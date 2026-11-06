@@ -12,7 +12,8 @@
     "build": "node scripts/build-tokens.js && echo '✓ Build complete'",
     "build-tokens": "node scripts/build-tokens.js",
     "validate": "node scripts/validate-tokens.js",
-    "test": "npm run build && npm run validate",
+    "sanity": "node scripts/sanity-check.js",
+    "test": "npm run build && npm run validate && npm run sanity",
     "dev": "npm run build && echo 'Ready to edit files. Build output: src/css/tokens.css'",
     "check": "npm run test"
   },
