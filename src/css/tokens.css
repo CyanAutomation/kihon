@@ -1,0 +1,97 @@
+/* Generated tokens for Kihon UI Foundation
+ * This file is auto-generated. Do not edit manually.
+ * Run: npm run build-tokens
+ */
+
+:root {
+  color-scheme: light;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --kh-color-background: #f5f5f7;
+  --kh-color-surface: #ffffff;
+  --kh-color-text-primary: #141518;
+  --kh-color-text-secondary: #475467;
+  --kh-color-accent: #175cd3;
+  --kh-color-on-accent: #ffffff;
+  --kh-color-danger: #b42318;
+  --kh-color-border-subtle: #d0d5dd;
+  --kh-color-border-strong: #667085;
+  --kh-color-focus-ring: #175cd3;
+  --kh-space-0: 0px;
+  --kh-space-1: 4px;
+  --kh-space-2: 8px;
+  --kh-space-3: 12px;
+  --kh-space-4: 16px;
+  --kh-space-6: 24px;
+  --kh-space-8: 32px;
+  --kh-space-12: 48px;
+  --kh-radius-sm: 0.5rem;
+  --kh-radius-md: 0.75rem;
+  --kh-radius-lg: 1rem;
+  --kh-radius-pill: 9999px;
+  --kh-type-size-xs: 0.875rem;
+  --kh-type-size-sm: 1rem;
+  --kh-type-size-base: 1rem;
+  --kh-type-size-lg: 1.125rem;
+  --kh-type-size-xl: 1.25rem;
+  --kh-type-size-2xl: 1.5rem;
+  --kh-type-size-3xl: 2rem;
+  --kh-type-line-height-tight: 1.2;
+  --kh-type-line-height-normal: 1.5;
+  --kh-type-line-height-relaxed: 1.75;
+  --kh-type-weight-regular: 400;
+  --kh-type-weight-medium: 500;
+  --kh-type-weight-semibold: 600;
+  --kh-type-weight-bold: 700;
+  --kh-type-font-stack: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --kh-shadow-none: none;
+  --kh-shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --kh-shadow-md: 0 4px 6px 0 rgba(0, 0, 0, 0.07);
+  --kh-shadow-lg: 0 12px 16px 0 rgba(0, 0, 0, 0.1);
+  --kh-motion-fast: 120ms;
+  --kh-motion-normal: 200ms;
+  --kh-motion-slow: 300ms;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-kh-theme]) {
+    color-scheme: dark;
+    --kh-color-background: #141518;
+    --kh-color-surface: #1f2024;
+    --kh-color-text-primary: #f5f5f7;
+    --kh-color-text-secondary: #a6acb1;
+    --kh-color-accent: #85b4ff;
+    --kh-color-on-accent: #141518;
+    --kh-color-danger: #f97066;
+    --kh-color-border-subtle: #475467;
+    --kh-color-border-strong: #667085;
+    --kh-color-focus-ring: #85b4ff;
+  }
+}
+
+:root[data-kh-theme="light"] {
+  color-scheme: light;
+  --kh-color-background: #f5f5f7;
+  --kh-color-surface: #ffffff;
+  --kh-color-text-primary: #141518;
+  --kh-color-text-secondary: #475467;
+  --kh-color-accent: #175cd3;
+  --kh-color-on-accent: #ffffff;
+  --kh-color-danger: #b42318;
+  --kh-color-border-subtle: #d0d5dd;
+  --kh-color-border-strong: #667085;
+  --kh-color-focus-ring: #175cd3;
+}
+
+:root[data-kh-theme="dark"] {
+  color-scheme: dark;
+  --kh-color-background: #141518;
+  --kh-color-surface: #1f2024;
+  --kh-color-text-primary: #f5f5f7;
+  --kh-color-text-secondary: #a6acb1;
+  --kh-color-accent: #85b4ff;
+  --kh-color-on-accent: #141518;
+  --kh-color-danger: #f97066;
+  --kh-color-border-subtle: #475467;
+  --kh-color-border-strong: #667085;
+  --kh-color-focus-ring: #85b4ff;
+}

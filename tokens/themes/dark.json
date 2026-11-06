@@ -1,0 +1,47 @@
+{
+  "$schema": "https://www.designtokens.org/schemas/2025.10/format.json",
+  "name": "Kihon Dark Theme",
+  "description": "Dark appearance theme for Kihon UI Foundation",
+  "color": {
+    "background": {
+      "$type": "color",
+      "$value": "{colors.gray.900}"
+    },
+    "surface": {
+      "$type": "color",
+      "$value": "{colors.gray.800}"
+    },
+    "text-primary": {
+      "$type": "color",
+      "$value": "{colors.gray.100}"
+    },
+    "text-secondary": {
+      "$type": "color",
+      "$value": "{colors.gray.400}"
+    },
+    "accent": {
+      "$type": "color",
+      "$value": "{colors.blue.400}"
+    },
+    "on-accent": {
+      "$type": "color",
+      "$value": "{colors.gray.900}"
+    },
+    "danger": {
+      "$type": "color",
+      "$value": "{colors.red.500}"
+    },
+    "border-subtle": {
+      "$type": "color",
+      "$value": "{colors.gray.700}"
+    },
+    "border-strong": {
+      "$type": "color",
+      "$value": "{colors.gray.600}"
+    },
+    "focus-ring": {
+      "$type": "color",
+      "$value": "{colors.blue.400}"
+    }
+  }
+}

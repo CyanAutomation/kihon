@@ -1,0 +1,538 @@
+/* Kihon Base CSS
+ * Foundational styles for Kihon UI Foundation
+ * Provides typography, element defaults, focus behaviour and layout primitives
+ */
+
+/* Import generated tokens */
+@import url('./tokens.css');
+
+/* ============================================================================
+   Root and global defaults
+   ========================================================================== */
+
+html {
+  /* Foundation text properties */
+  font-family: var(--kh-type-font-stack, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif);
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  /* Avoid default tap highlight on mobile */
+  -webkit-tap-highlight-color: transparent;
+
+  /* Support color-scheme for native controls */
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  html:not([data-kh-theme]) {
+    color-scheme: dark;
+  }
+}
+
+html[data-kh-theme="light"] {
+  color-scheme: light;
+}
+
+html[data-kh-theme="dark"] {
+  color-scheme: dark;
+}
+
+body {
+  background-color: var(--kh-color-background);
+  color: var(--kh-color-text-primary);
+  margin: 0;
+  padding: 0;
+  transition: background-color 200ms ease-in-out, color 200ms ease-in-out;
+}
+
+/* ============================================================================
+   Typography
+   ========================================================================== */
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 0;
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--kh-color-text-primary);
+}
+
+h1 {
+  font-size: 2rem;
+  margin-bottom: var(--kh-space-4);
+}
+
+h2 {
+  font-size: 1.5rem;
+  margin-bottom: var(--kh-space-3);
+}
+
+h3 {
+  font-size: 1.25rem;
+  margin-bottom: var(--kh-space-3);
+}
+
+h4 {
+  font-size: 1.125rem;
+  margin-bottom: var(--kh-space-2);
+}
+
+h5 {
+  font-size: 1rem;
+  margin-bottom: var(--kh-space-2);
+}
+
+h6 {
+  font-size: 0.875rem;
+  margin-bottom: var(--kh-space-2);
+}
+
+p {
+  margin: 0 0 var(--kh-space-4) 0;
+  line-height: 1.6;
+}
+
+p:last-child {
+  margin-bottom: 0;
+}
+
+/* ============================================================================
+   Text elements
+   ========================================================================== */
+
+small {
+  font-size: 0.875rem;
+  color: var(--kh-color-text-secondary);
+}
+
+strong, b {
+  font-weight: 600;
+}
+
+em, i {
+  font-style: italic;
+}
+
+/* Links */
+a {
+  color: var(--kh-color-accent);
+  text-decoration: none;
+  transition: opacity 120ms ease-in-out;
+}
+
+a:hover {
+  opacity: 0.8;
+}
+
+a:active {
+  opacity: 0.9;
+}
+
+a:focus-visible {
+  outline: 2px solid var(--kh-color-focus-ring);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* Code */
+code, pre {
+  font-family: "SF Mono", Monaco, "Cascadia Code", "Roboto Mono", Menlo, monospace;
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+code {
+  padding: 0.125rem 0.375rem;
+  background-color: var(--kh-color-surface);
+  border-radius: var(--kh-radius-sm);
+  color: var(--kh-color-text-primary);
+}
+
+pre {
+  background-color: var(--kh-color-surface);
+  border: 1px solid var(--kh-color-border-subtle);
+  border-radius: var(--kh-radius-md);
+  padding: var(--kh-space-4);
+  overflow-x: auto;
+  margin: 0 0 var(--kh-space-4) 0;
+}
+
+pre code {
+  background: none;
+  border-radius: 0;
+  padding: 0;
+  color: inherit;
+}
+
+/* Lists */
+ul, ol {
+  margin: 0 0 var(--kh-space-4) 0;
+  padding-left: var(--kh-space-6);
+}
+
+li {
+  margin-bottom: var(--kh-space-2);
+}
+
+li:last-child {
+  margin-bottom: 0;
+}
+
+/* Description list */
+dl {
+  margin: 0 0 var(--kh-space-4) 0;
+}
+
+dt {
+  font-weight: 600;
+  margin-top: var(--kh-space-4);
+}
+
+dt:first-child {
+  margin-top: 0;
+}
+
+dd {
+  margin: var(--kh-space-2) 0 0 0;
+}
+
+/* ============================================================================
+   Media and images
+   ========================================================================== */
+
+img, video, svg {
+  display: block;
+  height: auto;
+  max-width: 100%;
+}
+
+img, video {
+  border-radius: var(--kh-radius-md);
+}
+
+figure {
+  margin: 0 0 var(--kh-space-4) 0;
+}
+
+figcaption {
+  font-size: 0.875rem;
+  color: var(--kh-color-text-secondary);
+  margin-top: var(--kh-space-2);
+}
+
+/* ============================================================================
+   Horizontal rule
+   ========================================================================== */
+
+hr {
+  border: none;
+  border-top: 1px solid var(--kh-color-border-subtle);
+  margin: var(--kh-space-6) 0;
+}
+
+/* ============================================================================
+   Form elements
+   ========================================================================== */
+
+label {
+  display: block;
+  margin-bottom: var(--kh-space-2);
+  font-weight: 500;
+  color: var(--kh-color-text-primary);
+}
+
+/* Input, textarea, select - preserve native appearance by default */
+input,
+textarea,
+select {
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  color: inherit;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="email"],
+input[type="number"],
+input[type="search"],
+input[type="url"],
+input[type="tel"],
+textarea,
+select {
+  appearance: none;
+  width: 100%;
+  padding: var(--kh-space-3) var(--kh-space-3);
+  background-color: var(--kh-color-surface);
+  border: 1px solid var(--kh-color-border-strong);
+  border-radius: var(--kh-radius-md);
+  transition: border-color 120ms ease-in-out, box-shadow 120ms ease-in-out;
+  box-sizing: border-box;
+}
+
+input[type="text"]:hover,
+input[type="password"]:hover,
+input[type="email"]:hover,
+input[type="number"]:hover,
+input[type="search"]:hover,
+input[type="url"]:hover,
+input[type="tel"]:hover,
+textarea:hover,
+select:hover {
+  border-color: var(--kh-color-border-strong);
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus,
+input[type="email"]:focus,
+input[type="number"]:focus,
+input[type="search"]:focus,
+input[type="url"]:focus,
+input[type="tel"]:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  border-color: var(--kh-color-focus-ring);
+  box-shadow: 0 0 0 3px rgba(23, 92, 211, 0.1);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-kh-theme]) input[type="text"]:focus,
+  :root:not([data-kh-theme]) input[type="password"]:focus,
+  :root:not([data-kh-theme]) input[type="email"]:focus,
+  :root:not([data-kh-theme]) input[type="number"]:focus,
+  :root:not([data-kh-theme]) input[type="search"]:focus,
+  :root:not([data-kh-theme]) input[type="url"]:focus,
+  :root:not([data-kh-theme]) input[type="tel"]:focus,
+  :root:not([data-kh-theme]) textarea:focus,
+  :root:not([data-kh-theme]) select:focus {
+    box-shadow: 0 0 0 3px rgba(133, 180, 255, 0.1);
+  }
+}
+
+input[type="text"]:disabled,
+input[type="password"]:disabled,
+input[type="email"]:disabled,
+input[type="number"]:disabled,
+input[type="search"]:disabled,
+input[type="url"]:disabled,
+input[type="tel"]:disabled,
+textarea:disabled,
+select:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+textarea {
+  resize: vertical;
+  min-height: 6rem;
+}
+
+/* Checkbox and radio */
+input[type="checkbox"],
+input[type="radio"] {
+  width: 1.25rem;
+  height: 1.25rem;
+  accent-color: var(--kh-color-accent);
+  cursor: pointer;
+}
+
+input[type="checkbox"]:focus-visible,
+input[type="radio"]:focus-visible {
+  outline: 2px solid var(--kh-color-focus-ring);
+  outline-offset: 2px;
+}
+
+input[type="checkbox"]:disabled,
+input[type="radio"]:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* Fieldset and legend */
+fieldset {
+  border: 1px solid var(--kh-color-border-subtle);
+  border-radius: var(--kh-radius-md);
+  padding: var(--kh-space-4);
+  margin: 0 0 var(--kh-space-4) 0;
+}
+
+legend {
+  padding: 0 var(--kh-space-2);
+  font-weight: 600;
+  font-size: 1.125rem;
+}
+
+/* ============================================================================
+   Buttons (base styles only)
+   ========================================================================== */
+
+button {
+  appearance: none;
+  padding: var(--kh-space-3) var(--kh-space-4);
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 500;
+  line-height: 1.2;
+  border: none;
+  border-radius: var(--kh-radius-md);
+  background-color: var(--kh-color-accent);
+  color: var(--kh-color-on-accent);
+  cursor: pointer;
+  transition: opacity 120ms ease-in-out, box-shadow 120ms ease-in-out;
+  min-height: 2.5rem;
+  min-width: 2.5rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+button:hover {
+  opacity: 0.9;
+}
+
+button:active {
+  opacity: 1;
+}
+
+button:focus-visible {
+  outline: 2px solid var(--kh-color-focus-ring);
+  outline-offset: 2px;
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ============================================================================
+   Focus and interaction
+   ========================================================================== */
+
+/* Preserve focus visibility */
+*:focus-visible {
+  outline: 2px solid var(--kh-color-focus-ring);
+  outline-offset: 2px;
+}
+
+/* Respect reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ============================================================================
+   Layout utilities
+   ========================================================================== */
+
+/* Box sizing */
+html {
+  box-sizing: border-box;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+
+/* Container queries support (progressive enhancement) */
+.kh-container {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  padding-left: var(--kh-space-4);
+  padding-right: var(--kh-space-4);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@media (min-width: 48rem) {
+  .kh-container {
+    max-width: 44rem;
+  }
+}
+
+@media (min-width: 64rem) {
+  .kh-container {
+    max-width: 60rem;
+  }
+}
+
+@media (min-width: 80rem) {
+  .kh-container {
+    max-width: 76rem;
+  }
+}
+
+/* Grid and flex foundations */
+.kh-grid {
+  display: grid;
+  gap: var(--kh-space-4);
+}
+
+.kh-flex {
+  display: flex;
+  gap: var(--kh-space-4);
+}
+
+/* Surface styles */
+.kh-surface {
+  background-color: var(--kh-color-surface);
+  border-radius: var(--kh-radius-lg);
+  padding: var(--kh-space-6);
+  border: 1px solid var(--kh-color-border-subtle);
+  box-shadow: var(--kh-shadow-sm);
+}
+
+/* ============================================================================
+   Utility classes
+   ========================================================================== */
+
+.kh-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+.kh-truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ============================================================================
+   Accessibility
+   ========================================================================== */
+
+/* Ensure forced-colours mode remains usable */
+@media (forced-colors: active) {
+  input[type="text"],
+  input[type="password"],
+  input[type="email"],
+  input[type="number"],
+  input[type="search"],
+  input[type="url"],
+  input[type="tel"],
+  textarea,
+  select {
+    border: 1px solid CanvasText;
+  }
+
+  button {
+    border: 1px solid ButtonBorder;
+  }
+}

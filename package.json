@@ -1,0 +1,22 @@
+{
+  "name": "kihon",
+  "version": "1.0.0-draft.1",
+  "description": "Kihon UI Foundation — A lightweight, framework-free design system for CyanAutomation",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/CyanAutomation/kihon.git"
+  },
+  "license": "See LICENSE file",
+  "scripts": {
+    "build": "node scripts/build-tokens.js && echo '✓ Build complete'",
+    "build-tokens": "node scripts/build-tokens.js",
+    "validate": "node scripts/validate-tokens.js",
+    "test": "npm run build && npm run validate",
+    "dev": "npm run build && echo 'Ready to edit files. Build output: src/css/tokens.css'",
+    "check": "npm run test"
+  },
+  "devDependencies": {
+    "wcag-contrast": "^4.1.0"
+  }
+}
