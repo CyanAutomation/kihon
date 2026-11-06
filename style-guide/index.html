@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Kihon — the UI foundation for CyanAutomation. A lightweight, framework-free design system.">
+  <title>Kihon UI Foundation</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a href="#main-content" class="kh-sg-skip-link">Skip to main content</a>
+
+  <header class="kh-sg-header" role="banner">
+    <div class="kh-sg-header-content">
+      <h1 class="kh-sg-logo">Kihon</h1>
+      <nav aria-label="Theme selection">
+        <div class="kh-sg-theme-controls">
+          <button
+            class="kh-sg-theme-button"
+            data-kh-theme-toggle="system"
+            type="button"
+            aria-label="Use system theme preference"
+            title="System"
+          >
+            System
+          </button>
+          <button
+            class="kh-sg-theme-button"
+            data-kh-theme-toggle="light"
+            type="button"
+            aria-label="Force light theme"
+            title="Light"
+          >
+            Light
+          </button>
+          <button
+            class="kh-sg-theme-button"
+            data-kh-theme-toggle="dark"
+            type="button"
+            aria-label="Force dark theme"
+            title="Dark"
+          >
+            Dark
+          </button>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main-content" class="kh-sg-content">
+    <!-- Introduction -->
+    <section class="kh-sg-section">
+      <h2>Welcome to Kihon</h2>
+      <p>
+        <strong>Kihon</strong> (基本 — fundamentals) is the UI foundation for CyanAutomation.
+        A lightweight, framework-free design system that brings consistency to web interfaces
+        while preserving application independence.
+      </p>
+      <p>
+        This page demonstrates the design tokens, typography, colours, spacing, and foundational
+        elements that make up Kihon v1.0.
+      </p>
+    </section>
+
+    <!-- Typography -->
+    <section class="kh-sg-section">
+      <h2>Typography</h2>
+      <p>Kihon uses a system font stack for clarity and performance.</p>
+
+      <h3>Heading Hierarchy</h3>
+      <div class="kh-sg-type-scale">
+        <div class="kh-sg-type-example">
+          <div class="kh-sg-type-label">h1 — 2rem</div>
+          <h1>Main heading</h1>
+        </div>
+        <div class="kh-sg-type-example">
+          <div class="kh-sg-type-label">h2 — 1.5rem</div>
+          <h2>Secondary heading</h2>
+        </div>
+        <div class="kh-sg-type-example">
+          <div class="kh-sg-type-label">h3 — 1.25rem</div>
+          <h3>Tertiary heading</h3>
+        </div>
+        <div class="kh-sg-type-example">
+          <div class="kh-sg-type-label">h4 — 1.125rem</div>
+          <h4>Quaternary heading</h4>
+        </div>
+        <div class="kh-sg-type-example">
+          <div class="kh-sg-type-label">h5 — 1rem</div>
+          <h5>Fifth-level heading</h5>
+        </div>
+        <div class="kh-sg-type-example">
+          <div class="kh-sg-type-label">h6 — 0.875rem</div>
+          <h6>Sixth-level heading</h6>
+        </div>
+      </div>
+
+      <h3>Body text</h3>
+      <div class="kh-sg-type-example">
+        <div class="kh-sg-type-label">Body — 1rem, line-height 1.5</div>
+        <p>
+          This is a paragraph of body text. It uses a comfortable line-height for readability
+          and wraps gracefully on all viewport sizes. Lorem ipsum dolor sit amet, consectetur
+          adipiscing elit, sed do eiusmod tempor incididunt.
+        </p>
+      </div>
+
+      <h3>Secondary text</h3>
+      <div class="kh-sg-type-example">
+        <div class="kh-sg-type-label">Secondary — 1rem, text-secondary</div>
+        <p style="color: var(--kh-color-text-secondary);">
+          Secondary text is used for descriptions, metadata and less important information.
+          It maintains the same size but uses a lighter colour for visual hierarchy.
+        </p>
+      </div>
+
+      <h3>Metadata text</h3>
+      <div class="kh-sg-type-example">
+        <div class="kh-sg-type-label">Metadata — 0.875rem</div>
+        <small>This is small metadata text, often used for timestamps, labels or supplementary information.</small>
+      </div>
+
+      <h3>Code and monospace</h3>
+      <div class="kh-sg-type-example">
+        <div class="kh-sg-type-label">Inline code</div>
+        <p>Use <code>var(--kh-color-accent)</code> to apply the accent colour.</p>
+      </div>
+
+      <h3>Links</h3>
+      <div class="kh-sg-type-example">
+        <p>
+          <a href="#typography">This is a link</a> and <a href="#typography">another link</a>.
+          They use the accent colour and change on interaction.
+        </p>
+      </div>
+    </section>
+
+    <!-- Colours -->
+    <section class="kh-sg-section">
+      <h2>Semantic Colours</h2>
+      <p>Kihon uses semantic colour tokens that adapt to light and dark themes automatically.</p>
+
+      <h3>Light Theme Palette</h3>
+      <div class="kh-sg-grid">
+        <div class="kh-sg-card">
+          <div class="kh-sg-swatch" style="background-color: var(--kh-color-background);"></div>
+          <strong>Background</strong>
+          <div class="kh-sg-swatch-value">--kh-color-background</div>
+        </div>
+        <div class="kh-sg-card">
+          <div class="kh-sg-swatch" style="background-color: var(--kh-color-surface); border: 1px solid var(--kh-color-border-subtle);"></div>
+          <strong>Surface</strong>
+          <div class="kh-sg-swatch-value">--kh-color-surface</div>
+        </div>
+        <div class="kh-sg-card">
+          <div class="kh-sg-swatch" style="background-color: var(--kh-color-accent);"></div>
+          <strong>Accent</strong>
+          <div class="kh-sg-swatch-value">--kh-color-accent</div>
+        </div>
+        <div class="kh-sg-card">
+          <div class="kh-sg-swatch" style="background-color: var(--kh-color-danger);"></div>
+          <strong>Danger</strong>
+          <div class="kh-sg-swatch-value">--kh-color-danger</div>
+        </div>
+        <div class="kh-sg-card">
+          <div class="kh-sg-swatch" style="background-color: var(--kh-color-focus-ring);"></div>
+          <strong>Focus Ring</strong>
+          <div class="kh-sg-swatch-value">--kh-color-focus-ring</div>
+        </div>
+        <div class="kh-sg-card">
+          <div class="kh-sg-swatch" style="background-color: var(--kh-color-border-subtle);"></div>
+          <strong>Border Subtle</strong>
+          <div class="kh-sg-swatch-value">--kh-color-border-subtle</div>
+        </div>
+      </div>
+
+      <h3>Contrast Examples</h3>
+      <div class="kh-sg-contrast-check">
+        <div class="kh-sg-contrast-pair" style="background-color: var(--kh-color-surface); color: var(--kh-color-text-primary);">
+          <p>
+            Primary text on surface (4.5:1 contrast for WCAG AA normal text)
+          </p>
+          <div class="kh-sg-contrast-ratio">✓ Passes WCAG AA</div>
+        </div>
+        <div class="kh-sg-contrast-pair" style="background-color: var(--kh-color-accent); color: var(--kh-color-on-accent);">
+          <p>
+            Text on accent (4.5:1 contrast)
+          </p>
+          <div class="kh-sg-contrast-ratio">✓ Passes WCAG AA</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Spacing -->
+    <section class="kh-sg-section">
+      <h2>Spacing Scale</h2>
+      <p>Kihon uses an 8-pixel base unit for consistent spacing throughout.</p>
+
+      <div class="kh-sg-spacing-scale">
+        <div class="kh-sg-spacing-item">
+          <div class="kh-sg-spacing-block" style="width: 0px;"></div>
+          <div class="kh-sg-spacing-label">0px (--kh-space-0)</div>
+        </div>
+        <div class="kh-sg-spacing-item">
+          <div class="kh-sg-spacing-block" style="width: 4px;"></div>
+          <div class="kh-sg-spacing-label">4px (--kh-space-1)</div>
+        </div>
+        <div class="kh-sg-spacing-item">
+          <div class="kh-sg-spacing-block" style="width: 8px;"></div>
+          <div class="kh-sg-spacing-label">8px (--kh-space-2)</div>
+        </div>
+        <div class="kh-sg-spacing-item">
+          <div class="kh-sg-spacing-block" style="width: 12px;"></div>
+          <div class="kh-sg-spacing-label">12px (--kh-space-3)</div>
+        </div>
+        <div class="kh-sg-spacing-item">
+          <div class="kh-sg-spacing-block" style="width: 16px;"></div>
+          <div class="kh-sg-spacing-label">16px (--kh-space-4)</div>
+        </div>
+        <div class="kh-sg-spacing-item">
+          <div class="kh-sg-spacing-block" style="width: 24px;"></div>
+          <div class="kh-sg-spacing-label">24px (--kh-space-6)</div>
+        </div>
+        <div class="kh-sg-spacing-item">
+          <div class="kh-sg-spacing-block" style="width: 32px;"></div>
+          <div class="kh-sg-spacing-label">32px (--kh-space-8)</div>
+        </div>
+        <div class="kh-sg-spacing-item">
+          <div class="kh-sg-spacing-block" style="width: 48px;"></div>
+          <div class="kh-sg-spacing-label">48px (--kh-space-12)</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Radii -->
+    <section class="kh-sg-section">
+      <h2>Corner Radii</h2>
+      <p>Kihon provides a restrained set of corner radii for buttons, cards and controls.</p>
+
+      <div class="kh-sg-radius-scale">
+        <div class="kh-sg-radius-item">
+          <div class="kh-sg-radius-demo" style="border-radius: var(--kh-radius-sm);"></div>
+          <div class="kh-sg-radius-label">sm<br>0.5rem</div>
+        </div>
+        <div class="kh-sg-radius-item">
+          <div class="kh-sg-radius-demo" style="border-radius: var(--kh-radius-md);"></div>
+          <div class="kh-sg-radius-label">md<br>0.75rem</div>
+        </div>
+        <div class="kh-sg-radius-item">
+          <div class="kh-sg-radius-demo" style="border-radius: var(--kh-radius-lg);"></div>
+          <div class="kh-sg-radius-label">lg<br>1rem</div>
+        </div>
+        <div class="kh-sg-radius-item">
+          <div class="kh-sg-radius-demo" style="border-radius: var(--kh-radius-pill);"></div>
+          <div class="kh-sg-radius-label">pill<br>9999px</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Buttons -->
+    <section class="kh-sg-section">
+      <h2>Buttons</h2>
+      <p>Button examples showing primary state, hover, active, focus, and disabled states.</p>
+
+      <h3>Primary Button</h3>
+      <div class="kh-sg-states">
+        <div class="kh-sg-state-group">
+          <div class="kh-sg-state-label">Default</div>
+          <button>Primary Action</button>
+        </div>
+        <div class="kh-sg-state-group">
+          <div class="kh-sg-state-label">Hover</div>
+          <button style="opacity: 0.9;">Primary Action</button>
+        </div>
+        <div class="kh-sg-state-group">
+          <div class="kh-sg-state-label">Focus</div>
+          <button class="kh-sg-focus-demo">Primary Action</button>
+        </div>
+        <div class="kh-sg-state-group">
+          <div class="kh-sg-state-label">Disabled</div>
+          <button disabled>Primary Action</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Forms -->
+    <section class="kh-sg-section">
+      <h2>Form Elements</h2>
+
+      <h3>Basic inputs</h3>
+      <div style="display: grid; gap: var(--kh-space-6); max-width: 400px;">
+        <div class="kh-sg-form-group">
+          <label for="text-input">Text input</label>
+          <input id="text-input" type="text" placeholder="Enter text...">
+        </div>
+
+        <div class="kh-sg-form-group">
+          <label for="email-input">Email input</label>
+          <input id="email-input" type="email" placeholder="you@example.com">
+        </div>
+
+        <div class="kh-sg-form-group">
+          <label for="textarea-input">Textarea</label>
+          <textarea id="textarea-input" placeholder="Enter your message..."></textarea>
+        </div>
+
+        <div class="kh-sg-form-group">
+          <label for="select-input">Select</label>
+          <select id="select-input">
+            <option>Option 1</option>
+            <option>Option 2</option>
+            <option>Option 3</option>
+          </select>
+        </div>
+
+        <div class="kh-sg-form-group">
+          <label>
+            <input type="checkbox"> I agree to the terms
+          </label>
+        </div>
+
+        <div class="kh-sg-form-group">
+          <label>
+            <input type="radio" name="example"> Option A
+          </label>
+          <label>
+            <input type="radio" name="example"> Option B
+          </label>
+        </div>
+      </div>
+
+      <h3>Disabled state</h3>
+      <div style="display: grid; gap: var(--kh-space-6); max-width: 400px;">
+        <div class="kh-sg-form-group">
+          <label for="disabled-input">Disabled input</label>
+          <input id="disabled-input" type="text" disabled value="Disabled">
+        </div>
+      </div>
+    </section>
+
+    <!-- Surfaces -->
+    <section class="kh-sg-section">
+      <h2>Surfaces and Elevation</h2>
+
+      <h3>Surface card</h3>
+      <div class="kh-sg-surface" style="max-width: 400px;">
+        <h3>Card title</h3>
+        <p>
+          This is a surface card demonstrating the base surface elevation and styling.
+          It uses the --kh-color-surface background and has a subtle shadow.
+        </p>
+        <p>
+          Cards are commonly used for grouping related content or actions.
+        </p>
+      </div>
+    </section>
+
+    <!-- Focus -->
+    <section class="kh-sg-section">
+      <h2>Focus and Keyboard Navigation</h2>
+      <p>Try using Tab to navigate through the elements on this page. All interactive elements have visible focus indicators.</p>
+
+      <div style="display: grid; gap: var(--kh-space-4); max-width: 400px;">
+        <a href="#focus">Focusable link</a>
+        <button>Focusable button</button>
+        <input type="text" placeholder="Focusable input">
+      </div>
+    </section>
+
+    <!-- Application preview -->
+    <section class="kh-sg-section">
+      <h2>Application Preview</h2>
+      <p>A simple demonstration of how Kihon components work together in a real application layout.</p>
+
+      <div class="kh-sg-preview">
+        <div class="kh-sg-preview-header">
+          <div>
+            <h3 style="margin: 0;">Application</h3>
+          </div>
+          <div style="display: flex; gap: var(--kh-space-2);">
+            <button style="min-width: auto; padding: var(--kh-space-3);">Save</button>
+            <button style="min-width: auto; padding: var(--kh-space-3);">Cancel</button>
+          </div>
+        </div>
+        <div style="display: flex; flex: 1;">
+          <div class="kh-sg-preview-sidebar">
+            <h4 style="margin-top: 0;">Navigation</h4>
+            <ul style="list-style: none; padding: 0; margin: 0;">
+              <li><a href="#" style="display: block; padding: var(--kh-space-2); margin-bottom: var(--kh-space-2);">Dashboard</a></li>
+              <li><a href="#" style="display: block; padding: var(--kh-space-2); margin-bottom: var(--kh-space-2);">Settings</a></li>
+              <li><a href="#" style="display: block; padding: var(--kh-space-2);">About</a></li>
+            </ul>
+          </div>
+          <div class="kh-sg-preview-content">
+            <div>
+              <h2>Welcome</h2>
+              <p>This is a simple application layout showing Kihon's foundational elements working together.</p>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--kh-space-4);">
+              <div class="kh-surface">
+                <h4>Feature 1</h4>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+              </div>
+              <div class="kh-surface">
+                <h4>Feature 2</h4>
+                <p>Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Accessibility -->
+    <section class="kh-sg-section">
+      <h2>Accessibility Features</h2>
+
+      <h3>Reduced motion</h3>
+      <p>
+        If you have "Reduce motion" enabled in your system settings, animations and transitions
+        on this page will be minimized. Try enabling it to see the difference.
+      </p>
+
+      <h3>Forced colours mode</h3>
+      <p>
+        If you use high-contrast or forced-colours mode, elements on this page should remain
+        clearly visible and usable.
+      </p>
+
+      <h3>Zoom and text resize</h3>
+      <p>
+        Try zooming in (Ctrl/Cmd + Plus) or increasing text size in your browser settings.
+        All content should remain readable and nothing should be clipped or hidden.
+      </p>
+
+      <h3>Keyboard navigation</h3>
+      <p>
+        Press Tab to navigate through all interactive elements. Press Shift+Tab to go backwards.
+        Press Enter to activate buttons and links. Press Space to toggle checkboxes and radio buttons.
+        Press Escape to close dialogs (when implemented).
+      </p>
+    </section>
+
+    <!-- Footer -->
+    <section class="kh-sg-section" style="margin-bottom: 0; text-align: center; border-top: 1px solid var(--kh-color-border-subtle); padding-top: var(--kh-space-8);">
+      <p style="color: var(--kh-color-text-secondary); margin: 0;">
+        Kihon UI Foundation — A lightweight design system for CyanAutomation
+      </p>
+      <p style="color: var(--kh-color-text-secondary); font-size: 0.875rem; margin: var(--kh-space-2) 0 0 0;">
+        <a href="https://github.com/CyanAutomation/kihon" style="color: inherit;">View on GitHub</a> •
+        <a href="https://github.com/CyanAutomation/kihon/blob/main/docs/foundation.md" style="color: inherit;">Read the specification</a>
+      </p>
+    </section>
+  </main>
+
+  <div class="kh-sg-breakpoint-info" aria-live="polite" aria-label="Current breakpoint"></div>
+
+  <script src="theme.js"></script>
+</body>
+</html>

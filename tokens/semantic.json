@@ -1,0 +1,141 @@
+{
+  "$schema": "https://www.designtokens.org/schemas/2025.10/format.json",
+  "name": "Kihon Semantic Tokens",
+  "description": "Platform-neutral semantic tokens for Kihon UI Foundation",
+  "color": {
+    "background": {
+      "$type": "color",
+      "$description": "Application canvas background",
+      "$value": "{colors.gray.100}"
+    },
+    "surface": {
+      "$type": "color",
+      "$description": "Cards, panels, grouped sections",
+      "$value": "{colors.white}"
+    },
+    "text-primary": {
+      "$type": "color",
+      "$description": "Main content and headings",
+      "$value": "{colors.gray.900}"
+    },
+    "text-secondary": {
+      "$type": "color",
+      "$description": "Secondary readable content",
+      "$value": "{colors.gray.700}"
+    },
+    "accent": {
+      "$type": "color",
+      "$description": "Primary interactive emphasis",
+      "$value": "{colors.blue.700}"
+    },
+    "on-accent": {
+      "$type": "color",
+      "$description": "Text and icons on accent fills",
+      "$value": "{colors.white}"
+    },
+    "danger": {
+      "$type": "color",
+      "$description": "Destructive actions and error states",
+      "$value": "{colors.red.700}"
+    },
+    "border-subtle": {
+      "$type": "color",
+      "$description": "Decorative separators and dividers",
+      "$value": "{colors.gray.300}"
+    },
+    "border-strong": {
+      "$type": "color",
+      "$description": "Essential control boundaries",
+      "$value": "{colors.gray.600}"
+    },
+    "focus-ring": {
+      "$type": "color",
+      "$description": "Keyboard focus indicator",
+      "$value": "{colors.blue.700}"
+    }
+  },
+  "space": {
+    "0": {
+      "$type": "dimension",
+      "$value": "{spacing.0}"
+    },
+    "1": {
+      "$type": "dimension",
+      "$value": "{spacing.1}"
+    },
+    "2": {
+      "$type": "dimension",
+      "$value": "{spacing.2}"
+    },
+    "3": {
+      "$type": "dimension",
+      "$value": "{spacing.3}"
+    },
+    "4": {
+      "$type": "dimension",
+      "$value": "{spacing.4}"
+    },
+    "6": {
+      "$type": "dimension",
+      "$value": "{spacing.6}"
+    },
+    "8": {
+      "$type": "dimension",
+      "$value": "{spacing.8}"
+    },
+    "12": {
+      "$type": "dimension",
+      "$value": "{spacing.12}"
+    }
+  },
+  "radius": {
+    "sm": {
+      "$type": "dimension",
+      "$value": "{radius.sm}"
+    },
+    "md": {
+      "$type": "dimension",
+      "$value": "{radius.md}"
+    },
+    "lg": {
+      "$type": "dimension",
+      "$value": "{radius.lg}"
+    },
+    "pill": {
+      "$type": "dimension",
+      "$value": "{radius.pill}"
+    }
+  },
+  "shadow": {
+    "none": {
+      "$type": "shadow",
+      "$value": "{shadow.none}"
+    },
+    "sm": {
+      "$type": "shadow",
+      "$value": "{shadow.sm}"
+    },
+    "md": {
+      "$type": "shadow",
+      "$value": "{shadow.md}"
+    },
+    "lg": {
+      "$type": "shadow",
+      "$value": "{shadow.lg}"
+    }
+  },
+  "motion": {
+    "fast": {
+      "$type": "duration",
+      "$value": "{motion.fast}"
+    },
+    "normal": {
+      "$type": "duration",
+      "$value": "{motion.normal}"
+    },
+    "slow": {
+      "$type": "duration",
+      "$value": "{motion.slow}"
+    }
+  }
+}

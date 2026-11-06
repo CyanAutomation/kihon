@@ -1,0 +1,396 @@
+/* Kihon Style Guide
+ * Documentation and demonstration of the design foundation
+ */
+
+/* Import foundation */
+@import url('../src/css/tokens.css');
+@import url('../src/css/base.css');
+
+/* ============================================================================
+   Style Guide Layout
+   ========================================================================== */
+
+body {
+  max-width: 100%;
+}
+
+.kh-sg-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background-color: var(--kh-color-surface);
+  border-bottom: 1px solid var(--kh-color-border-subtle);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  background-color: rgba(255, 255, 255, 0.8);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-kh-theme]) .kh-sg-header {
+    background-color: rgba(31, 32, 36, 0.8);
+  }
+}
+
+:root[data-kh-theme="dark"] .kh-sg-header {
+  background-color: rgba(31, 32, 36, 0.8);
+}
+
+.kh-sg-header-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--kh-space-4);
+  gap: var(--kh-space-4);
+}
+
+.kh-sg-logo {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--kh-color-text-primary);
+  text-decoration: none;
+}
+
+.kh-sg-theme-controls {
+  display: flex;
+  gap: var(--kh-space-2);
+}
+
+.kh-sg-theme-button {
+  appearance: none;
+  padding: var(--kh-space-2) var(--kh-space-3);
+  background-color: var(--kh-color-background);
+  border: 1px solid var(--kh-color-border-subtle);
+  border-radius: var(--kh-radius-md);
+  color: var(--kh-color-text-primary);
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: background-color 120ms, border-color 120ms;
+}
+
+.kh-sg-theme-button:hover {
+  border-color: var(--kh-color-border-strong);
+}
+
+.kh-sg-theme-button.kh-active {
+  background-color: var(--kh-color-accent);
+  color: var(--kh-color-on-accent);
+  border-color: var(--kh-color-accent);
+}
+
+.kh-sg-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--kh-space-8) var(--kh-space-4);
+}
+
+/* Section layout */
+.kh-sg-section {
+  margin-bottom: var(--kh-space-12);
+  scroll-margin-top: 5rem;
+}
+
+.kh-sg-section h2 {
+  margin-bottom: var(--kh-space-6);
+  padding-bottom: var(--kh-space-4);
+  border-bottom: 1px solid var(--kh-color-border-subtle);
+}
+
+/* Grid for displaying multiple examples */
+.kh-sg-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--kh-space-6);
+  margin-bottom: var(--kh-space-6);
+}
+
+/* Swatch and example card */
+.kh-sg-card {
+  background-color: var(--kh-color-surface);
+  border: 1px solid var(--kh-color-border-subtle);
+  border-radius: var(--kh-radius-lg);
+  padding: var(--kh-space-4);
+  overflow: hidden;
+}
+
+.kh-sg-swatch {
+  width: 100%;
+  height: 120px;
+  border-radius: var(--kh-radius-md);
+  margin-bottom: var(--kh-space-3);
+  border: 1px solid var(--kh-color-border-subtle);
+}
+
+.kh-sg-swatch-value {
+  font-family: "SF Mono", Monaco, monospace;
+  font-size: 0.75rem;
+  color: var(--kh-color-text-secondary);
+  margin-top: var(--kh-space-2);
+  word-break: break-all;
+}
+
+/* Typography scale */
+.kh-sg-type-scale {
+  display: grid;
+  gap: var(--kh-space-4);
+}
+
+.kh-sg-type-example {
+  padding: var(--kh-space-4);
+  background-color: var(--kh-color-surface);
+  border: 1px solid var(--kh-color-border-subtle);
+  border-radius: var(--kh-radius-md);
+}
+
+.kh-sg-type-label {
+  font-size: 0.75rem;
+  color: var(--kh-color-text-secondary);
+  margin-bottom: var(--kh-space-2);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Spacing scale */
+.kh-sg-spacing-scale {
+  display: grid;
+  gap: var(--kh-space-2);
+}
+
+.kh-sg-spacing-item {
+  display: flex;
+  align-items: center;
+  gap: var(--kh-space-3);
+}
+
+.kh-sg-spacing-block {
+  flex-shrink: 0;
+  height: 40px;
+  background: linear-gradient(90deg, var(--kh-color-accent) 0%, var(--kh-color-accent) 100%);
+  border-radius: var(--kh-radius-sm);
+}
+
+.kh-sg-spacing-label {
+  font-family: "SF Mono", Monaco, monospace;
+  font-size: 0.875rem;
+  color: var(--kh-color-text-secondary);
+  min-width: 80px;
+}
+
+/* Radius scale */
+.kh-sg-radius-scale {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  gap: var(--kh-space-6);
+}
+
+.kh-sg-radius-item {
+  text-align: center;
+}
+
+.kh-sg-radius-demo {
+  width: 100%;
+  height: 80px;
+  background-color: var(--kh-color-accent);
+  margin-bottom: var(--kh-space-3);
+}
+
+.kh-sg-radius-label {
+  font-size: 0.875rem;
+  color: var(--kh-color-text-secondary);
+  font-family: "SF Mono", Monaco, monospace;
+}
+
+/* Focus demo */
+.kh-sg-focus-demo:focus-visible {
+  outline: 2px solid var(--kh-color-focus-ring);
+  outline-offset: 2px;
+}
+
+/* State variants */
+.kh-sg-states {
+  display: flex;
+  gap: var(--kh-space-4);
+  flex-wrap: wrap;
+}
+
+.kh-sg-state-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--kh-space-2);
+  align-items: flex-start;
+}
+
+.kh-sg-state-label {
+  font-size: 0.75rem;
+  color: var(--kh-color-text-secondary);
+  font-weight: 600;
+}
+
+/* Form elements demo */
+.kh-sg-form-group {
+  margin-bottom: var(--kh-space-4);
+}
+
+.kh-sg-form-group label {
+  margin-bottom: var(--kh-space-2);
+}
+
+.kh-sg-form-group input,
+.kh-sg-form-group textarea,
+.kh-sg-form-group select {
+  width: 100%;
+}
+
+/* Application preview */
+.kh-sg-preview {
+  background-color: var(--kh-color-surface);
+  border: 1px solid var(--kh-color-border-subtle);
+  border-radius: var(--kh-radius-lg);
+  overflow: hidden;
+  min-height: 300px;
+  display: flex;
+  flex-direction: column;
+}
+
+.kh-sg-preview-header {
+  background-color: var(--kh-color-surface);
+  border-bottom: 1px solid var(--kh-color-border-subtle);
+  padding: var(--kh-space-4);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--kh-space-4);
+}
+
+.kh-sg-preview-content {
+  flex: 1;
+  padding: var(--kh-space-6);
+  display: grid;
+  gap: var(--kh-space-6);
+}
+
+.kh-sg-preview-sidebar {
+  width: 200px;
+  background-color: var(--kh-color-background);
+  border-right: 1px solid var(--kh-color-border-subtle);
+  padding: var(--kh-space-4);
+}
+
+/* Contrast checker */
+.kh-sg-contrast-check {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--kh-space-4);
+  margin-bottom: var(--kh-space-4);
+}
+
+.kh-sg-contrast-pair {
+  background-color: var(--kh-color-surface);
+  border: 1px solid var(--kh-color-border-subtle);
+  border-radius: var(--kh-radius-md);
+  padding: var(--kh-space-4);
+  overflow: hidden;
+}
+
+.kh-sg-contrast-ratio {
+  font-family: "SF Mono", Monaco, monospace;
+  font-size: 0.875rem;
+  color: var(--kh-color-text-secondary);
+  margin-top: var(--kh-space-2);
+}
+
+/* Responsive breakpoint tester */
+.kh-sg-breakpoint-info {
+  position: fixed;
+  bottom: var(--kh-space-4);
+  right: var(--kh-space-4);
+  background-color: var(--kh-color-surface);
+  border: 1px solid var(--kh-color-border-subtle);
+  border-radius: var(--kh-radius-md);
+  padding: var(--kh-space-3);
+  font-size: 0.75rem;
+  color: var(--kh-color-text-secondary);
+  pointer-events: none;
+  font-family: "SF Mono", Monaco, monospace;
+}
+
+@media (max-width: 48rem) {
+  .kh-sg-breakpoint-info::before {
+    content: "Small (< 48rem)";
+  }
+}
+
+@media (min-width: 48rem) and (max-width: 64rem) {
+  .kh-sg-breakpoint-info::before {
+    content: "Medium (48-64rem)";
+  }
+}
+
+@media (min-width: 64rem) and (max-width: 80rem) {
+  .kh-sg-breakpoint-info::before {
+    content: "Large (64-80rem)";
+  }
+}
+
+@media (min-width: 80rem) {
+  .kh-sg-breakpoint-info::before {
+    content: "XL (> 80rem)";
+  }
+}
+
+/* Responsive grid adjustments */
+@media (max-width: 48rem) {
+  .kh-sg-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .kh-sg-header-content {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .kh-sg-contrast-check {
+    grid-template-columns: 1fr;
+  }
+
+  .kh-sg-states {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .kh-sg-states button {
+    width: 100%;
+  }
+}
+
+/* ============================================================================
+   Accessibility for style guide
+   ========================================================================== */
+
+.kh-sg-skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: var(--kh-color-accent);
+  color: var(--kh-color-on-accent);
+  padding: var(--kh-space-3);
+  text-decoration: none;
+  z-index: 100;
+}
+
+.kh-sg-skip-link:focus {
+  top: 0;
+}
+
+/* Ensure examples remain readable with forced colours */
+@media (forced-colors: active) {
+  .kh-sg-swatch {
+    outline: 2px solid CanvasText;
+  }
+
+  .kh-sg-radius-demo {
+    outline: 2px solid CanvasText;
+  }
+}

@@ -4,7 +4,7 @@
 
 Kihon defines a lightweight, framework-free design system for CyanAutomation web applications: shared design decisions, accessible interface conventions, reusable CSS and small, optional TypeScript enhancements. It draws inspiration from Apple's Human Interface Guidelines—particularly the clarity and ergonomics of macOS and iOS—while remaining a web-native system rather than an imitation of SwiftUI.
 
-> **Status: planning / initial specification.** Kihon v1.0 is the target foundation, not a published release. This repository is being established; the CSS, components, package and style-guide site described below are **planned** unless and until they appear in the repository. No installable package is available yet.
+> **Status: Phase 1 Implementation (Draft).** Kihon v1.0 is in active development. The design token system, foundational CSS, and static style guide are implemented and tested. Components, theming refinements, and public package distribution remain planned for future phases. See [`docs/development.md`](docs/development.md) for build and contribution information.
 
 ## Why Kihon?
 
@@ -108,7 +108,69 @@ These values are **examples, not final tokens**. Names, values and theming contr
 
 Kihon will use a predictable `kh-` prefix for its CSS classes and public custom properties to minimise collisions. Avoid intrusive global resets and unnecessarily high-specificity selectors.
 
-## Adoption model (once released)
+## Quick Start
+
+### Prerequisites
+
+- Node.js 18.0 or later
+- npm or yarn
+
+### Building
+
+```bash
+# Install dependencies (none currently required for runtime)
+npm install
+
+# Generate CSS from design tokens
+npm run build
+
+# Validate tokens and generated output
+npm run validate
+
+# Run all checks
+npm run test
+```
+
+### Viewing the Style Guide
+
+After building, open `style-guide/index.html` in your browser to see the interactive design foundation documentation.
+
+The style guide demonstrates:
+
+- **Design tokens** — colours, spacing, typography, shadows, motion
+- **Typography** — heading hierarchy, body text, code, links
+- **Colour palette** — light and dark theme colours with contrast verification
+- **Spacing and radii** — geometric scales
+- **Components** — buttons, forms, surfaces and application layouts
+- **Accessibility** — keyboard navigation, reduced motion, forced colours
+- **Theme switcher** — test light, dark and system preference modes
+
+### Using Kihon in Your Application
+
+After Phase 1, consuming applications will:
+
+1. Import the generated CSS:
+   ```html
+   <link rel="stylesheet" href="path/to/kihon/src/css/tokens.css">
+   <link rel="stylesheet" href="path/to/kihon/src/css/base.css">
+   ```
+
+2. Use semantic CSS variables in application styles:
+   ```css
+   .my-component {
+     background-color: var(--kh-color-surface);
+     color: var(--kh-color-text-primary);
+     border-radius: var(--kh-radius-md);
+     padding: var(--kh-space-4);
+   }
+   ```
+
+3. Optionally include the theme switcher for UI controls:
+   ```html
+   <script src="path/to/kihon/style-guide/theme.js"></script>
+   ```
+
+No frontend framework is required. Kihon works with vanilla HTML, CSS and optional JavaScript.
 
 Kihon is intended for CyanAutomation applications with a web UI. Headless Workers, APIs and background services are **not applicable**, rather than non-compliant.
 
