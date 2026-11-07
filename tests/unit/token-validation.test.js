@@ -58,3 +58,10 @@ test('honors a token type inherited from its containing group', () => {
   const errors = validateTokenDocuments(documents);
   assert.ok(errors.some((error) => error.includes('dimensions.incompatible') && error.includes('expected a dimension reference')));
 });
+
+test('resolves explicitly namespaced references to the semantic document', () => {
+  const documents = loadTokenDocuments();
+  documents.lightTheme.color.background.$value = '{semantic.color.background}';
+
+  assert.deepEqual(validateTokenDocuments(documents), []);
+});

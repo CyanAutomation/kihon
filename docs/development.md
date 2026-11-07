@@ -129,6 +129,11 @@ Tokens reference other tokens using the `{path.to.token}` syntax:
 ```
 
 The build process recursively resolves aliases into final values for CSS output.
+Primitive groups such as `colors` are available directly to semantic and theme
+tokens. To reference a token in another document explicitly, prefix the path
+with its document name, for example `{semantic.color.text-primary}` or
+`{primitives.colors.gray.900}`. The explicit prefix avoids ambiguity between a
+semantic token and a theme token with the same path.
 
 ## Building and Generating CSS
 

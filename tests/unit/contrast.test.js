@@ -37,3 +37,14 @@ test('fails contrast validation for translucent theme colors', () => {
   const errors = validateThemeDocuments(documents);
   assert.ok(errors.some((error) => error.includes('background') && error.includes('must be opaque')));
 });
+
+test('checks contrast after resolving a theme reference into the semantic document', () => {
+  const documents = loadTokenDocuments();
+  documents.semantic.color['text-primary'].$value = '{colors.gray.100}';
+  documents.lightTheme.color.background.$value = '{semantic.color.background}';
+  documents.lightTheme.color['text-primary'].$value = '{semantic.color.text-primary}';
+
+  const errors = validateThemeDocuments(documents);
+  assert.ok(errors.some((error) => error.includes('light: text-primary on background')));
+  assert.ok(errors.every((error) => !error.startsWith('Contrast validation failed:')));
+});

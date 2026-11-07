@@ -4,14 +4,29 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { TokenResolver, formatValue } = require('./token-resolver');
 const { loadTokenDocuments, validateTokenDocuments } = require('./token-validation');
+const { createTokenContext } = require('./token-context');
 
 const ROOT = path.join(__dirname, '..');
 const OUTPUT = path.join(ROOT, 'src', 'css', 'tokens.css');
 
 function generateTokensCss(tokensDir = path.join(ROOT, 'tokens')) {
   const resolver = new TokenResolver().load(tokensDir);
-  const lightTokens = resolver.extractTokens(resolver.lightTheme);
-  const darkTokens = resolver.extractTokens(resolver.darkTheme);
+  const documents = {
+    primitives: resolver.primitives,
+    semantic: resolver.semantic,
+    lightTheme: resolver.lightTheme,
+    darkTheme: resolver.darkTheme
+  };
+  const lightTokens = resolver.extractTokens(
+    resolver.lightTheme,
+    '',
+    createTokenContext(documents, resolver.lightTheme)
+  );
+  const darkTokens = resolver.extractTokens(
+    resolver.darkTheme,
+    '',
+    createTokenContext(documents, resolver.darkTheme)
+  );
   const primitives = resolver.extractTokens(resolver.primitives);
 
   let css = `/* Generated tokens for Kihon UI Foundation

@@ -3,6 +3,7 @@ const path = require('node:path');
 const Ajv = require('ajv').default;
 const addFormats = require('ajv-formats').default;
 const { TokenResolver } = require('./token-resolver');
+const { createTokenContext } = require('./token-context');
 
 const ROOT = path.join(__dirname, '..');
 const SCHEMA_PATH = path.join(ROOT, 'schemas', 'dtcg-2025.10-format.schema.json');
@@ -38,9 +39,8 @@ function validateTokenDocuments(documents) {
     validateTypedValues(document, label, errors);
   }
 
-  const combinedContext = Object.assign({}, ...entries.map(([, document]) => document));
   for (const [label, document] of entries) {
-    const context = { ...combinedContext, ...document };
+    const context = createTokenContext(documents, document);
     const resolver = new TokenResolver(context);
     visitTokens(document, (token, tokenPath, inheritedType) => {
       validateReferenceTypes(token.$value, token.$type || inheritedType, resolver, context, `${label}.${tokenPath}`, errors);
