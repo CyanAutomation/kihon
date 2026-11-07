@@ -150,10 +150,12 @@ body {
 }
 
 .kh-sg-type-example {
+  min-inline-size: 0;
   padding: var(--kh-space-4);
   background-color: var(--kh-color-surface);
   border: 1px solid var(--kh-color-border-subtle);
   border-radius: var(--kh-radius-md);
+  overflow-wrap: anywhere;
 }
 
 .kh-sg-type-label {
