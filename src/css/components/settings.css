@@ -1,0 +1,100 @@
+/* Kihon Grouped Settings
+ * Public classes: .kh-settings-group, .kh-settings-heading,
+ * .kh-settings-description, .kh-settings-list, .kh-settings-row,
+ * .kh-settings-row-content, .kh-settings-row-title,
+ * .kh-settings-row-description, and .kh-settings-row-control.
+ * Rows are presentational groups; native controls and labels own interaction.
+ */
+
+.kh-settings-group {
+  min-inline-size: 0;
+  margin-block-end: var(--kh-space-8);
+}
+
+.kh-settings-heading {
+  margin: 0 0 var(--kh-space-2);
+  font-size: var(--kh-type-size-lg);
+  overflow-wrap: anywhere;
+}
+
+.kh-settings-description {
+  margin: 0 0 var(--kh-space-3);
+  color: var(--kh-color-text-secondary);
+  overflow-wrap: anywhere;
+}
+
+.kh-settings-list {
+  min-inline-size: 0;
+  border: 1px solid var(--kh-color-border-subtle);
+  border-radius: var(--kh-radius-md);
+  background-color: var(--kh-color-surface);
+}
+
+.kh-settings-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, auto);
+  align-items: center;
+  gap: var(--kh-space-4);
+  min-inline-size: 0;
+  padding: var(--kh-space-4);
+}
+
+.kh-settings-row + .kh-settings-row {
+  border-block-start: 1px solid var(--kh-color-border-subtle);
+}
+
+.kh-settings-row-content {
+  min-inline-size: 0;
+}
+
+.kh-settings-row-title {
+  display: block;
+  margin: 0;
+  color: var(--kh-color-text-primary);
+  font-weight: var(--kh-type-weight-medium);
+  line-height: inherit;
+  overflow-wrap: anywhere;
+}
+
+.kh-settings-row-description {
+  margin: var(--kh-space-1) 0 0;
+  color: var(--kh-color-text-secondary);
+  overflow-wrap: anywhere;
+}
+
+.kh-settings-row-control {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--kh-space-2);
+  min-inline-size: 0;
+  max-inline-size: 20rem;
+}
+
+.kh-settings-row-control > * {
+  max-inline-size: 100%;
+}
+
+@media (max-width: 32rem) {
+  .kh-settings-row {
+    grid-template-columns: minmax(0, 1fr);
+    align-items: start;
+    gap: var(--kh-space-2);
+  }
+
+  .kh-settings-row-control {
+    justify-content: flex-start;
+    inline-size: 100%;
+    max-inline-size: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .kh-settings-list {
+    border-color: CanvasText;
+  }
+
+  .kh-settings-row + .kh-settings-row {
+    border-block-start-color: CanvasText;
+  }
+}

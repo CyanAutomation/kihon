@@ -359,59 +359,196 @@
     </section>
 
     <!-- Forms -->
-    <section class="kh-sg-section">
-      <h2>Form Elements</h2>
-      <p>These controls demonstrate appearance and focus states; they do not submit or save data.</p>
+    <section id="forms" class="kh-sg-section">
+      <h2>Forms and Validation</h2>
+      <p>Native controls keep browser editing, keyboard, and validation behavior. The examples below use local demonstration data only.</p>
 
-      <h3>Basic inputs</h3>
-      <div style="display: grid; gap: var(--kh-space-6); max-width: 400px;">
-        <div class="kh-sg-form-group">
-          <label class="kh-label" for="text-input">Text input</label>
-          <input class="kh-input" id="text-input" type="text" placeholder="Enter text...">
+      <h3>Text-entry controls</h3>
+      <form class="kh-sg-form-demo" action="#forms" method="get" data-kh-demo-native-form>
+        <div class="kh-sg-form-grid">
+          <div class="kh-field">
+            <label class="kh-label" for="guide-text">Application name <span class="kh-required" aria-hidden="true">(Required)</span></label>
+            <input class="kh-input" id="guide-text" name="applicationName" type="text" required aria-describedby="guide-text-help">
+            <p class="kh-help" id="guide-text-help">Used to identify this application.</p>
+          </div>
+
+          <div class="kh-field">
+            <label class="kh-label" for="guide-email">Email address</label>
+            <input class="kh-input" id="guide-email" name="email" type="email" placeholder="name@example.com">
+          </div>
+
+          <div class="kh-field">
+            <label class="kh-label" for="guide-password">Password</label>
+            <input class="kh-input" id="guide-password" name="password" type="password" autocomplete="new-password">
+          </div>
+
+          <div class="kh-field">
+            <label class="kh-label" for="guide-number">Retry limit</label>
+            <input class="kh-input" id="guide-number" name="retryLimit" type="number" min="0" max="10" value="3">
+          </div>
+
+          <div class="kh-field">
+            <label class="kh-label" for="guide-search">Search endpoint names</label>
+            <input class="kh-input" id="guide-search" name="endpointSearch" type="search" placeholder="Search endpoints">
+          </div>
+
+          <div class="kh-field">
+            <label class="kh-label" for="guide-url">Documentation URL (optional)</label>
+            <input class="kh-input" id="guide-url" name="documentationUrl" type="url" placeholder="https://example.com/docs">
+          </div>
+
+          <div class="kh-field">
+            <label class="kh-label" for="guide-phone">Support phone (optional)</label>
+            <input class="kh-input" id="guide-phone" name="supportPhone" type="tel" autocomplete="tel">
+          </div>
+
+          <div class="kh-field">
+            <label class="kh-label" for="guide-textarea">Description</label>
+            <textarea class="kh-textarea" id="guide-textarea" name="description" rows="3" placeholder="Describe this application."></textarea>
+          </div>
+
+          <div class="kh-field">
+            <label class="kh-label" for="guide-select">Environment</label>
+            <select class="kh-select" id="guide-select" name="environment">
+              <option value="development">Development</option>
+              <option value="staging">Staging</option>
+              <option value="production">Production</option>
+            </select>
+          </div>
         </div>
 
-        <div class="kh-sg-form-group">
-          <label class="kh-label" for="email-input">Email input</label>
-          <input class="kh-input" id="email-input" type="email" placeholder="you@example.com">
-        </div>
-
-        <div class="kh-sg-form-group">
-          <label class="kh-label" for="textarea-input">Textarea</label>
-          <textarea class="kh-textarea" id="textarea-input" placeholder="Enter your message..."></textarea>
-        </div>
-
-        <div class="kh-sg-form-group">
-          <label class="kh-label" for="select-input">Select</label>
-          <select class="kh-select" id="select-input">
-            <option>Option 1</option>
-            <option>Option 2</option>
-            <option>Option 3</option>
-          </select>
-        </div>
-
-        <div class="kh-sg-form-group">
-          <label class="kh-label">
-            <input class="kh-checkbox" type="checkbox"> I agree to the terms
+        <fieldset class="kh-fieldset">
+          <legend class="kh-legend">Notifications</legend>
+          <label class="kh-label kh-label--choice">
+            <input class="kh-checkbox" id="guide-notice-updates" name="updates" type="checkbox">
+            Send product update emails
           </label>
+          <label class="kh-label kh-label--choice">
+            <input class="kh-checkbox" id="guide-notice-security" name="securityNotices" type="checkbox" checked>
+            Send security notices
+          </label>
+        </fieldset>
+
+        <fieldset class="kh-fieldset">
+          <legend class="kh-legend">Color appearance</legend>
+          <label class="kh-label kh-label--choice">
+            <input class="kh-radio" id="guide-appearance-system" name="appearance" type="radio" value="system" checked>
+            Match system
+          </label>
+          <label class="kh-label kh-label--choice">
+            <input class="kh-radio" id="guide-appearance-light" name="appearance" type="radio" value="light">
+            Light
+          </label>
+          <label class="kh-label kh-label--choice">
+            <input class="kh-radio" id="guide-appearance-dark" name="appearance" type="radio" value="dark">
+            Dark
+          </label>
+        </fieldset>
+
+        <div class="kh-field">
+          <label class="kh-label" for="guide-disabled">Disabled field</label>
+          <input class="kh-input" id="guide-disabled" type="text" value="Managed by your administrator" disabled>
         </div>
 
-        <div class="kh-sg-form-group">
-          <label class="kh-label">
-            <input class="kh-radio" type="radio" name="example"> Option A
-          </label>
-          <label class="kh-label">
-            <input class="kh-radio" type="radio" name="example"> Option B
-          </label>
+        <div class="kh-field">
+          <label class="kh-label" for="guide-readonly">Read-only field</label>
+          <input class="kh-input" id="guide-readonly" type="text" value="Copyable configuration value" readonly>
+          <p class="kh-help">This value is read-only but remains focusable and copyable.</p>
         </div>
+
+        <button class="kh-button kh-button--primary" type="submit">Save example</button>
+        <p class="kh-sg-demo-status" data-kh-demo-native-status role="status" aria-live="polite">Submitting this form sends no data.</p>
+      </form>
+
+      <div class="kh-field kh-sg-standalone-field">
+        <label class="kh-label" for="guide-invalid">Invalid-state example</label>
+        <input class="kh-input" id="guide-invalid" type="email" value="not-an-email" aria-invalid="true" aria-describedby="guide-invalid-help guide-invalid-error">
+        <p class="kh-help" id="guide-invalid-help">Correct the address before saving.</p>
+        <p class="kh-error" id="guide-invalid-error">Enter an email address in the format name@example.com.</p>
       </div>
 
-      <h3>Disabled state</h3>
-      <div style="display: grid; gap: var(--kh-space-6); max-width: 400px;">
-        <div class="kh-sg-form-group">
-          <label class="kh-label" for="disabled-input">Disabled input</label>
-          <input class="kh-input" id="disabled-input" type="text" disabled value="Disabled">
+      <h3>Application-controlled error summary</h3>
+      <p>This demonstration checks native constraints on submit, then presents local field errors and focuses the summary. It does not validate while typing.</p>
+      <form class="kh-sg-form-demo" action="#forms" method="get" novalidate data-kh-demo-custom-form>
+        <section class="kh-sg-form-errors" data-kh-demo-error-summary aria-labelledby="guide-error-title" tabindex="-1" hidden>
+          <h4 id="guide-error-title">Review these fields</h4>
+          <ul data-kh-demo-error-list></ul>
+        </section>
+        <div class="kh-field">
+          <label class="kh-label" for="guide-custom-name">Application name</label>
+          <input class="kh-input" id="guide-custom-name" name="customApplicationName" type="text" required aria-describedby="guide-custom-name-error">
+          <p class="kh-error" id="guide-custom-name-error" hidden></p>
         </div>
-      </div>
+        <div class="kh-field">
+          <label class="kh-label" for="guide-custom-email">Contact email</label>
+          <input class="kh-input" id="guide-custom-email" name="customEmail" type="email" required aria-describedby="guide-custom-email-help guide-custom-email-error">
+          <p class="kh-help" id="guide-custom-email-help">Use a monitored address.</p>
+          <p class="kh-error" id="guide-custom-email-error" hidden></p>
+        </div>
+        <button class="kh-button kh-button--primary" type="submit">Check example</button>
+        <p class="kh-sg-demo-status" data-kh-demo-custom-status role="status" aria-live="polite">No data is sent or saved.</p>
+      </form>
+    </section>
+
+    <!-- Grouped settings -->
+    <section id="grouped-settings" class="kh-sg-section">
+      <h2>Grouped Settings</h2>
+      <p>Sections group related preferences while native controls retain their own labels, values, and keyboard behavior.</p>
+
+      <section class="kh-settings-group" aria-labelledby="guide-general-title">
+        <h3 class="kh-settings-heading" id="guide-general-title">General</h3>
+        <p class="kh-settings-description">Manage updates and application information.</p>
+        <div class="kh-settings-list">
+          <div class="kh-settings-row">
+            <div class="kh-settings-row-content">
+              <label class="kh-settings-row-title" for="guide-auto-updates">Automatic updates</label>
+              <p class="kh-settings-row-description" id="guide-auto-updates-help">Keep application information up to date when a new version is available.</p>
+            </div>
+            <div class="kh-settings-row-control">
+              <input class="kh-checkbox" id="guide-auto-updates" type="checkbox" aria-describedby="guide-auto-updates-help" data-kh-demo-setting>
+            </div>
+          </div>
+          <div class="kh-settings-row">
+            <div class="kh-settings-row-content">
+              <label class="kh-settings-row-title" for="guide-display-name">Display name</label>
+              <p class="kh-settings-row-description" id="guide-display-name-help">This longer description wraps alongside the control at desktop widths and stacks above it on narrow screens.</p>
+            </div>
+            <div class="kh-settings-row-control">
+              <input class="kh-input" id="guide-display-name" type="text" value="CyanAutomation" aria-describedby="guide-display-name-help" data-kh-demo-setting>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="kh-settings-group" aria-labelledby="guide-appearance-title">
+        <h3 class="kh-settings-heading" id="guide-appearance-title">Appearance</h3>
+        <p class="kh-settings-description">Choose a display mode for this local demonstration.</p>
+        <div class="kh-settings-list">
+          <div class="kh-settings-row">
+            <div class="kh-settings-row-content">
+              <label class="kh-settings-row-title" for="guide-settings-appearance">Theme</label>
+              <p class="kh-settings-row-description" id="guide-settings-appearance-help">The selected value is displayed below; this example does not persist it.</p>
+            </div>
+            <div class="kh-settings-row-control">
+              <select class="kh-select" id="guide-settings-appearance" aria-describedby="guide-settings-appearance-help" data-kh-demo-setting>
+                <option value="System">System</option>
+                <option value="Light">Light</option>
+                <option value="Dark">Dark</option>
+              </select>
+            </div>
+          </div>
+          <div class="kh-settings-row">
+            <div class="kh-settings-row-content">
+              <span class="kh-settings-row-title">Managed preference</span>
+              <p class="kh-settings-row-description" id="guide-managed-help">This preference is controlled by your organization.</p>
+            </div>
+            <div class="kh-settings-row-control">
+              <input class="kh-checkbox" id="guide-managed-setting" type="checkbox" disabled aria-describedby="guide-managed-help">
+            </div>
+          </div>
+        </div>
+      </section>
+      <p class="kh-sg-demo-status" data-kh-demo-settings-status role="status" aria-live="polite">Change a control to update this local status.</p>
     </section>
 
     <!-- Surfaces -->
@@ -533,5 +670,7 @@
 
   <script src="theme.js"></script>
   <script src="buttons.js" defer></script>
+  <script src="forms.js" defer></script>
+  <script src="settings.js" defer></script>
 </body>
 </html>
