@@ -178,10 +178,25 @@ test('icon-only names, long labels, and compact layouts remain usable at narrow 
     const buttonRect = button.getBoundingClientRect();
     const overflowing = Array.from(section.querySelectorAll('*')).map((element) => {
       const rect = element.getBoundingClientRect();
-      return { tag: element.tagName, id: element.id, className: String(element.className), left: rect.left, right: rect.right, width: rect.width };
-    }).filter((element) => element.right > sectionRect.right + 1 || element.left < sectionRect.left - 1).slice(0, 8);
+      return {
+        tag: element.tagName,
+        id: element.id,
+        className: String(element.className),
+        text: element.textContent.trim().slice(0, 60),
+        left: rect.left,
+        right: rect.right,
+        width: rect.width,
+        clientWidth: element.clientWidth,
+        scrollWidth: element.scrollWidth
+      };
+    }).filter((element) =>
+      element.scrollWidth > element.clientWidth + 1 ||
+      element.right > sectionRect.right + 1 ||
+      element.left < sectionRect.left - 1
+    ).slice(0, 8);
     return {
       section: { width: sectionRect.width, left: sectionRect.left, right: sectionRect.right, scrollWidth: section.scrollWidth },
+      document: { width: document.documentElement.clientWidth, scrollWidth: document.documentElement.scrollWidth },
       buttonWidth: buttonRect.width,
       buttonHeight: buttonRect.height,
       buttonScrollWidth: button.scrollWidth,
