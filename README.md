@@ -4,7 +4,7 @@
 
 Kihon defines a lightweight, framework-free design system for CyanAutomation web applications: shared design decisions, accessible interface conventions, reusable CSS and small, optional TypeScript enhancements. It draws inspiration from Apple's Human Interface Guidelines—particularly the clarity and ergonomics of macOS and iOS—while remaining a web-native system rather than an imitation of SwiftUI.
 
-> **Status: Draft foundation.** Automated checks cover DTCG token validation, selected WCAG contrast pairings, generated-file consistency, HTML/CSS parsing, and Chromium interactions. These checks do not certify WCAG conformance. Reusable components, desktop patterns, and public package distribution remain planned. See [`docs/development.md`](docs/development.md) for build and contribution information.
+> **Status: Draft foundation; Phase 2A buttons and actions implemented.** Automated checks cover DTCG token validation, selected WCAG contrast pairings, generated-file consistency, HTML/CSS parsing, and Chromium interactions. These checks do not certify WCAG conformance. Forms, desktop patterns, dialogs, and public package distribution remain planned. Kihon v1.0 has not been released. See [`docs/development.md`](docs/development.md) for build and contribution information.
 
 ## Why Kihon?
 
@@ -74,7 +74,8 @@ The intended repository structure is:
 kihon/
 ├── tokens/                 # Platform-neutral design token source
 ├── src/
-│   ├── css/                # Foundation, controls and layouts
+│   ├── css/                # Foundation and reusable CSS components
+│   │   └── components/     # Buttons and future component styles
 │   └── components/         # Optional vanilla TypeScript behaviours
 ├── style-guide/            # Static documentation and live examples
 ├── docs/
@@ -144,17 +145,17 @@ The style guide demonstrates:
 - **Typography** — heading hierarchy, body text, code, links
 - **Colour palette** — light and dark theme colours; approved pairings are checked by `npm run validate`
 - **Spacing and radii** — geometric scales
-- **Components** — buttons, forms, surfaces and application layouts
+- **Buttons and actions** — variants, sizes, states, icons, and application-owned status demonstrations
+- **Foundations** — surfaces and application layouts
 - **Accessibility** — keyboard navigation, reduced motion, forced colours
 - **Theme switcher** — test light, dark and system preference modes
 
 ### Using Kihon in Your Application
 
-After Phase 1, consuming applications will:
+For Phase 2A buttons, consuming applications can import the foundation entry point:
 
 1. Import the generated CSS:
    ```html
-   <link rel="stylesheet" href="path/to/kihon/src/css/tokens.css">
    <link rel="stylesheet" href="path/to/kihon/src/css/base.css">
    ```
 
@@ -168,10 +169,14 @@ After Phase 1, consuming applications will:
    }
    ```
 
-3. Optionally include the theme switcher for UI controls:
+3. Use the documented button classes, for example:
    ```html
-   <script src="path/to/kihon/style-guide/theme.js"></script>
+   <button type="button" class="kh-button kh-button--primary">Save</button>
+   <button type="button" class="kh-button kh-button--secondary kh-button--sm">Cancel</button>
    ```
+   See [`docs/components/buttons.md`](docs/components/buttons.md) for variants, state handling, token customisation, and accessibility guidance.
+
+4. Let CSS follow the system appearance or set `data-kh-theme="light"` / `data-kh-theme="dark"` on `<html>`. The theme switcher in `style-guide/` is a demonstration, not a production component.
 
 No frontend framework is required. Kihon works with vanilla HTML, CSS and optional JavaScript.
 
@@ -201,7 +206,8 @@ The planned `swiftui-mapping.md` will describe conceptual equivalents—for exam
 - [ ] Formalise the UI Foundation v1.0 specification and acceptance criteria.
 - [ ] Define and validate semantic light/dark design tokens.
 - [ ] Implement the minimal base stylesheet and responsive primitives.
-- [ ] Add accessible button and form styling with documented states.
+- [x] Implement core buttons and actions (Phase 2A).
+- [ ] Add accessible form styling with documented states.
 - [ ] Document and implement desktop sidebar/toolbar conventions.
 - [ ] Implement and test the native-dialog-based accessible pattern.
 - [ ] Build a static, framework-free style-guide site with live examples.

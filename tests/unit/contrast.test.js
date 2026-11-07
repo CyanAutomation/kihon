@@ -11,12 +11,12 @@ test('checks approved text pairings independently in light and dark themes', () 
   const themes = {
     light: {
       background: '#ffffff', surface: '#ffffff', 'text-primary': '#000000',
-      'text-secondary': '#333333', accent: '#000000', 'on-accent': '#ffffff',
+      'text-secondary': '#333333', accent: '#000000', 'on-accent': '#ffffff', 'button-primary-hover': '#000000',
       'focus-ring': '#000000', danger: '#000000', 'border-strong': '#333333'
     },
     dark: {
       background: '#000000', surface: '#111111', 'text-primary': '#ffffff',
-      'text-secondary': '#eeeeee', accent: '#ffffff', 'on-accent': '#000000',
+      'text-secondary': '#eeeeee', accent: '#ffffff', 'on-accent': '#000000', 'button-primary-hover': '#ffffff',
       'focus-ring': '#ffffff', danger: '#ffffff', 'border-strong': '#eeeeee'
     }
   };
@@ -26,6 +26,10 @@ test('checks approved text pairings independently in light and dark themes', () 
   themes.dark['text-secondary'] = '#555555';
   const errors = validateThemeContrast(themes);
   assert.ok(errors.some((error) => error.includes('dark') && error.includes('text-secondary')));
+
+  themes.dark['text-secondary'] = '#eeeeee';
+  themes.dark['button-primary-hover'] = '#333333';
+  assert.ok(validateThemeContrast(themes).some((error) => error.includes('button-primary-hover')));
 });
 
 test('fails contrast validation for translucent theme colors', () => {

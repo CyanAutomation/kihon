@@ -1,0 +1,172 @@
+/* Kihon Buttons and Actions
+ * Public classes: .kh-button, .kh-button--{primary,secondary,quiet,destructive},
+ * .kh-button--{sm,md,lg}, .kh-button--icon, and .kh-button--loading.
+ * Rules target native buttons; anchors keep their navigation styling.
+ * Import through base.css, which provides tokens and foundation conventions.
+ */
+
+button.kh-button {
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--kh-space-2);
+  max-inline-size: 100%;
+  min-inline-size: var(--kh-space-12);
+  min-block-size: var(--kh-space-12);
+  padding-block: var(--kh-space-2);
+  padding-inline: var(--kh-space-4);
+  border: 1px solid transparent;
+  border-radius: var(--kh-radius-md);
+  background-color: var(--kh-color-accent);
+  color: var(--kh-color-on-accent);
+  font-family: inherit;
+  font-size: var(--kh-type-size-base);
+  font-weight: var(--kh-type-weight-medium);
+  line-height: var(--kh-type-line-height-tight);
+  text-align: center;
+  text-decoration: none;
+  white-space: normal;
+  cursor: pointer;
+  transition:
+    background-color var(--kh-motion-fast) ease-in-out,
+    border-color var(--kh-motion-fast) ease-in-out,
+    color var(--kh-motion-fast) ease-in-out,
+    transform var(--kh-motion-fast) ease-in-out;
+}
+
+/* The unmodified .kh-button remains the primary, medium-size button. */
+button.kh-button--primary {
+  background-color: var(--kh-color-accent);
+  color: var(--kh-color-on-accent);
+  border-color: var(--kh-color-accent);
+}
+
+button.kh-button:not(:where(.kh-button--secondary, .kh-button--quiet, .kh-button--destructive)):hover:not(:disabled) {
+  background-color: var(--kh-color-button-primary-hover);
+  border-color: var(--kh-color-button-primary-hover);
+}
+
+button.kh-button--secondary {
+  background-color: var(--kh-color-surface);
+  color: var(--kh-color-text-primary);
+  border-color: var(--kh-color-border-strong);
+}
+
+button.kh-button--secondary:hover:not(:disabled) {
+  background-color: var(--kh-color-background);
+}
+
+button.kh-button--quiet {
+  background-color: transparent;
+  color: var(--kh-color-accent);
+  border-color: transparent;
+}
+
+button.kh-button--quiet:hover:not(:disabled) {
+  background-color: var(--kh-color-surface);
+  border-color: var(--kh-color-border-subtle);
+}
+
+button.kh-button--destructive {
+  background-color: transparent;
+  color: var(--kh-color-danger);
+  border-color: transparent;
+}
+
+button.kh-button--destructive:hover:not(:disabled) {
+  background-color: var(--kh-color-surface);
+  border-color: var(--kh-color-danger);
+}
+
+button.kh-button:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+button.kh-button:focus-visible {
+  outline: 2px solid var(--kh-color-focus-ring);
+  outline-offset: 2px;
+}
+
+button.kh-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+button.kh-button--sm {
+  min-inline-size: calc(var(--kh-space-8) + var(--kh-space-2));
+  min-block-size: calc(var(--kh-space-8) + var(--kh-space-2));
+  padding-block: var(--kh-space-1);
+  padding-inline: var(--kh-space-3);
+  font-size: var(--kh-type-size-xs);
+}
+
+button.kh-button--md {
+  min-inline-size: var(--kh-space-12);
+  min-block-size: var(--kh-space-12);
+  padding-block: var(--kh-space-2);
+  padding-inline: var(--kh-space-4);
+  font-size: var(--kh-type-size-base);
+}
+
+button.kh-button--lg {
+  min-inline-size: calc(var(--kh-space-12) + var(--kh-space-2));
+  min-block-size: calc(var(--kh-space-12) + var(--kh-space-2));
+  padding-block: var(--kh-space-3);
+  padding-inline: var(--kh-space-6);
+  font-size: var(--kh-type-size-lg);
+}
+
+button.kh-button--icon {
+  min-inline-size: var(--kh-space-12);
+  min-block-size: var(--kh-space-12);
+  padding-inline: var(--kh-space-2);
+}
+
+button.kh-button > svg {
+  flex: none;
+  inline-size: 1em;
+  block-size: 1em;
+}
+
+button.kh-button--loading::before {
+  content: "";
+  flex: none;
+  inline-size: 1em;
+  block-size: 1em;
+  border: 2px solid currentColor;
+  border-inline-end-color: transparent;
+  border-radius: 50%;
+  animation: kh-button-spin var(--kh-motion-loading) linear infinite;
+}
+
+@keyframes kh-button-spin {
+  to {
+    transform: rotate(1turn);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  button.kh-button {
+    transition: none;
+  }
+
+  button.kh-button:active:not(:disabled) {
+    transform: none;
+  }
+
+  button.kh-button--loading::before {
+    display: none;
+    animation: none;
+  }
+}
+
+@media (forced-colors: active) {
+  button.kh-button {
+    border-color: ButtonBorder;
+  }
+
+  button.kh-button:focus-visible {
+    outline-color: Highlight;
+  }
+}
