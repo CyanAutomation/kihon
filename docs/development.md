@@ -4,7 +4,7 @@ This document explains how Kihon's design tokens, CSS and style guide are organi
 
 Phase 2A buttons and actions are implemented as a framework-free CSS component. See [`components/buttons.md`](components/buttons.md) for its public classes, tokens and accessibility contract.
 
-Use Node.js 22.17 or later and npm. The minimum version covers the HTML validation and browser-test development tools; the delivered CSS and theme switcher have no npm runtime dependencies.
+Use Node.js 24 or later and npm. The minimum version covers the HTML validation and browser-test development tools; the delivered CSS and theme switcher have no npm runtime dependencies.
 
 ## Repository Structure
 
