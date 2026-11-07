@@ -2,7 +2,7 @@
 
 This document explains how Kihon's design tokens, CSS and style guide are organized and built.
 
-Phase 2A buttons and actions are implemented as a framework-free CSS component. See [`components/buttons.md`](components/buttons.md) for its public classes, tokens and accessibility contract.
+Phase 2A buttons and actions, and Phase 2B forms and grouped settings, are implemented as framework-free CSS components. See [`components/buttons.md`](components/buttons.md), [`components/forms.md`](components/forms.md), and [`components/grouped-settings.md`](components/grouped-settings.md) for their public classes and accessibility contracts.
 
 Use Node.js 24 or later and npm. The minimum version covers the HTML validation and browser-test development tools; the delivered CSS and theme switcher have no npm runtime dependencies.
 
@@ -20,13 +20,17 @@ kihon/
 │   └── css/
 │       ├── tokens.css           # Generated: CSS custom properties
 │       ├── base.css             # Foundation styles and resets
-│       └── components/
-│           └── buttons.css      # Button rules imported by base.css
+│       └── components/          # Component rules imported by base.css
+│           ├── buttons.css
+│           ├── forms.css
+│           └── settings.css
 ├── style-guide/                 # Static documentation site
 │   ├── index.html               # Main style guide page
 │   ├── styles.css               # Style guide-specific styles
 │   ├── theme.js                 # Style-guide theme switcher
-│   └── buttons.js               # Style-guide button demonstrations
+│   ├── buttons.js               # Style-guide button demonstrations
+│   ├── forms.js                 # Local form and validation demonstrations
+│   └── settings.js              # Local grouped-settings demonstration
 ├── scripts/
 │   ├── build-tokens.js          # Generates tokens.css from source
 │   ├── token-resolver.js        # Resolves aliases and formats typed values
@@ -40,11 +44,19 @@ kihon/
 ├── tests/                       # Test fixtures and checks
 ├── docs/
 │   ├── foundation.md            # Normative specification
-│   └── development.md           # This file
+│   ├── development.md           # This file
+│   └── components/              # Public component contracts
+│       ├── buttons.md
+│       ├── forms.md
+│       └── grouped-settings.md
 └── package.json                 # Build configuration
 ```
 
 ## Design Tokens
+
+`src/css/base.css` is the consumer entry point. It imports generated tokens,
+then buttons, forms, and grouped-settings styles in that order; applications do
+not need to import files from `style-guide/`.
 
 ### Token Source Structure
 

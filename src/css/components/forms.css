@@ -1,0 +1,199 @@
+/* Kihon Forms
+ * Public classes: .kh-field, .kh-label, .kh-label--choice, .kh-help,
+ * .kh-error, .kh-required, .kh-input, .kh-textarea, .kh-select,
+ * .kh-checkbox, .kh-radio, .kh-fieldset, and .kh-legend.
+ * Native form behavior is preserved; all presentation is opt-in.
+ */
+
+.kh-field {
+  display: grid;
+  gap: var(--kh-space-2);
+  min-inline-size: 0;
+  margin-block-end: var(--kh-space-4);
+}
+
+.kh-label {
+  display: block;
+  min-inline-size: 0;
+  color: var(--kh-color-text-primary);
+  font-weight: var(--kh-type-weight-medium);
+  overflow-wrap: anywhere;
+}
+
+/* Use the whole visible label as a comfortable checkbox/radio target. */
+.kh-label--choice {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--kh-space-3);
+  min-block-size: var(--kh-space-12);
+  padding-block: var(--kh-space-2);
+  font-weight: var(--kh-type-weight-regular);
+  cursor: pointer;
+}
+
+.kh-required {
+  margin-inline-start: var(--kh-space-1);
+  color: var(--kh-color-text-secondary);
+  font-size: var(--kh-type-size-sm);
+  font-weight: var(--kh-type-weight-regular);
+}
+
+.kh-help,
+.kh-error {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.kh-help {
+  color: var(--kh-color-text-secondary);
+}
+
+.kh-error {
+  color: var(--kh-color-danger);
+  font-weight: var(--kh-type-weight-medium);
+}
+
+/* Text-entry controls and selects keep their native elements and behavior. */
+.kh-input,
+.kh-textarea,
+.kh-select {
+  display: block;
+  inline-size: 100%;
+  min-inline-size: 0;
+  min-block-size: var(--kh-space-12);
+  padding: var(--kh-space-2) var(--kh-space-3);
+  border: 1px solid var(--kh-color-border-strong);
+  border-radius: var(--kh-radius-md);
+  background-color: var(--kh-color-surface);
+  color: var(--kh-color-text-primary);
+  font: inherit;
+  line-height: inherit;
+  transition: border-color var(--kh-motion-fast) ease-in-out;
+}
+
+.kh-input:hover:not(:disabled),
+.kh-textarea:hover:not(:disabled),
+.kh-select:hover:not(:disabled) {
+  border-color: var(--kh-color-focus-ring);
+}
+
+.kh-input:focus-visible,
+.kh-textarea:focus-visible,
+.kh-select:focus-visible,
+.kh-checkbox:focus-visible,
+.kh-radio:focus-visible {
+  outline: 2px solid var(--kh-color-focus-ring);
+  outline-offset: 2px;
+}
+
+.kh-input:disabled,
+.kh-textarea:disabled,
+.kh-select:disabled {
+  background-color: var(--kh-color-background);
+  color: var(--kh-color-text-secondary);
+  cursor: not-allowed;
+}
+
+.kh-input:read-only,
+.kh-textarea:read-only {
+  background-color: var(--kh-color-background);
+  color: var(--kh-color-text-primary);
+  cursor: text;
+}
+
+.kh-input[aria-invalid="true"],
+.kh-textarea[aria-invalid="true"],
+.kh-select[aria-invalid="true"] {
+  border-color: var(--kh-color-danger);
+}
+
+.kh-input[aria-invalid="true"]:focus-visible,
+.kh-textarea[aria-invalid="true"]:focus-visible,
+.kh-select[aria-invalid="true"]:focus-visible {
+  outline-color: var(--kh-color-focus-ring);
+}
+
+.kh-textarea {
+  min-block-size: 6rem;
+  resize: vertical;
+}
+
+/* Checkboxes and radios retain native rendering and keyboard interactions. */
+.kh-checkbox,
+.kh-radio {
+  flex: none;
+  inline-size: var(--kh-space-6);
+  block-size: var(--kh-space-6);
+  margin: 0;
+  accent-color: var(--kh-color-accent);
+  cursor: pointer;
+}
+
+.kh-checkbox:disabled,
+.kh-radio:disabled {
+  cursor: not-allowed;
+}
+
+.kh-checkbox[aria-invalid="true"],
+.kh-radio[aria-invalid="true"] {
+  outline: 1px solid var(--kh-color-danger);
+  outline-offset: 2px;
+}
+
+.kh-checkbox[aria-invalid="true"]:focus-visible,
+.kh-radio[aria-invalid="true"]:focus-visible {
+  outline: 2px solid var(--kh-color-focus-ring);
+}
+
+.kh-fieldset {
+  min-inline-size: 0;
+  margin: 0 0 var(--kh-space-4);
+  padding: var(--kh-space-4);
+  border: 1px solid var(--kh-color-border-subtle);
+  border-radius: var(--kh-radius-md);
+}
+
+.kh-legend {
+  max-inline-size: 100%;
+  padding-inline: var(--kh-space-2);
+  color: var(--kh-color-text-primary);
+  font-size: var(--kh-type-size-lg);
+  font-weight: var(--kh-type-weight-semibold);
+  overflow-wrap: anywhere;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kh-input,
+  .kh-textarea,
+  .kh-select {
+    transition: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .kh-input,
+  .kh-textarea,
+  .kh-select {
+    border-color: CanvasText;
+  }
+
+  .kh-input[aria-invalid="true"],
+  .kh-textarea[aria-invalid="true"],
+  .kh-select[aria-invalid="true"] {
+    border-style: dashed;
+    border-color: CanvasText;
+  }
+
+  .kh-input:focus-visible,
+  .kh-textarea:focus-visible,
+  .kh-select:focus-visible,
+  .kh-checkbox:focus-visible,
+  .kh-radio:focus-visible {
+    outline-color: Highlight;
+  }
+
+  .kh-error {
+    color: CanvasText;
+    text-decoration: underline;
+  }
+}

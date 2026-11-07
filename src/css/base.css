@@ -7,6 +7,8 @@
 @import url('./tokens.css');
 /* Preserve the existing base.css entry point while keeping component rules modular. */
 @import url('./components/buttons.css');
+@import url('./components/forms.css');
+@import url('./components/settings.css');
 
 /* ============================================================================
    Root and global defaults
@@ -226,96 +228,6 @@ hr {
 }
 
 /* ============================================================================
-   Form elements
-   ========================================================================== */
-
-.kh-label {
-  display: block;
-  margin-bottom: var(--kh-space-2);
-  font-weight: 500;
-  color: var(--kh-color-text-primary);
-}
-
-/* Control styling is opt-in. Selects retain their native appearance. */
-.kh-input,
-.kh-textarea,
-.kh-select {
-  font-family: inherit;
-  font-size: inherit;
-  line-height: inherit;
-  color: inherit;
-  display: block;
-  width: 100%;
-  padding: var(--kh-space-3) var(--kh-space-3);
-  background-color: var(--kh-color-surface);
-  border: 1px solid var(--kh-color-border-strong);
-  border-radius: var(--kh-radius-md);
-  transition: border-color 120ms ease-in-out, box-shadow 120ms ease-in-out;
-  box-sizing: border-box;
-}
-
-.kh-input:hover,
-.kh-textarea:hover,
-.kh-select:hover {
-  border-color: var(--kh-color-border-strong);
-}
-
-.kh-input:focus-visible,
-.kh-textarea:focus-visible,
-.kh-select:focus-visible {
-  outline: 2px solid var(--kh-color-focus-ring);
-  outline-offset: 2px;
-  border-color: var(--kh-color-focus-ring);
-}
-
-.kh-input:disabled,
-.kh-textarea:disabled,
-.kh-select:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-.kh-textarea {
-  resize: vertical;
-  min-height: 6rem;
-}
-
-/* Checkbox and radio keep the browser's native control presentation. */
-.kh-checkbox,
-.kh-radio {
-  width: 1.25rem;
-  height: 1.25rem;
-  accent-color: var(--kh-color-accent);
-  cursor: pointer;
-}
-
-.kh-checkbox:focus-visible,
-.kh-radio:focus-visible {
-  outline: 2px solid var(--kh-color-focus-ring);
-  outline-offset: 2px;
-}
-
-.kh-checkbox:disabled,
-.kh-radio:disabled {
-  cursor: not-allowed;
-  opacity: 0.5;
-}
-
-/* Fieldset and legend */
-fieldset {
-  border: 1px solid var(--kh-color-border-subtle);
-  border-radius: var(--kh-radius-md);
-  padding: var(--kh-space-4);
-  margin: 0 0 var(--kh-space-4) 0;
-}
-
-legend {
-  padding: 0 var(--kh-space-2);
-  font-weight: 600;
-  font-size: 1.125rem;
-}
-
-/* ============================================================================
    Focus and interaction
    ========================================================================== */
 
@@ -421,18 +333,4 @@ html {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-}
-
-/* ============================================================================
-   Accessibility
-   ========================================================================== */
-
-/* Ensure forced-colours mode remains usable */
-@media (forced-colors: active) {
-  .kh-input,
-  .kh-textarea,
-  .kh-select {
-    border: 1px solid CanvasText;
-  }
-
 }

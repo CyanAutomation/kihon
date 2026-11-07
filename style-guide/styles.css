@@ -150,10 +150,12 @@ body {
 }
 
 .kh-sg-type-example {
+  min-inline-size: 0;
   padding: var(--kh-space-4);
   background-color: var(--kh-color-surface);
   border: 1px solid var(--kh-color-border-subtle);
   border-radius: var(--kh-radius-md);
+  overflow-wrap: anywhere;
 }
 
 .kh-sg-type-label {
@@ -293,19 +295,56 @@ body {
   border-radius: var(--kh-radius-md);
 }
 
-/* Form elements demo */
-.kh-sg-form-group {
-  margin-bottom: var(--kh-space-4);
+/* Form and validation demonstrations */
+.kh-sg-form-demo {
+  display: grid;
+  gap: var(--kh-space-4);
+  max-inline-size: 56rem;
+  margin-block-end: var(--kh-space-8);
 }
 
-.kh-sg-form-group label {
-  margin-bottom: var(--kh-space-2);
+.kh-sg-form-demo > .kh-button {
+  justify-self: start;
 }
 
-.kh-sg-form-group input,
-.kh-sg-form-group textarea,
-.kh-sg-form-group select {
-  width: 100%;
+.kh-sg-standalone-field {
+  max-inline-size: 28rem;
+}
+
+.kh-sg-form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+  gap: var(--kh-space-4);
+}
+
+.kh-sg-form-grid .kh-field {
+  margin: 0;
+}
+
+.kh-sg-form-errors {
+  padding: var(--kh-space-4);
+  border: 1px solid var(--kh-color-danger);
+  border-inline-start-width: 0.25rem;
+  border-radius: var(--kh-radius-md);
+  background-color: var(--kh-color-surface);
+  color: var(--kh-color-text-primary);
+}
+
+.kh-sg-form-errors[hidden],
+.kh-error[hidden] {
+  display: none;
+}
+
+.kh-sg-form-errors h4 {
+  margin: 0 0 var(--kh-space-2);
+}
+
+.kh-sg-form-errors ul {
+  margin: 0;
+}
+
+.kh-sg-form-errors a {
+  text-decoration: underline;
 }
 
 /* Application preview */
@@ -451,6 +490,10 @@ body {
   .kh-sg-states {
     flex-direction: column;
     align-items: stretch;
+  }
+
+  .kh-sg-form-grid {
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .kh-sg-states button {
