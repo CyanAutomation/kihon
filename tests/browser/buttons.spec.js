@@ -132,11 +132,24 @@ test('light and dark themes update all variants and loading respects reduced mot
     await expectTokenColor(page, destructive, 'color', '--kh-color-danger');
   }
 
+  const loadingDemo = page.locator('[data-kh-demo-loading]');
+  await loadingDemo.evaluate((element) => element.classList.add('kh-button--loading'));
+  const animatedSpinner = await loadingDemo.evaluate((element) => {
+    const spinner = getComputedStyle(element, '::before');
+    return { content: spinner.content, display: spinner.display, animation: spinner.animationName };
+  });
+  expect(animatedSpinner.content).not.toBe('none');
+  expect(animatedSpinner.display).not.toBe('none');
+  expect(animatedSpinner.animation).toBe('kh-button-spin');
+
   await page.emulateMedia({ reducedMotion: 'reduce' });
-  const spinnerDisplay = await page.locator('#loading-example').evaluate((element) =>
-    getComputedStyle(element, '::before').display
-  );
-  expect(spinnerDisplay).toBe('none');
+  const spinnerStyles = await loadingDemo.evaluate((element) => {
+    const spinner = getComputedStyle(element, '::before');
+    return { content: spinner.content, display: spinner.display, animation: spinner.animationName };
+  });
+  expect(spinnerStyles.content).not.toBe('none');
+  expect(spinnerStyles.display).toBe('none');
+  expect(spinnerStyles.animation).toBe('none');
 });
 
 test('icon-only names, long labels, and compact layouts remain usable at narrow widths', async ({ page }) => {
