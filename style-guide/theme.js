@@ -1,101 +1,107 @@
 /**
- * Kihon Theme Switcher
- * Provides theme selection controls and manages data-kh-theme attribute
+ * Theme mode selector for the Kihon style guide.
+ * data-kh-theme is set only for an explicit light or dark choice. With System
+ * selected, CSS follows the operating system's prefers-color-scheme setting.
  */
-
 class KihonThemeSwitcher {
   constructor(options = {}) {
     this.storageKey = options.storageKey || 'kihon-theme';
     this.attributeName = 'data-kh-theme';
+    this.themeMode = 'system';
+    this.mediaQuery = window.matchMedia
+      ? window.matchMedia('(prefers-color-scheme: dark)')
+      : null;
     this.init();
   }
 
   init() {
-    // Restore persisted theme preference if available
     const stored = this.getStoredTheme();
-    if (stored) {
-      this.setTheme(stored);
+    if (stored === 'light' || stored === 'dark') {
+      this.themeMode = stored;
+      document.documentElement.setAttribute(this.attributeName, stored);
+    } else {
+      document.documentElement.removeAttribute(this.attributeName);
     }
 
-    // Listen for theme toggle buttons
-    document.addEventListener('click', (e) => {
-      if (e.target.matches('[data-kh-theme-toggle]')) {
-        const theme = e.target.getAttribute('data-kh-theme-toggle');
-        this.setTheme(theme || 'system');
-      }
+    document.addEventListener('click', (event) => {
+      const button = event.target.closest?.('[data-kh-theme-toggle]');
+      if (button) this.setTheme(button.getAttribute('data-kh-theme-toggle'));
     });
 
-    // Listen for system preference changes
-    if (window.matchMedia) {
-      const darkModeQuery = window.matchMedia('(prefers-color-scheme: dark)');
-      darkModeQuery.addEventListener('change', () => {
-        if (!this.getStoredTheme()) {
-          // Only respond to system changes if user hasn't explicitly chosen a theme
-          this.updateButtons();
-        }
-      });
+    if (this.mediaQuery) {
+      const updateAppearance = () => this.updateAppearanceStatus();
+      if (typeof this.mediaQuery.addEventListener === 'function') {
+        this.mediaQuery.addEventListener('change', updateAppearance);
+      } else if (typeof this.mediaQuery.addListener === 'function') {
+        this.mediaQuery.addListener(updateAppearance);
+      }
     }
 
     this.updateButtons();
+    this.updateAppearanceStatus();
   }
 
-  /**
-   * Set the theme and persist the preference.
-   */
   setTheme(theme) {
+    if (!['system', 'light', 'dark'].includes(theme)) return;
+
+    this.themeMode = theme;
     if (theme === 'system') {
       document.documentElement.removeAttribute(this.attributeName);
-      localStorage.removeItem(this.storageKey);
-    } else if (theme === 'light' || theme === 'dark') {
+      this.removeStoredTheme();
+    } else {
       document.documentElement.setAttribute(this.attributeName, theme);
-      localStorage.setItem(this.storageKey, theme);
+      this.storeTheme(theme);
     }
 
     this.updateButtons();
+    this.updateAppearanceStatus();
   }
 
-  /**
-   * Get the currently active theme.
-   */
-  getActiveTheme() {
-    const attribute = document.documentElement.getAttribute(this.attributeName);
-    if (attribute) {
-      return attribute;
-    }
-
-    // Return system preference
-    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-      return 'dark';
-    }
-
-    return 'light';
+  getEffectiveTheme() {
+    if (this.themeMode !== 'system') return this.themeMode;
+    return this.mediaQuery && this.mediaQuery.matches ? 'dark' : 'light';
   }
 
-  /**
-   * Get the stored theme preference.
-   */
   getStoredTheme() {
-    return localStorage.getItem(this.storageKey);
+    try {
+      return window.localStorage.getItem(this.storageKey);
+    } catch {
+      return null;
+    }
   }
 
-  /**
-   * Update theme toggle buttons to reflect current theme.
-   */
+  storeTheme(theme) {
+    try {
+      window.localStorage.setItem(this.storageKey, theme);
+    } catch {
+      // The theme remains active for this page even when browser storage is blocked.
+    }
+  }
+
+  removeStoredTheme() {
+    try {
+      window.localStorage.removeItem(this.storageKey);
+    } catch {
+      // System mode still applies for this page when browser storage is blocked.
+    }
+  }
+
   updateButtons() {
-    const active = this.getActiveTheme();
-    const stored = this.getStoredTheme();
-
     document.querySelectorAll('[data-kh-theme-toggle]').forEach((button) => {
-      const theme = button.getAttribute('data-kh-theme-toggle');
-      const isActive = stored ? theme === stored : theme === active;
-
-      button.setAttribute('aria-pressed', isActive ? 'true' : 'false');
-      button.classList.toggle('kh-active', isActive);
+      const isSelected = button.getAttribute('data-kh-theme-toggle') === this.themeMode;
+      button.setAttribute('aria-pressed', String(isSelected));
+      button.classList.toggle('kh-active', isSelected);
     });
+  }
+
+  updateAppearanceStatus() {
+    const status = document.querySelector('[data-kh-theme-status]');
+    if (status) {
+      status.textContent = `Selected mode: ${this.themeMode}. Current appearance: ${this.getEffectiveTheme()}.`;
+    }
   }
 }
 
-// Auto-initialize if document is ready
 if (document.readyState !== 'loading') {
   window.KihonThemeSwitcher = new KihonThemeSwitcher();
 } else {

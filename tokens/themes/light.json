@@ -1,7 +1,5 @@
 {
   "$schema": "https://www.designtokens.org/schemas/2025.10/format.json",
-  "name": "Kihon Light Theme",
-  "description": "Light appearance theme for Kihon UI Foundation",
   "color": {
     "background": {
       "$type": "color",
@@ -43,5 +41,6 @@
       "$type": "color",
       "$value": "{colors.blue.700}"
     }
-  }
+  },
+  "$description": "Light appearance theme for Kihon UI Foundation"
 }

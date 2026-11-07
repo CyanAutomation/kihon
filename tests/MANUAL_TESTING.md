@@ -389,3 +389,5 @@ _[Add notes as needed]_
 
 **Result:** ☐ PASS ☐ FAIL ☐ PARTIAL
 
+**Last updated:** 2026-11-07. This checklist is not executed by `npm test`; record manual results above when those checks are performed.
+

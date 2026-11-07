@@ -57,6 +57,13 @@ body {
   gap: var(--kh-space-2);
 }
 
+.kh-sg-theme-status {
+  margin: var(--kh-space-2) 0 0;
+  color: var(--kh-color-on-accent);
+  font-size: 0.75rem;
+  text-align: right;
+}
+
 .kh-sg-theme-button {
   appearance: none;
   padding: var(--kh-space-2) var(--kh-space-3);
@@ -276,6 +283,13 @@ body {
   background-color: var(--kh-color-background);
   border-right: 1px solid var(--kh-color-border-subtle);
   padding: var(--kh-space-4);
+}
+
+.kh-sg-demo-link {
+  display: block;
+  padding: var(--kh-space-2);
+  margin-bottom: var(--kh-space-2);
+  color: var(--kh-color-accent);
 }
 
 /* Contrast checker */
