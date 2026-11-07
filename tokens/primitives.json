@@ -722,6 +722,14 @@
         "value": 300,
         "unit": "ms"
       }
+    },
+    "loading": {
+      "$type": "duration",
+      "$description": "Cycle duration for decorative loading indicators",
+      "$value": {
+        "value": 800,
+        "unit": "ms"
+      }
     }
   },
   "$description": "Primitive colour, spacing, and scale values for Kihon UI Foundation"

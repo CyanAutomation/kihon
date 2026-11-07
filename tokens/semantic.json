@@ -31,6 +31,11 @@
       "$description": "Text and icons on accent fills",
       "$value": "{colors.white}"
     },
+    "button-primary-hover": {
+      "$type": "color",
+      "$description": "Primary button background during pointer hover",
+      "$value": "{colors.blue.800}"
+    },
     "danger": {
       "$type": "color",
       "$description": "Destructive actions and error states",
@@ -134,6 +139,11 @@
     "slow": {
       "$type": "duration",
       "$value": "{motion.slow}"
+    },
+    "loading": {
+      "$type": "duration",
+      "$description": "Cycle duration for decorative loading indicators",
+      "$value": "{motion.loading}"
     }
   },
   "$description": "Platform-neutral semantic tokens for Kihon UI Foundation"

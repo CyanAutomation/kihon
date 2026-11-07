@@ -1,10 +1,28 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
 const { loadTokenDocuments, validateTokenDocuments } = require('../../scripts/token-validation');
+const { generateTokensCss } = require('../../scripts/build-tokens');
 
 test('all committed token files validate against DTCG 2025.10 and typed value rules', () => {
   const errors = validateTokenDocuments(loadTokenDocuments());
   assert.deepEqual(errors, []);
+});
+
+test('primary button hover colour is defined in both themes and exported by token generation', () => {
+  const documents = loadTokenDocuments();
+  assert.equal(documents.lightTheme.color['button-primary-hover'].$value, '{colors.blue.800}');
+  assert.equal(documents.darkTheme.color['button-primary-hover'].$value, '{colors.blue.300}');
+
+  const errors = validateTokenDocuments(documents);
+  assert.deepEqual(errors, []);
+});
+
+test('loading motion has a typed semantic alias and is exported to CSS', () => {
+  const documents = loadTokenDocuments();
+  assert.deepEqual(documents.primitives.motion.loading.$value, { value: 800, unit: 'ms' });
+  assert.equal(documents.semantic['motion-duration'].loading.$value, '{motion.loading}');
+  assert.deepEqual(validateTokenDocuments(documents), []);
+  assert.match(generateTokensCss(), /--kh-motion-loading: 800ms;/);
 });
 
 test('rejects legacy string dimensions and durations', () => {

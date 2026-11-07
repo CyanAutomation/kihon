@@ -25,6 +25,10 @@
       "$type": "color",
       "$value": "{colors.white}"
     },
+    "button-primary-hover": {
+      "$type": "color",
+      "$value": "{colors.blue.800}"
+    },
     "danger": {
       "$type": "color",
       "$value": "{colors.red.700}"
