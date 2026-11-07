@@ -452,8 +452,8 @@
 
         <div class="kh-field">
           <label class="kh-label" for="guide-readonly">Read-only field</label>
-          <input class="kh-input" id="guide-readonly" type="text" value="Copyable configuration value" readonly>
-          <p class="kh-help">This value is read-only but remains focusable and copyable.</p>
+          <input class="kh-input" id="guide-readonly" type="text" value="Copyable configuration value" readonly aria-describedby="guide-readonly-help">
+          <p class="kh-help" id="guide-readonly-help">This value is read-only but remains focusable and copyable.</p>
         </div>
 
         <button class="kh-button kh-button--primary" type="submit">Save example</button>
@@ -539,7 +539,7 @@
           </div>
           <div class="kh-settings-row">
             <div class="kh-settings-row-content">
-              <span class="kh-settings-row-title">Managed preference</span>
+              <label class="kh-settings-row-title" for="guide-managed-setting">Managed preference</label>
               <p class="kh-settings-row-description" id="guide-managed-help">This preference is controlled by your organization.</p>
             </div>
             <div class="kh-settings-row-control">
@@ -549,6 +549,88 @@
         </div>
       </section>
       <p class="kh-sg-demo-status" data-kh-demo-settings-status role="status" aria-live="polite">Change a control to update this local status.</p>
+    </section>
+
+    <!-- Dialogs -->
+    <section id="dialogs" class="kh-sg-section" aria-labelledby="dialogs-heading">
+      <h2 id="dialogs-heading" tabindex="-1">Dialogs</h2>
+      <p>These examples use native modal dialogs, Kihon buttons and form controls. The preferences and confirmation examples are local only; they save or delete no data.</p>
+
+      <div class="kh-sg-dialog-launchers">
+        <button id="about-dialog-trigger" class="kh-button kh-button--secondary" type="button">About this application</button>
+        <button id="preferences-dialog-trigger" class="kh-button kh-button--primary" type="button">Edit preferences</button>
+        <button id="delete-dialog-trigger" class="kh-button kh-button--destructive" type="button">Delete saved configuration</button>
+      </div>
+      <p class="kh-sg-demo-status" data-kh-dialog-status role="status" aria-live="polite">Choose a dialog example to try it.</p>
+
+      <dialog class="kh-dialog kh-dialog--sm" id="about-dialog" aria-labelledby="about-dialog-title" aria-describedby="about-dialog-description">
+        <header class="kh-dialog__header">
+          <h3 class="kh-dialog__title" id="about-dialog-title">About this application</h3>
+          <p class="kh-dialog__description" id="about-dialog-description">Kihon is a framework-free UI foundation. This example sends and stores no data.</p>
+        </header>
+        <div class="kh-dialog__body">
+          <p>Kihon provides shared design tokens, accessible interface conventions, and reusable CSS for CyanAutomation web applications.</p>
+        </div>
+        <form class="kh-dialog__footer" method="dialog">
+          <button class="kh-button kh-button--primary" id="about-dialog-close" type="submit" value="close" autofocus>Close</button>
+        </form>
+      </dialog>
+
+      <dialog class="kh-dialog" id="preferences-dialog" aria-labelledby="preferences-dialog-title" aria-describedby="preferences-dialog-description">
+        <header class="kh-dialog__header">
+          <h3 class="kh-dialog__title" id="preferences-dialog-title">Edit application preferences</h3>
+          <p class="kh-dialog__description" id="preferences-dialog-description">Update these local examples to see validation and focus behavior. Nothing is persisted.</p>
+        </header>
+        <form class="kh-dialog__body" id="preferences-form" novalidate data-kh-dialog-preferences>
+          <div class="kh-sg-dialog-errors" id="preferences-error-summary" aria-labelledby="preferences-error-title" tabindex="-1" role="alert" hidden>
+            <h4 id="preferences-error-title">Review this field</h4>
+            <ul data-kh-preferences-error-list></ul>
+          </div>
+
+          <div class="kh-field">
+            <label class="kh-label" for="preferences-name">Application name <span class="kh-required" aria-hidden="true">(Required)</span></label>
+            <input class="kh-input" id="preferences-name" name="applicationName" type="text" required autocomplete="off" aria-describedby="preferences-name-help" autofocus>
+            <p class="kh-help" id="preferences-name-help">Used to identify this local example.</p>
+            <p class="kh-error" id="preferences-name-error" hidden></p>
+          </div>
+
+          <div class="kh-field">
+            <label class="kh-label" for="preferences-appearance">Appearance</label>
+            <select class="kh-select" id="preferences-appearance" name="appearance" aria-describedby="preferences-appearance-help">
+              <option value="system">Match system</option>
+              <option value="light">Light</option>
+              <option value="dark">Dark</option>
+            </select>
+            <p class="kh-help" id="preferences-appearance-help">This choice does not change the style-guide theme.</p>
+          </div>
+
+          <div class="kh-field">
+            <label class="kh-label kh-label--choice">
+              <input class="kh-checkbox" id="preferences-notifications" name="notifications" type="checkbox" aria-describedby="preferences-notifications-help">
+              Receive product update notices
+            </label>
+            <p class="kh-help" id="preferences-notifications-help">This Boolean preference is only shown in the form.</p>
+          </div>
+        </form>
+        <div class="kh-dialog__footer">
+          <button class="kh-button kh-button--secondary" id="preferences-cancel" type="button" form="preferences-form">Cancel</button>
+          <button class="kh-button kh-button--primary" id="preferences-save" type="submit" form="preferences-form">Save changes</button>
+        </div>
+      </dialog>
+
+      <dialog class="kh-dialog kh-dialog--sm" id="delete-dialog" aria-labelledby="delete-dialog-title" aria-describedby="delete-dialog-description">
+        <header class="kh-dialog__header">
+          <h3 class="kh-dialog__title" id="delete-dialog-title">Delete saved configuration?</h3>
+          <p class="kh-dialog__description" id="delete-dialog-description">This action would remove the saved configuration and its local preferences. The demonstration does not delete real data.</p>
+        </header>
+        <div class="kh-dialog__body">
+          <p>Choose Cancel to keep the configuration, or confirm to see the local demonstration response.</p>
+        </div>
+        <div class="kh-dialog__footer">
+          <button class="kh-button kh-button--secondary" id="delete-dialog-cancel" type="button" autofocus>Cancel</button>
+          <button class="kh-button kh-button--destructive" id="delete-dialog-confirm" type="button">Delete configuration</button>
+        </div>
+      </dialog>
     </section>
 
     <!-- Surfaces -->
@@ -576,7 +658,8 @@
       <div style="display: grid; gap: var(--kh-space-4); max-width: 400px;">
         <a href="#focus">Focusable link</a>
         <button class="kh-button" type="button">Focusable button</button>
-        <input class="kh-input" type="text" placeholder="Focusable input">
+        <label class="kh-label" for="focus-input">Focusable input</label>
+        <input class="kh-input" id="focus-input" type="text" placeholder="Enter a value">
       </div>
     </section>
 
@@ -650,7 +733,7 @@
       <p>
         Press Tab to navigate through all interactive elements. Press Shift+Tab to go backwards.
         Press Enter to activate buttons and links. Press Space to toggle checkboxes and radio buttons.
-        Press Escape to close dialogs (when implemented).
+        Press Escape to close a dismissible modal dialog.
       </p>
     </section>
 
@@ -672,5 +755,7 @@
   <script src="buttons.js" defer></script>
   <script src="forms.js" defer></script>
   <script src="settings.js" defer></script>
+  <script src="../src/js/dialogs.js" defer></script>
+  <script src="dialogs.js" defer></script>
 </body>
 </html>

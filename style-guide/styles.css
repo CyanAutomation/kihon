@@ -269,6 +269,38 @@ body {
   color: var(--kh-color-text-secondary);
 }
 
+.kh-sg-dialog-launchers {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--kh-space-3);
+}
+
+.kh-sg-dialog-errors {
+  margin-block-end: var(--kh-space-4);
+  padding: var(--kh-space-4);
+  border: 1px solid var(--kh-color-danger);
+  border-inline-start-width: 0.25rem;
+  border-radius: var(--kh-radius-md);
+  background-color: var(--kh-color-surface);
+  color: var(--kh-color-text-primary);
+}
+
+.kh-sg-dialog-errors[hidden] {
+  display: none;
+}
+
+.kh-sg-dialog-errors h4 {
+  margin: 0 0 var(--kh-space-2);
+}
+
+.kh-sg-dialog-errors ul {
+  margin: 0;
+}
+
+.kh-sg-dialog-errors a {
+  text-decoration: underline;
+}
+
 .kh-sg-narrow-example {
   max-inline-size: 18rem;
 }
