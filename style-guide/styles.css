@@ -105,6 +105,11 @@ body {
   border-bottom: 1px solid var(--kh-color-border-subtle);
 }
 
+.kh-sg-section h2,
+.kh-sg-section h3 {
+  overflow-wrap: anywhere;
+}
+
 /* Grid for displaying multiple examples */
 .kh-sg-grid {
   display: grid;
