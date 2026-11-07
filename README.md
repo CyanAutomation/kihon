@@ -4,7 +4,7 @@
 
 Kihon defines a lightweight, framework-free design system for CyanAutomation web applications: shared design decisions, accessible interface conventions, reusable CSS and small, optional TypeScript enhancements. It draws inspiration from Apple's Human Interface Guidelines—particularly the clarity and ergonomics of macOS and iOS—while remaining a web-native system rather than an imitation of SwiftUI.
 
-> **Status: Draft foundation; Phase 2A buttons and actions, and Phase 2B forms and grouped settings, are implemented.** Automated checks cover DTCG token validation, selected WCAG contrast pairings, generated-file consistency, HTML/CSS parsing, and Chromium interactions. These checks do not certify WCAG conformance. Sidebars, dialogs, and public package distribution remain planned. Kihon v1.0 has not been released. See [`docs/development.md`](docs/development.md) for build and contribution information.
+> **Status: Draft foundation; Phase 2A buttons and actions, Phase 2B forms and grouped settings, and Phase 2C accessible dialogs are implemented.** Automated checks cover DTCG token validation, selected WCAG contrast pairings, generated-file consistency, HTML/CSS parsing, and Chromium interactions. These checks do not certify WCAG conformance. Sidebars and public package distribution remain planned. Kihon v1.0 has not been released. See [`docs/development.md`](docs/development.md) for build and contribution information.
 
 ## Why Kihon?
 
@@ -42,7 +42,7 @@ Kihon is **not** a full application framework, a page builder, an Apple UI clone
 | **Forms** | Labels, inputs, selects, checkboxes, textareas, validation, descriptions and error/help states. |
 | **Desktop patterns** | Sidebar, toolbar, section headers, grouped settings and contextual actions informed by macOS conventions. |
 | **Responsive patterns** | Sidebar collapse, appropriate mobile navigation and layouts that withstand zoom and narrow viewports. |
-| **Dialogs** | An accessible modal pattern, preferably based on native `<dialog>`, with verified focus management and dismissal behaviour. |
+| **Dialogs** | Accessible modal interactions built on native `<dialog>`, with documented focus management and dismissal behavior. |
 | **Style guide** | A static, framework-free site documenting foundations, component examples, states, usage and anti-patterns. |
 | **Quality checks** | Token validation, accessibility checks, keyboard tests and visual regression coverage for supported examples. |
 
@@ -148,6 +148,7 @@ The style guide demonstrates:
 - **Buttons and actions** — variants, sizes, states, icons, and application-owned status demonstrations
 - **Forms** — native controls, field states, help and error associations, and a local validation example
 - **Grouped settings** — responsive preference sections with native controls
+- **Dialogs** — native modal information, validated preferences, and confirmation examples
 - **Foundations** — surfaces and application layouts
 - **Accessibility** — keyboard navigation, reduced motion, forced colours
 - **Theme switcher** — test light, dark and system preference modes
@@ -182,6 +183,8 @@ For Kihon components, consuming applications can import the foundation entry poi
 
 No frontend framework is required. Kihon works with vanilla HTML, CSS and optional JavaScript.
 
+Dialogs use native `<dialog>` opened with `showModal()`; the optional focus helper and consumer responsibilities are documented in [`docs/components/dialogs.md`](docs/components/dialogs.md).
+
 Kihon is intended for CyanAutomation applications with a web UI. Headless Workers, APIs and background services are **not applicable**, rather than non-compliant.
 
 1. Audit the app's current HTML, CSS, interaction patterns and accessibility baseline.
@@ -211,9 +214,9 @@ The planned `swiftui-mapping.md` will describe conceptual equivalents—for exam
 - [x] Implement core buttons and actions (Phase 2A).
 - [x] Add accessible form styling with documented states (Phase 2B).
 - [x] Implement grouped settings patterns with responsive rows (Phase 2B).
+- [x] Implement native accessible dialogs with local examples (Phase 2C).
 - [ ] Document and implement desktop sidebar/toolbar conventions.
-- [ ] Implement and test the native-dialog-based accessible pattern.
-- [ ] Build a static, framework-free style-guide site with live examples.
+- [x] Build a static, framework-free style-guide site with live examples.
 - [ ] Add automated validation and manual review checklists.
 - [ ] Pilot adoption in one CyanAutomation web application.
 - [ ] Decide package exports, versioning, distribution and licensing before v1.0 release.
