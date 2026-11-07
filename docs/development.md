@@ -2,6 +2,8 @@
 
 This document explains how Kihon's design tokens, CSS and style guide are organized and built.
 
+Phase 2A buttons and actions are implemented as a framework-free CSS component. See [`components/buttons.md`](components/buttons.md) for its public classes, tokens and accessibility contract.
+
 Use Node.js 22.17 or later and npm. The minimum version covers the HTML validation and browser-test development tools; the delivered CSS and theme switcher have no npm runtime dependencies.
 
 ## Repository Structure
@@ -17,11 +19,14 @@ kihon/
 ├── src/
 │   └── css/
 │       ├── tokens.css           # Generated: CSS custom properties
-│       └── base.css             # Foundation styles and resets
+│       ├── base.css             # Foundation styles and resets
+│       └── components/
+│           └── buttons.css      # Button rules imported by base.css
 ├── style-guide/                 # Static documentation site
 │   ├── index.html               # Main style guide page
 │   ├── styles.css               # Style guide-specific styles
-│   └── theme.js                 # Theme switcher component
+│   ├── theme.js                 # Style-guide theme switcher
+│   └── buttons.js               # Style-guide button demonstrations
 ├── scripts/
 │   ├── build-tokens.js          # Generates tokens.css from source
 │   ├── token-resolver.js        # Resolves aliases and formats typed values
@@ -196,7 +201,7 @@ All public Kihon CSS variables use the `--kh-` prefix:
 - Spacing: `--kh-space-1`, `--kh-space-4`, etc.
 - Radii: `--kh-radius-sm`, `--kh-radius-md`, etc.
 - Shadows: `--kh-shadow-md`, `--kh-shadow-lg`, etc.
-- Motion: `--kh-motion-fast`, `--kh-motion-normal`, etc.
+- Motion: `--kh-motion-fast`, `--kh-motion-normal`, `--kh-motion-slow`, `--kh-motion-loading`, etc.
 - Typography: `--kh-type-font-stack`, `--kh-type-size-*`, etc.
 
 This prefix ensures tokens don't collide with application-specific variables.
@@ -224,12 +229,14 @@ Run this before committing token changes.
 
 - System-font defaults
 - Typography (headings, body, code)
-- Opt-in `.kh-input`, `.kh-textarea`, `.kh-select`, `.kh-checkbox`, `.kh-radio`, `.kh-label`, and `.kh-button` styles
+- Opt-in `.kh-input`, `.kh-textarea`, `.kh-select`, `.kh-checkbox`, `.kh-radio`, and `.kh-label` styles
 - Focus and keyboard navigation
 - Accessibility features (reduced motion, forced colours)
 - Layout utility classes
 
-Base CSS imports the generated `tokens.css` to use custom properties. Unclassed controls retain browser styling, selects retain native appearance, and the root font size remains the browser's default. Do not edit token values in `base.css`; regenerate CSS from the token source instead.
+`base.css` imports generated `tokens.css`, followed by `src/css/components/buttons.css`. Button rules stay in that component file, while `base.css` remains the public entry point and preserves existing `.kh-button` usage. Button styling is opt-in through documented classes; unclassed controls retain browser styling, selects retain native appearance, and the root font size remains the browser's default. Do not edit token values in `base.css`; regenerate CSS from the token source instead.
+
+Button classes, tokens, markup, state responsibilities and accessibility guidance are documented in [`components/buttons.md`](components/buttons.md). Consuming applications do not need style-guide CSS or JavaScript.
 
 ## Style Guide
 
@@ -238,14 +245,15 @@ The static style guide lives in `style-guide/` and demonstrates:
 - Typography hierarchy
 - Colour palette and contrast
 - Spacing and radii scales
-- Button and form states
+- Button variants, sizes and interaction states
+- Form states
 - Keyboard navigation
 - Theme switching
 - Application preview examples
 
 ### Preview the Style Guide
 
-Run `npm run dev` to build and serve the guide at `http://127.0.0.1:4173/style-guide/`. The examples are demonstrations; their controls do not perform application actions. Automated browser coverage currently runs Chromium only. It does not replace the manual browser, assistive-technology, zoom, or forced-colors review in `tests/MANUAL_TESTING.md`.
+Run `npm run dev` to build and serve the guide at `http://127.0.0.1:4173/style-guide/`. Button examples include style-guide-only action and loading demonstrations; their script is not a production API. Automated browser coverage currently runs Chromium only. It does not replace the manual browser, assistive-technology, zoom, or forced-colors review in `tests/MANUAL_TESTING.md`.
 
 The style guide includes:
 

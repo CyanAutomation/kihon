@@ -10,6 +10,7 @@ const HTML_PATH = path.join(ROOT, 'style-guide', 'index.html');
 const CSS_PATHS = [
   path.join(ROOT, 'src', 'css', 'tokens.css'),
   path.join(ROOT, 'src', 'css', 'base.css'),
+  path.join(ROOT, 'src', 'css', 'components', 'buttons.css'),
   path.join(ROOT, 'style-guide', 'styles.css')
 ];
 
@@ -48,7 +49,7 @@ async function main() {
   }
 
   console.log('✓ Style guide HTML passes html-validate');
-  console.log('✓ Generated, base, and style guide CSS parse successfully');
+  console.log('✓ Generated, base, button component, and style guide CSS parse successfully');
 }
 
 if (require.main === module) main().catch((error) => {
