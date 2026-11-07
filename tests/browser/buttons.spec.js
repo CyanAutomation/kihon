@@ -171,18 +171,24 @@ test('icon-only names, long labels, and compact layouts remain usable at narrow 
   await page.setViewportSize({ width: 320, height: 900 });
   const defaultHeight = await page.locator('#long-label-example').evaluate((element) => element.getBoundingClientRect().height);
   await page.evaluate(() => { document.documentElement.style.fontSize = '200%'; });
-  const zoomed = await page.evaluate(() => ({
-    sectionWidth: document.querySelector('#buttons').getBoundingClientRect().width,
-    sectionScrollWidth: document.querySelector('#buttons').scrollWidth,
-    buttonWidth: document.querySelector('#long-label-example').getBoundingClientRect().width,
-    buttonHeight: document.querySelector('#long-label-example').getBoundingClientRect().height,
-    buttonScrollWidth: document.querySelector('#long-label-example').scrollWidth,
-    overflowing: Array.from(document.querySelectorAll('#buttons *')).map((element) => {
+  const zoomed = await page.evaluate(() => {
+    const section = document.querySelector('#buttons');
+    const sectionRect = section.getBoundingClientRect();
+    const button = document.querySelector('#long-label-example');
+    const buttonRect = button.getBoundingClientRect();
+    const overflowing = Array.from(section.querySelectorAll('*')).map((element) => {
       const rect = element.getBoundingClientRect();
       return { tag: element.tagName, id: element.id, className: String(element.className), left: rect.left, right: rect.right, width: rect.width };
-    }).filter((element) => element.right > innerWidth + 1 || element.left < -1).slice(0, 8)
-  }));
-  expect(zoomed.sectionScrollWidth, JSON.stringify(zoomed.overflowing)).toBeLessThanOrEqual(zoomed.sectionWidth);
+    }).filter((element) => element.right > sectionRect.right + 1 || element.left < sectionRect.left - 1).slice(0, 8);
+    return {
+      section: { width: sectionRect.width, left: sectionRect.left, right: sectionRect.right, scrollWidth: section.scrollWidth },
+      buttonWidth: buttonRect.width,
+      buttonHeight: buttonRect.height,
+      buttonScrollWidth: button.scrollWidth,
+      overflowing
+    };
+  });
+  expect(zoomed.section.scrollWidth, JSON.stringify(zoomed.overflowing)).toBeLessThanOrEqual(zoomed.section.width);
   expect(zoomed.buttonScrollWidth).toBeLessThanOrEqual(zoomed.buttonWidth);
   expect(zoomed.buttonHeight).toBeGreaterThan(defaultHeight);
 });
