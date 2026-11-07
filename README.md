@@ -4,7 +4,7 @@
 
 Kihon defines a lightweight, framework-free design system for CyanAutomation web applications: shared design decisions, accessible interface conventions, reusable CSS and small, optional TypeScript enhancements. It draws inspiration from Apple's Human Interface Guidelines—particularly the clarity and ergonomics of macOS and iOS—while remaining a web-native system rather than an imitation of SwiftUI.
 
-> **Status: Draft foundation; Phase 2A buttons and actions implemented.** Automated checks cover DTCG token validation, selected WCAG contrast pairings, generated-file consistency, HTML/CSS parsing, and Chromium interactions. These checks do not certify WCAG conformance. Forms, desktop patterns, dialogs, and public package distribution remain planned. Kihon v1.0 has not been released. See [`docs/development.md`](docs/development.md) for build and contribution information.
+> **Status: Draft foundation; Phase 2A buttons and actions, and Phase 2B forms and grouped settings, are implemented.** Automated checks cover DTCG token validation, selected WCAG contrast pairings, generated-file consistency, HTML/CSS parsing, and Chromium interactions. These checks do not certify WCAG conformance. Sidebars, dialogs, and public package distribution remain planned. Kihon v1.0 has not been released. See [`docs/development.md`](docs/development.md) for build and contribution information.
 
 ## Why Kihon?
 
@@ -146,13 +146,15 @@ The style guide demonstrates:
 - **Colour palette** — light and dark theme colours; approved pairings are checked by `npm run validate`
 - **Spacing and radii** — geometric scales
 - **Buttons and actions** — variants, sizes, states, icons, and application-owned status demonstrations
+- **Forms** — native controls, field states, help and error associations, and a local validation example
+- **Grouped settings** — responsive preference sections with native controls
 - **Foundations** — surfaces and application layouts
 - **Accessibility** — keyboard navigation, reduced motion, forced colours
 - **Theme switcher** — test light, dark and system preference modes
 
 ### Using Kihon in Your Application
 
-For Phase 2A buttons, consuming applications can import the foundation entry point:
+For Kihon components, consuming applications can import the foundation entry point:
 
 1. Import the generated CSS:
    ```html
@@ -207,7 +209,8 @@ The planned `swiftui-mapping.md` will describe conceptual equivalents—for exam
 - [ ] Define and validate semantic light/dark design tokens.
 - [ ] Implement the minimal base stylesheet and responsive primitives.
 - [x] Implement core buttons and actions (Phase 2A).
-- [ ] Add accessible form styling with documented states.
+- [x] Add accessible form styling with documented states (Phase 2B).
+- [x] Implement grouped settings patterns with responsive rows (Phase 2B).
 - [ ] Document and implement desktop sidebar/toolbar conventions.
 - [ ] Implement and test the native-dialog-based accessible pattern.
 - [ ] Build a static, framework-free style-guide site with live examples.

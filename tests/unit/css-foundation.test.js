@@ -7,9 +7,10 @@ const postcss = require('postcss');
 const root = path.join(__dirname, '..', '..');
 const read = (file) => fs.readFileSync(path.join(root, file), 'utf8');
 
-test('generated tokens, foundation, button component, and guide styles parse as CSS', () => {
+test('generated tokens, foundation, component, and guide styles parse as CSS', () => {
   for (const file of [
-    'src/css/tokens.css', 'src/css/base.css', 'src/css/components/buttons.css', 'style-guide/styles.css'
+    'src/css/tokens.css', 'src/css/base.css', 'src/css/components/buttons.css',
+    'src/css/components/forms.css', 'src/css/components/settings.css', 'style-guide/styles.css'
   ]) {
     assert.doesNotThrow(() => postcss.parse(read(file), { from: file }), `${file} should parse`);
   }
@@ -17,7 +18,7 @@ test('generated tokens, foundation, button component, and guide styles parse as 
 
 test('base control styling is opt-in and preserves native select appearance', () => {
   const css = postcss.parse(read('src/css/base.css'));
-  const controlTags = /(^|[\s,>+~])(?:button|input|select|textarea)(?=$|[\s.#:[,>+~])/i;
+  const controlTags = /(^|[\s,>+~])(?:button|input|select|textarea|label|fieldset|legend)(?=$|[\s.#:[,>+~])/i;
   const unsafeRules = [];
 
   css.walkRules((rule) => {
@@ -32,11 +33,53 @@ test('base control styling is opt-in and preserves native select appearance', ()
   assert.doesNotMatch(read('src/css/base.css'), /outline:\s*none\s*;/);
 });
 
-test('base.css imports the token and button styles in a deterministic order', () => {
+test('base.css imports tokens and components in a deterministic order', () => {
   const css = postcss.parse(read('src/css/base.css'));
   const imports = css.nodes.filter((node) => node.type === 'atrule' && node.name === 'import').map((node) => node.params);
 
-  assert.deepEqual(imports, ["url('./tokens.css')", "url('./components/buttons.css')"]);
+  assert.deepEqual(imports, [
+    "url('./tokens.css')", "url('./components/buttons.css')",
+    "url('./components/forms.css')", "url('./components/settings.css')"
+  ]);
+});
+
+test('form and settings styles expose opt-in classes without global control resets', () => {
+  const forms = postcss.parse(read('src/css/components/forms.css'));
+  const settings = postcss.parse(read('src/css/components/settings.css'));
+  const formSelectors = [];
+  const settingsSelectors = [];
+  forms.walkRules((rule) => formSelectors.push(...(rule.selectors || [])));
+  settings.walkRules((rule) => settingsSelectors.push(...(rule.selectors || [])));
+
+  for (const selector of [...formSelectors, ...settingsSelectors]) {
+    assert.match(selector, /\.kh-[\w-]+/, `component selector must be opt-in: ${selector}`);
+    assert.doesNotMatch(selector, /\.kh-sg-/i, `component CSS must not depend on the guide: ${selector}`);
+  }
+
+  const globalSelectors = [...formSelectors, ...settingsSelectors].filter((selector) =>
+    /^(?:input|select|textarea|button|fieldset|legend)(?:$|[\s:[.#])/i.test(selector.trim())
+  );
+  assert.deepEqual(globalSelectors, []);
+  assert.doesNotMatch(read('src/css/components/forms.css'), /appearance\s*:\s*none/i);
+  for (const file of ['src/css/components/forms.css', 'src/css/components/settings.css']) {
+    assert.doesNotMatch(read(file), /#[\da-f]{3,8}\b|\b(?:rgb|hsl)a?\(/i, `${file} must use semantic color tokens`);
+  }
+
+  for (const selector of [
+    '.kh-field', '.kh-label', '.kh-label--choice', '.kh-help', '.kh-error', '.kh-required',
+    '.kh-input', '.kh-textarea', '.kh-select', '.kh-checkbox', '.kh-radio',
+    '.kh-fieldset', '.kh-legend'
+  ]) {
+    assert.ok(formSelectors.some((candidate) => candidate.includes(selector)), `missing selector ${selector}`);
+  }
+
+  for (const selector of [
+    '.kh-settings-group', '.kh-settings-heading', '.kh-settings-description',
+    '.kh-settings-list', '.kh-settings-row', '.kh-settings-row-content',
+    '.kh-settings-row-title', '.kh-settings-row-description', '.kh-settings-row-control'
+  ]) {
+    assert.ok(settingsSelectors.some((candidate) => candidate.includes(selector)), `missing selector ${selector}`);
+  }
 });
 
 test('button component exposes namespaced variants, sizes, states, and token-based colours', () => {
