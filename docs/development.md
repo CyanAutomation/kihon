@@ -2,6 +2,8 @@
 
 This document explains how Kihon's design tokens, CSS and style guide are organized and built.
 
+Use Node.js 22.17 or later and npm. The minimum version covers the HTML validation and browser-test development tools; the delivered CSS and theme switcher have no npm runtime dependencies.
+
 ## Repository Structure
 
 ```
@@ -22,7 +24,14 @@ kihon/
 │   └── theme.js                 # Theme switcher component
 ├── scripts/
 │   ├── build-tokens.js          # Generates tokens.css from source
-│   └── validate-tokens.js       # Validates token correctness
+│   ├── token-resolver.js        # Resolves aliases and formats typed values
+│   ├── token-validation.js     # DTCG schema and value validation
+│   ├── contrast.js              # WCAG contrast calculations
+│   ├── check-generated.js       # Detects stale committed CSS
+│   ├── sanity-check.js          # Parses HTML and CSS
+│   └── serve.js                 # Local style-guide preview server
+├── schemas/                     # Vendored DTCG JSON Schema
+├── .github/workflows/ci.yml     # Pull request and main-branch checks
 ├── tests/                       # Test fixtures and checks
 ├── docs/
 │   ├── foundation.md            # Normative specification
@@ -40,16 +49,29 @@ Each token file is a JSON object with typed `$value` entries:
 
 ```json
 {
+  "$schema": "https://www.designtokens.org/schemas/2025.10/format.json",
   "colors": {
     "gray": {
       "100": {
         "$type": "color",
-        "$value": "#f5f5f7"
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.9607843, 0.9607843, 0.9686275],
+          "hex": "#f5f5f7"
+        }
       }
+    }
+  },
+  "spacing": {
+    "4": {
+      "$type": "dimension",
+      "$value": { "value": 16, "unit": "px" }
     }
   }
 }
 ```
+
+The matching 2025.10 format schema is checked in at `schemas/dtcg-2025.10-format.schema.json`, so validation does not depend on network access.
 
 ### Primitive vs. Semantic Tokens
 
@@ -61,7 +83,7 @@ Each token file is a JSON object with typed `$value` entries:
 
 **Semantics** (`tokens/semantic.json`) define purpose-based aliases:
 - `color.text-primary` (what it is) instead of `colors.gray.900` (literal value)
-- `space.4` instead of `spacing.16`
+- `space.4` as the semantic alias for the 16px primitive at `spacing.4`
 
 This separation allows themes to override colour values without touching component code.
 
@@ -88,7 +110,7 @@ Themes are implemented using the `data-kh-theme` attribute on the root `<html>` 
 
 Each theme file defines how semantic tokens resolve in that mode. For example:
 
-- Light theme: `color.text-primary` → `#1d1d1f` (dark gray)
+- Light theme: `color.text-primary` → `#141518` (dark gray)
 - Dark theme: `color.text-primary` → `#f5f5f7` (light gray)
 
 ### Token Aliases
@@ -99,6 +121,7 @@ Tokens reference other tokens using the `{path.to.token}` syntax:
 {
   "color": {
     "text-primary": {
+      "$type": "color",
       "$value": "{colors.gray.900}"
     }
   }
@@ -106,6 +129,11 @@ Tokens reference other tokens using the `{path.to.token}` syntax:
 ```
 
 The build process recursively resolves aliases into final values for CSS output.
+Primitive groups such as `colors` are available directly to semantic and theme
+tokens. To reference a token in another document explicitly, prefix the path
+with its document name, for example `{semantic.color.text-primary}` or
+`{primitives.colors.gray.900}`. The explicit prefix avoids ambiguity between a
+semantic token and a theme token with the same path.
 
 ## Building and Generating CSS
 
@@ -134,7 +162,7 @@ The generated `tokens.css` contains:
   color-scheme: light;
   --kh-color-background: #f5f5f7;
   --kh-color-surface: #ffffff;
-  --kh-color-text-primary: #1d1d1f;
+  --kh-color-text-primary: #141518;
   --kh-color-accent: #175cd3;
   /* ... more tokens ... */
 }
@@ -181,11 +209,12 @@ npm run validate
 
 This runs `scripts/validate-tokens.js`, which checks:
 
-- ✓ Token source files exist and are valid JSON
-- ✓ Required semantic tokens are present in all themes
-- ✓ CSS generation produces valid output
-- ✓ Light and dark themes have matching token counts
-- ✓ Theme selectors and media queries are present
+- DTCG 2025.10 JSON Schema and typed dimensions, durations, colors, and shadows
+- Required semantic colors in both themes
+- Alias resolution, including missing and cyclic references
+- Approved text and non-text contrast pairings in light and dark themes
+
+`npm run sanity` parses the style-guide HTML with `html-validate` and all committed CSS with PostCSS. `npm run check:generated` compares generated CSS in memory with `src/css/tokens.css`; it does not rebuild first. `npm test` runs these checks, Node unit tests, and Playwright browser checks.
 
 Run this before committing token changes.
 
@@ -195,13 +224,12 @@ Run this before committing token changes.
 
 - System-font defaults
 - Typography (headings, body, code)
-- Form element styling
-- Button base styles
+- Opt-in `.kh-input`, `.kh-textarea`, `.kh-select`, `.kh-checkbox`, `.kh-radio`, `.kh-label`, and `.kh-button` styles
 - Focus and keyboard navigation
 - Accessibility features (reduced motion, forced colours)
 - Layout utility classes
 
-Base CSS imports the generated `tokens.css` to use custom properties. Do not edit token values in `base.css`; regenerate CSS from the token source instead.
+Base CSS imports the generated `tokens.css` to use custom properties. Unclassed controls retain browser styling, selects retain native appearance, and the root font size remains the browser's default. Do not edit token values in `base.css`; regenerate CSS from the token source instead.
 
 ## Style Guide
 
@@ -217,7 +245,7 @@ The static style guide lives in `style-guide/` and demonstrates:
 
 ### Preview the Style Guide
 
-Once the build is complete, open `style-guide/index.html` in a browser to view the interactive documentation.
+Run `npm run dev` to build and serve the guide at `http://127.0.0.1:4173/style-guide/`. The examples are demonstrations; their controls do not perform application actions. Automated browser coverage currently runs Chromium only. It does not replace the manual browser, assistive-technology, zoom, or forced-colors review in `tests/MANUAL_TESTING.md`.
 
 The style guide includes:
 
@@ -228,19 +256,15 @@ The style guide includes:
 
 ### Theme Switching
 
-The theme switcher is implemented in `style-guide/theme.js` using a framework-free `KihonThemeSwitcher` class:
+The framework-free theme switcher is an internal style-guide script. Its buttons use `data-kh-theme-toggle`; it does not expose a public constructor API. The selected mode is reflected by `aria-pressed`. System mode leaves `data-kh-theme` unset so CSS follows the operating system; explicit light and dark modes set that attribute.
 
-```javascript
-// Auto-initializes when DOM is ready
-window.KihonThemeSwitcher = new KihonThemeSwitcher({
-  storageKey: 'kihon-theme'  // localStorage key for persistence
-});
-
-// Programmatic usage
-KihonThemeSwitcher.setTheme('dark');
+```html
+<button type="button" data-kh-theme-toggle="system">System</button>
+<button type="button" data-kh-theme-toggle="light">Light</button>
+<button type="button" data-kh-theme-toggle="dark">Dark</button>
 ```
 
-It stores the user's preference in localStorage and applies the `data-kh-theme` attribute to `<html>`.
+Explicit preferences are stored under `kihon-theme` when browser storage is available. A storage failure does not prevent changing the theme for the current page.
 
 ## Development Workflow
 
@@ -249,7 +273,7 @@ It stores the user's preference in localStorage and applies the `data-kh-theme` 
 1. **Modify token values**: Edit `tokens/primitives.json` or theme files
 2. **Rebuild CSS**: `npm run build`
 3. **Validate**: `npm run validate`
-4. **Preview**: Open `style-guide/index.html` in a browser
+4. **Preview**: Run `npm run dev` and open `http://127.0.0.1:4173/style-guide/`
 
 ### Adding New Tokens
 
@@ -257,7 +281,7 @@ It stores the user's preference in localStorage and applies the `data-kh-theme` 
    ```json
    {
      "spacing": {
-       "16": { "$type": "dimension", "$value": "64px" }
+      "16": { "$type": "dimension", "$value": { "value": 64, "unit": "px" } }
      }
    }
    ```
@@ -290,7 +314,7 @@ It stores the user's preference in localStorage and applies the `data-kh-theme` 
 npm run test
 ```
 
-Runs build, validation and basic correctness checks.
+Runs unit, token schema/value, contrast, HTML/CSS parsing, generated-file consistency, and Chromium browser checks. It does not run the manual verification checklist.
 
 ### Manual Verification Checklist
 
