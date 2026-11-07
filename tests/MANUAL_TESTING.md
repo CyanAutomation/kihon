@@ -1,4 +1,4 @@
-# Kihon Phase 1 — Manual Testing Checklist
+# Kihon Manual Testing Checklist
 
 ## Overview
 
@@ -56,6 +56,8 @@ Test with **one desktop screen reader** (e.g., NVDA, JAWS, VoiceOver):
 - [ ] Required fields are announced
 - [ ] Error messages are announced when present
 - [ ] Helper text and descriptions are read
+- [ ] Settings titles announce the associated native controls and descriptions
+- [ ] Error summary links move to the relevant fields
 
 ### Links and Buttons
 - [ ] Links are announced as links with descriptive text
@@ -212,10 +214,12 @@ Test with **one desktop screen reader** (e.g., NVDA, JAWS, VoiceOver):
 - [ ] No conflict with CSS styling
 
 ### Validation
-- [ ] Validation does not prevent form submission
-- [ ] Error messages appear in context (near the field)
+- [ ] Native constraints prevent incomplete or malformed form submission
+- [ ] Valid forms submit through the application's intended flow
+- [ ] Error messages appear in context (near the field) after the chosen validation trigger
 - [ ] Errors are not announced only via color
-- [ ] Success states are clear
+- [ ] Read-only fields remain focusable and copyable; disabled fields are unavailable
+- [ ] Settings rows remain understandable and operable at narrow widths
 
 ---
 

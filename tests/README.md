@@ -9,11 +9,11 @@ npm test
 
 The suite runs:
 
-1. Node unit tests for alias resolution, typed token validation, contrast calculations, and parsed button CSS contracts.
+1. Node unit tests for alias resolution, typed token validation, contrast calculations, and parsed button, form, and grouped-settings CSS contracts.
 2. DTCG 2025.10 schema and value validation, including required theme tokens and approved contrast pairings.
 3. `html-validate` for the style-guide HTML and PostCSS parsing for committed stylesheets.
 4. A generated CSS consistency check that compares output without rebuilding the committed file first.
-5. Playwright checks in Chromium for theme behaviour, button variants and states, keyboard activation, responsive widths, accessible names, and in-page links.
+5. Playwright checks in Chromium for theme behaviour, button variants and states, native form labels and interactions, validation relationships, settings rows, responsive widths, accessible names, and in-page links.
 
 `npm run build` regenerates `src/css/tokens.css`. It is intentionally not run before the consistency check in `npm test`, so stale committed output fails validation.
 
