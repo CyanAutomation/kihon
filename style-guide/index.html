@@ -10,7 +10,7 @@
 <body>
   <a href="#main-content" class="kh-sg-skip-link">Skip to main content</a>
 
-  <header class="kh-sg-header" role="banner">
+  <header class="kh-sg-header">
     <div class="kh-sg-header-content">
       <h1 class="kh-sg-logo">Kihon</h1>
       <nav aria-label="Theme selection">
@@ -43,13 +43,14 @@
             Dark
           </button>
         </div>
+        <p class="kh-sg-theme-status" data-kh-theme-status role="status" aria-live="polite"></p>
       </nav>
     </div>
   </header>
 
   <main id="main-content" class="kh-sg-content">
     <!-- Introduction -->
-    <section class="kh-sg-section">
+    <section id="introduction" class="kh-sg-section">
       <h2>Welcome to Kihon</h2>
       <p>
         <strong>Kihon</strong> (基本 — fundamentals) is the UI foundation for CyanAutomation.
@@ -63,7 +64,7 @@
     </section>
 
     <!-- Typography -->
-    <section class="kh-sg-section">
+    <section id="typography" class="kh-sg-section">
       <h2>Typography</h2>
       <p>Kihon uses a system font stack for clarity and performance.</p>
 
@@ -140,7 +141,7 @@
       <h2>Semantic Colours</h2>
       <p>Kihon uses semantic colour tokens that adapt to light and dark themes automatically.</p>
 
-      <h3>Light Theme Palette</h3>
+      <h3>Theme-adaptive palette</h3>
       <div class="kh-sg-grid">
         <div class="kh-sg-card">
           <div class="kh-sg-swatch" style="background-color: var(--kh-color-background);"></div>
@@ -260,25 +261,25 @@
     <!-- Buttons -->
     <section class="kh-sg-section">
       <h2>Buttons</h2>
-      <p>Button examples showing primary state, hover, active, focus, and disabled states.</p>
+      <p>These buttons are static examples; they do not perform application actions.</p>
 
       <h3>Primary Button</h3>
       <div class="kh-sg-states">
         <div class="kh-sg-state-group">
           <div class="kh-sg-state-label">Default</div>
-          <button>Primary Action</button>
+          <button class="kh-button" type="button">Primary Action</button>
         </div>
         <div class="kh-sg-state-group">
           <div class="kh-sg-state-label">Hover</div>
-          <button style="opacity: 0.9;">Primary Action</button>
+          <button class="kh-button" type="button" style="opacity: 0.9;">Primary Action</button>
         </div>
         <div class="kh-sg-state-group">
           <div class="kh-sg-state-label">Focus</div>
-          <button class="kh-sg-focus-demo">Primary Action</button>
+          <button class="kh-button kh-sg-focus-demo" type="button">Primary Action</button>
         </div>
         <div class="kh-sg-state-group">
           <div class="kh-sg-state-label">Disabled</div>
-          <button disabled>Primary Action</button>
+          <button class="kh-button" type="button" disabled>Primary Action</button>
         </div>
       </div>
     </section>
@@ -286,27 +287,28 @@
     <!-- Forms -->
     <section class="kh-sg-section">
       <h2>Form Elements</h2>
+      <p>These controls demonstrate appearance and focus states; they do not submit or save data.</p>
 
       <h3>Basic inputs</h3>
       <div style="display: grid; gap: var(--kh-space-6); max-width: 400px;">
         <div class="kh-sg-form-group">
-          <label for="text-input">Text input</label>
-          <input id="text-input" type="text" placeholder="Enter text...">
+          <label class="kh-label" for="text-input">Text input</label>
+          <input class="kh-input" id="text-input" type="text" placeholder="Enter text...">
         </div>
 
         <div class="kh-sg-form-group">
-          <label for="email-input">Email input</label>
-          <input id="email-input" type="email" placeholder="you@example.com">
+          <label class="kh-label" for="email-input">Email input</label>
+          <input class="kh-input" id="email-input" type="email" placeholder="you@example.com">
         </div>
 
         <div class="kh-sg-form-group">
-          <label for="textarea-input">Textarea</label>
-          <textarea id="textarea-input" placeholder="Enter your message..."></textarea>
+          <label class="kh-label" for="textarea-input">Textarea</label>
+          <textarea class="kh-textarea" id="textarea-input" placeholder="Enter your message..."></textarea>
         </div>
 
         <div class="kh-sg-form-group">
-          <label for="select-input">Select</label>
-          <select id="select-input">
+          <label class="kh-label" for="select-input">Select</label>
+          <select class="kh-select" id="select-input">
             <option>Option 1</option>
             <option>Option 2</option>
             <option>Option 3</option>
@@ -314,17 +316,17 @@
         </div>
 
         <div class="kh-sg-form-group">
-          <label>
-            <input type="checkbox"> I agree to the terms
+          <label class="kh-label">
+            <input class="kh-checkbox" type="checkbox"> I agree to the terms
           </label>
         </div>
 
         <div class="kh-sg-form-group">
-          <label>
-            <input type="radio" name="example"> Option A
+          <label class="kh-label">
+            <input class="kh-radio" type="radio" name="example"> Option A
           </label>
-          <label>
-            <input type="radio" name="example"> Option B
+          <label class="kh-label">
+            <input class="kh-radio" type="radio" name="example"> Option B
           </label>
         </div>
       </div>
@@ -332,14 +334,14 @@
       <h3>Disabled state</h3>
       <div style="display: grid; gap: var(--kh-space-6); max-width: 400px;">
         <div class="kh-sg-form-group">
-          <label for="disabled-input">Disabled input</label>
-          <input id="disabled-input" type="text" disabled value="Disabled">
+          <label class="kh-label" for="disabled-input">Disabled input</label>
+          <input class="kh-input" id="disabled-input" type="text" disabled value="Disabled">
         </div>
       </div>
     </section>
 
     <!-- Surfaces -->
-    <section class="kh-sg-section">
+    <section id="focus" class="kh-sg-section">
       <h2>Surfaces and Elevation</h2>
 
       <h3>Surface card</h3>
@@ -362,15 +364,15 @@
 
       <div style="display: grid; gap: var(--kh-space-4); max-width: 400px;">
         <a href="#focus">Focusable link</a>
-        <button>Focusable button</button>
-        <input type="text" placeholder="Focusable input">
+        <button class="kh-button" type="button">Focusable button</button>
+        <input class="kh-input" type="text" placeholder="Focusable input">
       </div>
     </section>
 
     <!-- Application preview -->
     <section class="kh-sg-section">
       <h2>Application Preview</h2>
-      <p>A simple demonstration of how Kihon components work together in a real application layout.</p>
+      <p>This non-interactive preview shows how Kihon styles can work together in an application layout.</p>
 
       <div class="kh-sg-preview">
         <div class="kh-sg-preview-header">
@@ -378,17 +380,17 @@
             <h3 style="margin: 0;">Application</h3>
           </div>
           <div style="display: flex; gap: var(--kh-space-2);">
-            <button style="min-width: auto; padding: var(--kh-space-3);">Save</button>
-            <button style="min-width: auto; padding: var(--kh-space-3);">Cancel</button>
+            <button class="kh-button" type="button" style="min-width: auto; padding: var(--kh-space-3);">Save</button>
+            <button class="kh-button" type="button" style="min-width: auto; padding: var(--kh-space-3);">Cancel</button>
           </div>
         </div>
         <div style="display: flex; flex: 1;">
           <div class="kh-sg-preview-sidebar">
             <h4 style="margin-top: 0;">Navigation</h4>
             <ul style="list-style: none; padding: 0; margin: 0;">
-              <li><a href="#" style="display: block; padding: var(--kh-space-2); margin-bottom: var(--kh-space-2);">Dashboard</a></li>
-              <li><a href="#" style="display: block; padding: var(--kh-space-2); margin-bottom: var(--kh-space-2);">Settings</a></li>
-              <li><a href="#" style="display: block; padding: var(--kh-space-2);">About</a></li>
+              <li><span class="kh-sg-demo-link">Dashboard</span></li>
+              <li><span class="kh-sg-demo-link">Settings</span></li>
+              <li><span class="kh-sg-demo-link">About</span></li>
             </ul>
           </div>
           <div class="kh-sg-preview-content">
@@ -453,7 +455,7 @@
     </section>
   </main>
 
-  <div class="kh-sg-breakpoint-info" aria-live="polite" aria-label="Current breakpoint"></div>
+  <div class="kh-sg-breakpoint-info" aria-hidden="true"></div>
 
   <script src="theme.js"></script>
 </body>

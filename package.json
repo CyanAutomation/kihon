@@ -7,17 +7,28 @@
     "type": "git",
     "url": "https://github.com/CyanAutomation/kihon.git"
   },
-  "license": "See LICENSE file",
+  "license": "UNLICENSED",
+  "engines": {
+    "node": ">=22.17.0"
+  },
   "scripts": {
-    "build": "node scripts/build-tokens.js && echo '✓ Build complete'",
+    "build": "node scripts/build-tokens.js",
     "build-tokens": "node scripts/build-tokens.js",
     "validate": "node scripts/validate-tokens.js",
     "sanity": "node scripts/sanity-check.js",
-    "test": "npm run build && npm run validate && npm run sanity",
-    "dev": "npm run build && echo 'Ready to edit files. Build output: src/css/tokens.css'",
-    "check": "npm run test"
+    "check:generated": "node scripts/check-generated.js",
+    "test:unit": "node --test tests/unit/*.test.js",
+    "test:browser": "playwright test",
+    "test": "npm run test:unit && npm run validate && npm run sanity && npm run check:generated && npm run test:browser",
+    "dev": "npm run build && node scripts/serve.js",
+    "check": "npm test"
   },
   "devDependencies": {
-    "wcag-contrast": "^4.1.0"
+    "@playwright/test": "^1.65.0",
+    "ajv": "^8.20.0",
+    "ajv-formats": "^3.0.1",
+    "html-validate": "~11.1.0",
+    "postcss": "^8.5.32",
+    "wcag-contrast": "^3.0.0"
   }
 }

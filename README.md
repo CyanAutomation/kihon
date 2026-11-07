@@ -4,7 +4,7 @@
 
 Kihon defines a lightweight, framework-free design system for CyanAutomation web applications: shared design decisions, accessible interface conventions, reusable CSS and small, optional TypeScript enhancements. It draws inspiration from Apple's Human Interface Guidelines—particularly the clarity and ergonomics of macOS and iOS—while remaining a web-native system rather than an imitation of SwiftUI.
 
-> **Status: Phase 1 Implementation (Draft).** Kihon v1.0 is in active development. The design token system, foundational CSS, and static style guide are implemented and tested. Components, theming refinements, and public package distribution remain planned for future phases. See [`docs/development.md`](docs/development.md) for build and contribution information.
+> **Status: Draft foundation.** Automated checks cover DTCG token validation, selected WCAG contrast pairings, generated-file consistency, HTML/CSS parsing, and Chromium interactions. These checks do not certify WCAG conformance. Reusable components, desktop patterns, and public package distribution remain planned. See [`docs/development.md`](docs/development.md) for build and contribution information.
 
 ## Why Kihon?
 
@@ -112,14 +112,14 @@ Kihon will use a predictable `kh-` prefix for its CSS classes and public custom 
 
 ### Prerequisites
 
-- Node.js 18.0 or later
-- npm or yarn
+- Node.js 22.17 or later
+- npm
 
 ### Building
 
 ```bash
-# Install dependencies (none currently required for runtime)
-npm install
+# Install the locked development dependencies
+npm ci
 
 # Generate CSS from design tokens
 npm run build
@@ -127,19 +127,22 @@ npm run build
 # Validate tokens and generated output
 npm run validate
 
-# Run all checks
-npm run test
+# Run unit, token, contrast, HTML/CSS, generated-file, and Chromium checks
+npm test
+
+# Build and serve the style guide
+npm run dev
 ```
 
 ### Viewing the Style Guide
 
-After building, open `style-guide/index.html` in your browser to see the interactive design foundation documentation.
+`npm run dev` builds the generated tokens and serves the guide at `http://127.0.0.1:4173/style-guide/`.
 
 The style guide demonstrates:
 
 - **Design tokens** — colours, spacing, typography, shadows, motion
 - **Typography** — heading hierarchy, body text, code, links
-- **Colour palette** — light and dark theme colours with contrast verification
+- **Colour palette** — light and dark theme colours; approved pairings are checked by `npm run validate`
 - **Spacing and radii** — geometric scales
 - **Components** — buttons, forms, surfaces and application layouts
 - **Accessibility** — keyboard navigation, reduced motion, forced colours

@@ -1,7 +1,5 @@
 {
   "$schema": "https://www.designtokens.org/schemas/2025.10/format.json",
-  "name": "Kihon Semantic Tokens",
-  "description": "Platform-neutral semantic tokens for Kihon UI Foundation",
   "color": {
     "background": {
       "$type": "color",
@@ -88,7 +86,7 @@
       "$value": "{spacing.12}"
     }
   },
-  "radius": {
+  "corner-radius": {
     "sm": {
       "$type": "dimension",
       "$value": "{radius.sm}"
@@ -106,7 +104,7 @@
       "$value": "{radius.pill}"
     }
   },
-  "shadow": {
+  "elevation": {
     "none": {
       "$type": "shadow",
       "$value": "{shadow.none}"
@@ -124,7 +122,7 @@
       "$value": "{shadow.lg}"
     }
   },
-  "motion": {
+  "motion-duration": {
     "fast": {
       "$type": "duration",
       "$value": "{motion.fast}"
@@ -137,5 +135,6 @@
       "$type": "duration",
       "$value": "{motion.slow}"
     }
-  }
+  },
+  "$description": "Platform-neutral semantic tokens for Kihon UI Foundation"
 }
