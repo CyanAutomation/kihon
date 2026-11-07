@@ -1,5 +1,28 @@
 const { test, expect } = require('@playwright/test');
 
+async function expectNoHorizontalOverflow(page) {
+  const layout = await page.evaluate(() => {
+    const clientWidth = document.documentElement.clientWidth;
+    const offenders = [...document.body.querySelectorAll('*')]
+      .map((element) => {
+        const rect = element.getBoundingClientRect();
+        return {
+          tag: element.tagName,
+          id: element.id,
+          className: typeof element.className === 'string' ? element.className : '',
+          left: Math.round(rect.left),
+          right: Math.round(rect.right)
+        };
+      })
+      .filter((element) => element.left < -1 || element.right > clientWidth + 1)
+      .slice(0, 12);
+    return { clientWidth, scrollWidth: document.documentElement.scrollWidth, offenders };
+  });
+
+  expect(layout.scrollWidth, `horizontal overflow at ${layout.clientWidth}px: ${JSON.stringify(layout)}`)
+    .toBeLessThanOrEqual(layout.clientWidth);
+}
+
 test.beforeEach(async ({ page }) => {
   await page.emulateMedia({ colorScheme: 'light' });
   await page.goto('/style-guide/');
@@ -100,7 +123,7 @@ test('forms and settings reflow at narrow widths and with enlarged text', async 
   // A 320 CSS px viewport is the available layout width for a 1280px window at 400% browser zoom.
   for (const width of [320, 480]) {
     await page.setViewportSize({ width, height: 900 });
-    await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth)).toBe(true);
+    await expectNoHorizontalOverflow(page);
   }
 
   const firstRow = page.locator('.kh-settings-row').first();
@@ -113,7 +136,7 @@ test('forms and settings reflow at narrow widths and with enlarged text', async 
 
   await page.evaluate(() => { document.documentElement.style.fontSize = '200%'; });
   await page.setViewportSize({ width: 320, height: 900 });
-  await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth)).toBe(true);
+  await expectNoHorizontalOverflow(page);
   await expect(page.locator('#guide-display-name')).toBeVisible();
 });
 
