@@ -1,5 +1,6 @@
 const wcagContrast = require('wcag-contrast');
 const { TokenResolver, formatColor } = require('./token-resolver');
+const { createTokenContext } = require('./token-context');
 
 const APPROVED_PAIRS = [
   { foreground: 'text-primary', background: 'background', minimum: 4.5 },
@@ -21,13 +22,14 @@ function contrastRatio(foreground, background) {
   return wcagContrast.hex(foreground, background);
 }
 
-function resolveThemeColors(theme, primitives = {}) {
-  const resolver = new TokenResolver(primitives);
+function resolveThemeColors(theme, documents = {}) {
+  const resolver = new TokenResolver(documents.primitives || {});
+  const context = createTokenContext(documents, theme);
   const colors = {};
 
   for (const [name, token] of Object.entries(theme.color || {})) {
     if (!token || !Object.hasOwn(token, '$value')) continue;
-    const value = resolver.resolveValue(token.$value, primitives);
+    const value = resolver.resolveValue(token.$value, context);
     if (typeof value !== 'string' && (value.alpha ?? 1) !== 1) {
       throw new Error(`${name}: theme colors used in contrast checks must be opaque`);
     }
@@ -62,8 +64,8 @@ function validateThemeContrast(themes) {
 function validateThemeDocuments(documents) {
   try {
     const themes = {
-      light: resolveThemeColors(documents.lightTheme, documents.primitives),
-      dark: resolveThemeColors(documents.darkTheme, documents.primitives)
+      light: resolveThemeColors(documents.lightTheme, documents),
+      dark: resolveThemeColors(documents.darkTheme, documents)
     };
     return validateThemeContrast(themes);
   } catch (error) {
