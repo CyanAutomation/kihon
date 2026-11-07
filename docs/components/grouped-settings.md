@@ -121,3 +121,7 @@ It does not define a settings information architecture or build navigation.
 
 These are conceptual equivalents only. No SwiftUI controls or automatic
 conversion are provided.
+
+## Reference screenshots
+
+[Light theme settings](screenshots/grouped-settings-light.png) · [Dark theme settings](screenshots/grouped-settings-dark.png)
