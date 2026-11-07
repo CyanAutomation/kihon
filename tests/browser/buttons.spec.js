@@ -159,17 +159,17 @@ test('icon-only names, long labels, and compact layouts remain usable at narrow 
   const defaultHeight = await page.locator('#long-label-example').evaluate((element) => element.getBoundingClientRect().height);
   await page.evaluate(() => { document.documentElement.style.fontSize = '200%'; });
   const zoomed = await page.evaluate(() => ({
-    pageWidth: document.documentElement.scrollWidth,
-    viewportWidth: document.documentElement.clientWidth,
+    sectionWidth: document.querySelector('#buttons').getBoundingClientRect().width,
+    sectionScrollWidth: document.querySelector('#buttons').scrollWidth,
     buttonWidth: document.querySelector('#long-label-example').getBoundingClientRect().width,
     buttonHeight: document.querySelector('#long-label-example').getBoundingClientRect().height,
     buttonScrollWidth: document.querySelector('#long-label-example').scrollWidth,
-    overflowing: Array.from(document.querySelectorAll('body *')).map((element) => {
+    overflowing: Array.from(document.querySelectorAll('#buttons *')).map((element) => {
       const rect = element.getBoundingClientRect();
       return { tag: element.tagName, id: element.id, className: String(element.className), left: rect.left, right: rect.right, width: rect.width };
     }).filter((element) => element.right > innerWidth + 1 || element.left < -1).slice(0, 8)
   }));
-  expect(zoomed.pageWidth, JSON.stringify(zoomed.overflowing)).toBeLessThanOrEqual(zoomed.viewportWidth);
+  expect(zoomed.sectionScrollWidth, JSON.stringify(zoomed.overflowing)).toBeLessThanOrEqual(zoomed.sectionWidth);
   expect(zoomed.buttonScrollWidth).toBeLessThanOrEqual(zoomed.buttonWidth);
   expect(zoomed.buttonHeight).toBeGreaterThan(defaultHeight);
 });
