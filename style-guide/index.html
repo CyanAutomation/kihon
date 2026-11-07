@@ -259,29 +259,103 @@
     </section>
 
     <!-- Buttons -->
-    <section class="kh-sg-section">
-      <h2>Buttons</h2>
-      <p>These buttons are static examples; they do not perform application actions.</p>
+    <section id="buttons" class="kh-sg-section">
+      <h2>Buttons and Actions</h2>
+      <p>Use native buttons for actions and links for navigation. The unmodified <code>.kh-button</code> is a medium primary button.</p>
+      <p>Default appearance: <button id="default-button-example" class="kh-button" type="button">Save</button></p>
 
-      <h3>Primary Button</h3>
-      <div class="kh-sg-states">
-        <div class="kh-sg-state-group">
-          <div class="kh-sg-state-label">Default</div>
-          <button class="kh-button" type="button">Primary Action</button>
+      <h3>Action hierarchy</h3>
+      <div class="kh-sg-button-grid">
+        <div class="kh-sg-button-example">
+          <span class="kh-sg-state-label">Primary · main action</span>
+          <button id="primary-example" class="kh-button kh-button--primary" type="button">Save changes</button>
         </div>
-        <div class="kh-sg-state-group">
-          <div class="kh-sg-state-label">Hover</div>
-          <button class="kh-button" type="button" style="opacity: 0.9;">Primary Action</button>
+        <div class="kh-sg-button-example">
+          <span class="kh-sg-state-label">Secondary · supporting action</span>
+          <button id="secondary-example" class="kh-button kh-button--secondary" type="button">View details</button>
         </div>
-        <div class="kh-sg-state-group">
-          <div class="kh-sg-state-label">Focus</div>
-          <button class="kh-button kh-sg-focus-demo" type="button">Primary Action</button>
+        <div class="kh-sg-button-example">
+          <span class="kh-sg-state-label">Quiet · contextual action</span>
+          <button id="quiet-example" class="kh-button kh-button--quiet" type="button">Edit</button>
         </div>
-        <div class="kh-sg-state-group">
-          <div class="kh-sg-state-label">Disabled</div>
-          <button class="kh-button" type="button" disabled>Primary Action</button>
+        <div class="kh-sg-button-example">
+          <span class="kh-sg-state-label">Destructive · potentially irreversible</span>
+          <button id="destructive-example" class="kh-button kh-button--destructive" type="button">Delete item</button>
         </div>
       </div>
+      <p>Destructive actions use clear wording as well as a danger colour. Confirm irreversible actions in the application when the consequences warrant it.</p>
+
+      <h3>Sizes</h3>
+      <div class="kh-sg-button-row">
+        <button id="size-small" class="kh-button kh-button--primary kh-button--sm" type="button">Small action</button>
+        <button id="size-medium" class="kh-button kh-button--primary kh-button--md" type="button">Medium action</button>
+        <button id="size-large" class="kh-button kh-button--primary kh-button--lg" type="button">Large action</button>
+      </div>
+
+      <h3>Interaction states</h3>
+      <p>Hover a button, press and hold it to see active feedback, and use Tab to inspect keyboard focus. Active is momentary feedback, not a persistent toggle state.</p>
+      <div class="kh-sg-states">
+        <div class="kh-sg-state-group">
+          <span class="kh-sg-state-label">Default and hover</span>
+          <button id="interaction-example" class="kh-button kh-button--primary" type="button">Continue</button>
+        </div>
+        <div class="kh-sg-state-group">
+          <span class="kh-sg-state-label">Disabled · native attribute</span>
+          <button class="kh-button kh-button--primary" type="button" disabled>Unavailable</button>
+        </div>
+        <div class="kh-sg-state-group">
+          <span class="kh-sg-state-label">Loading · application-managed</span>
+          <button id="loading-example" class="kh-button kh-button--primary kh-button--loading" type="button" disabled>Saving…</button>
+        </div>
+      </div>
+      <p>Keep a loading label that names the current activity. Disable the native button when duplicate activation must be prevented. Use an adjacent live status for progress updates or completion and failure messages.</p>
+
+      <h3>Text, icons and long labels</h3>
+      <div class="kh-sg-button-row">
+        <button class="kh-button kh-button--secondary" type="button">
+          <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+            <path d="M8 2.5v11M2.5 8h11" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+          </svg>
+          Add item
+        </button>
+        <button id="icon-only-example" class="kh-button kh-button--quiet kh-button--icon" type="button" aria-label="Refresh">
+          <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+            <path d="M13 5.5A5.5 5.5 0 1 0 13.2 9M13 2.5v3h-3" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </button>
+        <span class="kh-sg-state-label">Icon-only action: accessible name is “Refresh”.</span>
+      </div>
+      <div class="kh-sg-narrow-example">
+        <button id="long-label-example" class="kh-button kh-button--secondary" type="button">Save these preferences and continue to account security</button>
+      </div>
+
+      <h3>Actions in context</h3>
+      <p>Dialog-style action footer example:</p>
+      <div class="kh-sg-action-footer">
+        <button class="kh-button kh-button--secondary" type="button">Cancel</button>
+        <button class="kh-button kh-button--primary" type="button">Save changes</button>
+      </div>
+      <p>Compact toolbar action examples:</p>
+      <div class="kh-sg-toolbar" role="group" aria-label="Example actions">
+        <button class="kh-button kh-button--quiet kh-button--sm" type="button">New</button>
+        <button class="kh-button kh-button--quiet kh-button--sm" type="button">Export</button>
+        <button class="kh-button kh-button--quiet kh-button--sm kh-button--icon" type="button" aria-label="Refresh items">
+          <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+            <path d="M13 5.5A5.5 5.5 0 1 0 13.2 9M13 2.5v3h-3" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </button>
+      </div>
+
+      <h3>Working demonstrations</h3>
+      <div class="kh-sg-button-example">
+        <button class="kh-button kh-button--primary" type="button" data-kh-demo-action>Run example action</button>
+        <p class="kh-sg-demo-status" data-kh-demo-action-status role="status" aria-live="polite">No action has run yet.</p>
+      </div>
+      <div class="kh-sg-button-example">
+        <button class="kh-button kh-button--primary" type="button" data-kh-demo-loading>Save asynchronously</button>
+        <p class="kh-sg-demo-status" data-kh-demo-loading-status role="status" aria-live="polite">The demo controls this button's loading state.</p>
+      </div>
+      <p>These scripts demonstrate application-owned behavior. Kihon provides CSS only and does not manage asynchronous state.</p>
     </section>
 
     <!-- Forms -->
@@ -379,12 +453,12 @@
           <div>
             <h3 style="margin: 0;">Application</h3>
           </div>
-          <div style="display: flex; gap: var(--kh-space-2);">
-            <button class="kh-button" type="button" style="min-width: auto; padding: var(--kh-space-3);">Save</button>
-            <button class="kh-button" type="button" style="min-width: auto; padding: var(--kh-space-3);">Cancel</button>
+          <div class="kh-sg-preview-actions">
+            <button class="kh-button kh-button--primary kh-button--sm" type="button">Save</button>
+            <button class="kh-button kh-button--quiet kh-button--sm" type="button">Cancel</button>
           </div>
         </div>
-        <div style="display: flex; flex: 1;">
+        <div class="kh-sg-preview-layout">
           <div class="kh-sg-preview-sidebar">
             <h4 style="margin-top: 0;">Navigation</h4>
             <ul style="list-style: none; padding: 0; margin: 0;">
@@ -398,7 +472,7 @@
               <h2>Welcome</h2>
               <p>This is a simple application layout showing Kihon's foundational elements working together.</p>
             </div>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--kh-space-4);">
+            <div class="kh-sg-preview-cards">
               <div class="kh-surface">
                 <h4>Feature 1</h4>
                 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
@@ -458,5 +532,6 @@
   <div class="kh-sg-breakpoint-info" aria-hidden="true"></div>
 
   <script src="theme.js"></script>
+  <script src="buttons.js" defer></script>
 </body>
 </html>

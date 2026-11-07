@@ -12,6 +12,7 @@
   --kh-color-text-secondary: #475467;
   --kh-color-accent: #175cd3;
   --kh-color-on-accent: #ffffff;
+  --kh-color-button-primary-hover: #1e40af;
   --kh-color-danger: #b42318;
   --kh-color-border-subtle: #d0d5dd;
   --kh-color-border-strong: #667085;
@@ -50,6 +51,7 @@
   --kh-motion-fast: 120ms;
   --kh-motion-normal: 200ms;
   --kh-motion-slow: 300ms;
+  --kh-motion-loading: 800ms;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -61,6 +63,7 @@
     --kh-color-text-secondary: #a6acb1;
     --kh-color-accent: #85b4ff;
     --kh-color-on-accent: #141518;
+    --kh-color-button-primary-hover: #a4cafe;
     --kh-color-danger: #f97066;
     --kh-color-border-subtle: #475467;
     --kh-color-border-strong: #667085;
@@ -76,6 +79,7 @@
   --kh-color-text-secondary: #475467;
   --kh-color-accent: #175cd3;
   --kh-color-on-accent: #ffffff;
+  --kh-color-button-primary-hover: #1e40af;
   --kh-color-danger: #b42318;
   --kh-color-border-subtle: #d0d5dd;
   --kh-color-border-strong: #667085;
@@ -90,6 +94,7 @@
   --kh-color-text-secondary: #a6acb1;
   --kh-color-accent: #85b4ff;
   --kh-color-on-accent: #141518;
+  --kh-color-button-primary-hover: #a4cafe;
   --kh-color-danger: #f97066;
   --kh-color-border-subtle: #475467;
   --kh-color-border-strong: #667085;
