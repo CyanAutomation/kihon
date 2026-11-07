@@ -241,6 +241,7 @@ body {
   display: grid;
   align-content: start;
   justify-items: start;
+  min-inline-size: 0;
   gap: var(--kh-space-3);
   padding: var(--kh-space-4);
   background-color: var(--kh-color-surface);
