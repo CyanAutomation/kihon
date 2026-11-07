@@ -176,3 +176,7 @@ consuming app.
 
 These are design-intent equivalents only. Kihon does not generate SwiftUI code
 or promise automatic portability.
+
+## Reference screenshots
+
+[Light theme forms](screenshots/forms-light.png) · [Dark theme forms](screenshots/forms-dark.png)
