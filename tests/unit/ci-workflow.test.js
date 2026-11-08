@@ -27,3 +27,10 @@ test('CI uses a fixed runner label, a job timeout, and superseded-run cancellati
   assert.match(workflow, /^\s+group:\s*\$\{\{ github\.workflow \}\}-\$\{\{ github\.event\.pull_request\.number \|\| github\.ref \}\}\s*$/m);
   assert.match(workflow, /^\s+cancel-in-progress:\s*true\s*$/m);
 });
+
+test('CI builds generated runtime files and checks TypeScript before running tests', () => {
+  assert.match(workflow, /^\s*- run: npm ci\s*$/m);
+  assert.match(workflow, /^\s*- run: npm run build\s*$/m);
+  assert.match(workflow, /^\s*- run: npm run typecheck\s*$/m);
+  assert.match(workflow, /^\s*- run: npm test\s*$/m);
+});

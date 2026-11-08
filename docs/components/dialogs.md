@@ -72,6 +72,11 @@ Native code can open a modal directly:
 dialog.showModal();
 ```
 
+The reusable helper is authored in TypeScript at `src/ts/dialogs.ts`. Its
+generated browser/CommonJS entry remains at `src/js/dialogs.js`, preserving
+`window.KihonDialogs` for classic scripts and `require()` for Node consumers.
+The corresponding generated API declarations are in `src/js/dialogs.d.ts`.
+
 Calling `showModal()` on an already-open dialog throws. The optional helper
 provides a repeated-open guard and stores the invoking control for the removed
 trigger fallback case:
@@ -147,7 +152,10 @@ button's value. Escape dispatches `cancel` and closes a dismissible modal;
 programmatic `close(value)` closes it and sets `returnValue`. A close event
 reports that it closed, not that an operation succeeded. Treat values such as
 `cancel`, `close`, or `confirm` explicitly, and keep confirmation or save logic
-in the application. Guard business actions against duplicate activation.
+in the application. Guard business actions against duplicate activation. The
+Kihon helper clears `returnValue` before each new modal session, so an Escape
+after reopening cannot reuse the previous Save or Confirm result. Results from
+the completed session remain available after close until another session opens.
 
 For forms with validation or asynchronous saving, do not use
 `method="dialog"`. Prevent submission, validate with native constraints and

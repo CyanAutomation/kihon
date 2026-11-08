@@ -7,6 +7,7 @@ function createDialogHarness(closeTiming) {
   const document = { activeElement: null, body: {}, documentElement: {} };
   const focusable = (name) => ({
     name,
+    nodeType: 1,
     isConnected: true,
     ownerDocument: document,
     focus() { document.activeElement = this; }
@@ -19,6 +20,7 @@ function createDialogHarness(closeTiming) {
 
   const dialog = {
     open: false,
+    returnValue: '',
     ownerDocument: document,
     showModal() { this.open = true; },
     matches(selector) { return selector === ':modal' && this.open; },
@@ -30,8 +32,9 @@ function createDialogHarness(closeTiming) {
         removeCount += 1;
       }
     },
-    close() {
+    close(returnValue = '') {
       this.open = false;
+      this.returnValue = returnValue;
       pendingClose = listeners.get('close');
       if (closeTiming === 'sync') pendingClose?.();
     }
@@ -86,4 +89,25 @@ test('disposeDialog waits for an asynchronous close event to restore focus and c
   assert.equal(harness.document.activeElement, harness.trigger);
   assert.equal(harness.listenerCount, 0);
   assert.equal(harness.removeCount, 1);
+});
+
+test('each new modal session resets the previous result before an Escape-style close', () => {
+  const harness = createDialogHarness('sync');
+
+  assert.equal(open(harness), true);
+  assert.equal(closeDialog(harness.dialog, 'save'), true);
+  assert.equal(harness.dialog.returnValue, 'save');
+
+  assert.equal(open(harness), true);
+  assert.equal(harness.dialog.returnValue, '');
+  assert.equal(closeDialog(harness.dialog), true);
+  assert.equal(harness.dialog.returnValue, '');
+
+  assert.equal(open(harness), true);
+  assert.equal(closeDialog(harness.dialog, 'confirm'), true);
+  assert.equal(harness.dialog.returnValue, 'confirm');
+  assert.equal(open(harness), true);
+  assert.equal(harness.dialog.returnValue, '');
+  assert.equal(closeDialog(harness.dialog), true);
+  assert.equal(harness.dialog.returnValue, '');
 });
