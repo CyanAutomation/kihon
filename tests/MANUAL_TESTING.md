@@ -38,11 +38,31 @@ On the style guide (`style-guide/index.html`):
 - [ ] Escape does not close content unexpectedly
 - [ ] Form inputs accept keyboard input without issue
 
+### Native Modal Dialogs
+
+In the style guide's **Dialogs** section, verify each example with keyboard-only interaction:
+
+- [ ] Open each dialog from its labeled trigger.
+- [ ] Confirm focus starts on Close for information, the application-name field for preferences, and Cancel for destructive confirmation.
+- [ ] Tab and Shift+Tab remain within the active modal and background controls cannot receive focus.
+- [ ] Escape dismisses each standard dismissible example and does not run the destructive confirmation.
+- [ ] Visible Close and Cancel actions work and focus returns to the invoking trigger.
+- [ ] Remove the invoking trigger while the dialog is open and confirm the configured logical fallback receives focus.
+- [ ] Submit invalid preferences, hear the error summary, and confirm the invalid field's help and error text are announced.
+- [ ] Correct the preferences error and complete the local example; verify it closes only after valid submission.
+- [ ] Confirm the destructive action is not initially focused and that Cancel leaves the status clear that nothing was deleted.
+- [ ] Confirm the destructive action produces one local status update and deletes no real data.
+- [ ] Test programmatic close and `returnValue` handling in a consuming application.
+
 ---
 
 ## Screen Reader Testing
 
 Test with **one desktop screen reader** (e.g., NVDA, JAWS, VoiceOver):
+
+- [ ] VoiceOver on macOS with Safari: open, explore, cancel, and close each dialog; verify its name, description, initial focus, and restoration.
+- [ ] NVDA with a supported Windows browser, where available: verify modal announcement, focus containment, Escape, validation errors, and return focus.
+- [ ] Check that preference validation errors are announced and remain associated with the invalid field.
 
 ### Heading Structure
 - [ ] All headings are announced as headings with correct level (h1, h2, h3, etc.)
@@ -86,12 +106,14 @@ Test with **one desktop screen reader** (e.g., NVDA, JAWS, VoiceOver):
 - [ ] All content remains readable and accessible at 200% resize
 - [ ] No text is clipped, truncated or hidden
 - [ ] Layout reflows appropriately
+- [ ] Dialogs remain usable with 200% text resizing and long content; headings and actions remain reachable while the body scrolls.
 
 ### Page Zoom
 - [ ] Page can be zoomed to 400% (Ctrl/Cmd + Plus)
 - [ ] All content is still accessible at 400% zoom
 - [ ] Horizontal scrolling is acceptable, but no functional loss
 - [ ] Rounded corners and borders remain visible
+- [ ] At 400% browser zoom, open and complete each dialog without clipped content or unreachable actions.
 
 ### Font Rendering
 - [ ] System font stack renders correctly on each OS
@@ -141,6 +163,7 @@ Test with **one desktop screen reader** (e.g., NVDA, JAWS, VoiceOver):
 - [ ] Content is still accessible and understandable
 - [ ] No essential information is conveyed only by animation
 - [ ] Page loads and functions without motion
+- [ ] Dialog opening, closing, validation, and focus remain clear with reduced motion enabled.
 
 ---
 
@@ -154,6 +177,7 @@ Test with **one desktop screen reader** (e.g., NVDA, JAWS, VoiceOver):
 - [ ] Focus indicators remain visible
 - [ ] No information is lost
 - [ ] Borders and boundaries are clear
+- [ ] Dialog boundaries and keyboard focus remain visible in forced-colours mode.
 
 ---
 
@@ -164,6 +188,8 @@ Test with **one desktop screen reader** (e.g., NVDA, JAWS, VoiceOver):
 - [ ] All buttons and controls are at least 44 × 44 CSS px
 - [ ] Touch targets do not overlap
 - [ ] Form inputs are usable on touch keyboards
+- [ ] At a 320 CSS px viewport, dialog fields and actions remain reachable and labels may wrap.
+- [ ] Open and dismiss dialogs using touch on a mobile viewport or device.
 - [ ] Hover states are not required for functionality
 - [ ] No:hover-only affordances
 - [ ] Zoom is not disabled (no `user-scalable=no`)
@@ -394,4 +420,6 @@ _[Add notes as needed]_
 **Result:** ☐ PASS ☐ FAIL ☐ PARTIAL
 
 **Last updated:** 2026-11-07. This checklist is not executed by `npm test`; record manual results above when those checks are performed.
+
+**Phase 2C manual status:** Not yet performed. VoiceOver, NVDA, actual browser zoom, mobile touch, and cross-browser forced-colours checks remain outstanding; automated Chromium results are recorded separately.
 

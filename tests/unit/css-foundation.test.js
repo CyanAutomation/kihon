@@ -10,7 +10,8 @@ const read = (file) => fs.readFileSync(path.join(root, file), 'utf8');
 test('generated tokens, foundation, component, and guide styles parse as CSS', () => {
   for (const file of [
     'src/css/tokens.css', 'src/css/base.css', 'src/css/components/buttons.css',
-    'src/css/components/forms.css', 'src/css/components/settings.css', 'style-guide/styles.css'
+    'src/css/components/forms.css', 'src/css/components/settings.css',
+    'src/css/components/dialogs.css', 'style-guide/styles.css'
   ]) {
     assert.doesNotThrow(() => postcss.parse(read(file), { from: file }), `${file} should parse`);
   }
@@ -39,8 +40,34 @@ test('base.css imports tokens and components in a deterministic order', () => {
 
   assert.deepEqual(imports, [
     "url('./tokens.css')", "url('./components/buttons.css')",
-    "url('./components/forms.css')", "url('./components/settings.css')"
+    "url('./components/forms.css')", "url('./components/settings.css')",
+    "url('./components/dialogs.css')"
   ]);
+});
+
+test('dialog styles are opt-in, namespaced, token-based, and expose the documented API', () => {
+  const css = postcss.parse(read('src/css/components/dialogs.css'));
+  const selectors = [];
+  const declarations = [];
+  css.walkRules((rule) => selectors.push(...(rule.selectors || [])));
+  css.walkDecls((decl) => declarations.push(decl));
+
+  for (const selector of selectors) {
+    assert.match(selector, /\.kh-dialog/, `dialog selector must be opt-in: ${selector}`);
+    assert.doesNotMatch(selector, /\.kh-sg-/i, `dialog component CSS must not depend on the guide: ${selector}`);
+  }
+
+  for (const decl of declarations) {
+    assert.doesNotMatch(decl.value, /#[\da-f]{3,8}\b|\b(?:rgb|hsl)a?\(/i, `hard-coded colour in ${decl.prop}`);
+  }
+
+  for (const selector of [
+    '.kh-dialog', '.kh-dialog__header', '.kh-dialog__title', '.kh-dialog__description',
+    '.kh-dialog__body', '.kh-dialog__footer', '.kh-dialog--sm', '.kh-dialog--lg',
+    'dialog.kh-dialog::backdrop'
+  ]) {
+    assert.ok(selectors.some((candidate) => candidate.includes(selector)), `missing selector ${selector}`);
+  }
 });
 
 test('form and settings styles expose opt-in classes without global control resets', () => {
