@@ -15,7 +15,7 @@ test('information dialog opens as a named modal, focuses Close, and restores foc
   await expect(page.locator('#about-dialog-close')).toBeFocused();
   expect(await dialog.evaluate((element) => element.matches(':modal'))).toBe(true);
 
-  await page.evaluate(() => document.querySelector('#default-button-example').focus());
+  await page.evaluate(() => document.querySelector('#default-button-example')?.focus());
   await expect(page.locator('#about-dialog-close')).toBeFocused();
 
   // Calling the optional helper again while the same modal is open is safe.
