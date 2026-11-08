@@ -164,6 +164,24 @@ test('cancelling preferences does not save', async ({ page }) => {
   await expect(page.getByRole('button', { name: 'Edit preferences' })).toBeFocused();
 });
 
+test('reopened saved preferences start with a cancelled returnValue when Escape is pressed', async ({ page }) => {
+  const trigger = page.getByRole('button', { name: 'Edit preferences' });
+  const dialog = page.locator('#preferences-dialog');
+
+  await trigger.click();
+  await page.locator('#preferences-name').fill('Saved example');
+  await page.locator('#preferences-save').click();
+  await expect(dialog).toBeHidden();
+  expect(await dialog.evaluate((element) => element.returnValue)).toBe('save');
+
+  await trigger.click();
+  expect(await dialog.evaluate((element) => element.returnValue)).toBe('');
+  await page.keyboard.press('Escape');
+  await expect(dialog).toBeHidden();
+  await expect(page.locator('[data-kh-dialog-status]')).toHaveText('Preferences cancelled. Nothing was saved.');
+  expect(await dialog.evaluate((element) => element.returnValue)).toBe('');
+});
+
 test('destructive confirmation starts on Cancel and executes at most once', async ({ page }) => {
   await page.getByRole('button', { name: 'Delete saved configuration' }).click();
   const dialog = page.getByRole('dialog', { name: 'Delete saved configuration?' });
@@ -183,6 +201,23 @@ test('destructive confirmation starts on Cancel and executes at most once', asyn
   });
   await expect(dialog).toBeHidden();
   await expect(page.locator('[data-kh-dialog-status]')).toHaveText('Confirmation ran once. No real data was deleted.');
+});
+
+test('reopened destructive confirmation does not reuse the previous confirm result after Escape', async ({ page }) => {
+  const trigger = page.getByRole('button', { name: 'Delete saved configuration' });
+  const dialog = page.locator('#delete-dialog');
+
+  await trigger.click();
+  await page.locator('#delete-dialog-confirm').click();
+  await expect(dialog).toBeHidden();
+  expect(await dialog.evaluate((element) => element.returnValue)).toBe('confirm');
+
+  await trigger.click();
+  expect(await dialog.evaluate((element) => element.returnValue)).toBe('');
+  await page.keyboard.press('Escape');
+  await expect(dialog).toBeHidden();
+  await expect(page.locator('[data-kh-dialog-status]')).toHaveText('Deletion cancelled. No configuration was deleted.');
+  expect(await dialog.evaluate((element) => element.returnValue)).toBe('');
 });
 
 test('dialogs follow themes and remain usable with long content at narrow widths', async ({ page }) => {

@@ -1,10 +1,10 @@
 # Kihon Development Guide
 
-This document explains how Kihon's design tokens, CSS and style guide are organized and built.
+This document explains how Kihon's design tokens, CSS, reusable TypeScript behavior, and style guide are organized and built.
 
-Phase 2A buttons and actions, Phase 2B forms and grouped settings, and Phase 2C accessible dialogs are implemented as framework-free components. See [`components/buttons.md`](components/buttons.md), [`components/forms.md`](components/forms.md), [`components/grouped-settings.md`](components/grouped-settings.md), and [`components/dialogs.md`](components/dialogs.md) for their public classes and accessibility contracts. Dialog behavior remains native to `<dialog>`; the optional helper is documented separately from the CSS API.
+Phase 2A buttons and actions, Phase 2B forms and grouped settings, Phase 2C accessible dialogs, and Phase 3A application shell are implemented as framework-free components. See [`components/buttons.md`](components/buttons.md), [`components/forms.md`](components/forms.md), [`components/grouped-settings.md`](components/grouped-settings.md), [`components/dialogs.md`](components/dialogs.md), and [`components/app-shell.md`](components/app-shell.md) for their public contracts. Dialog behavior remains native to `<dialog>`; the optional helper is documented separately from the CSS API.
 
-Use Node.js 24 or later and npm. The minimum version covers the HTML validation and browser-test development tools; the delivered CSS and theme switcher have no npm runtime dependencies.
+Use Node.js 24 or later and npm. The minimum version covers the HTML validation and browser-test tools. Generated Kihon CSS and the compiled dialog helper have no npm runtime dependencies; TypeScript and esbuild are development-only.
 
 ## Repository Structure
 
@@ -24,9 +24,14 @@ kihon/
 │           ├── buttons.css
 │           ├── forms.css
 │           ├── settings.css
-│           └── dialogs.css
+│           ├── dialogs.css
+│           └── app-shell.css
+├── src/ts/
+│   └── dialogs.ts               # Reusable runtime source
 ├── src/js/
-│   └── dialogs.js               # Optional native-dialog helper
+│   ├── dialogs.js               # Generated browser/CommonJS helper
+│   ├── dialogs.js.map            # Generated source map
+│   └── dialogs.d.ts              # Generated public declarations
 ├── style-guide/                 # Static documentation site
 │   ├── index.html               # Main style guide page
 │   ├── styles.css               # Style guide-specific styles
@@ -37,6 +42,7 @@ kihon/
 │   └── dialogs.js               # Local dialog demonstrations
 ├── scripts/
 │   ├── build-tokens.js          # Generates tokens.css from source
+│   ├── build-runtime.js         # Generates the dialog bundle and declarations
 │   ├── token-resolver.js        # Resolves aliases and formats typed values
 │   ├── token-validation.js     # DTCG schema and value validation
 │   ├── contrast.js              # WCAG contrast calculations
@@ -53,16 +59,38 @@ kihon/
 │       ├── buttons.md
 │       ├── forms.md
 │       ├── grouped-settings.md
-│       └── dialogs.md
+│       ├── dialogs.md
+│       └── app-shell.md
 └── package.json                 # Build configuration
 ```
+
+## Reusable TypeScript behavior
+
+TypeScript is the preferred source language for new reusable Kihon runtime behavior. CSS remains responsible for presentation, HTML for structure and native semantics, and generated JavaScript for browser and Node consumers. Applications do not need TypeScript or a runtime framework.
+
+The first TypeScript helper is the native-dialog helper:
+
+| Purpose | Path or command |
+| --- | --- |
+| TypeScript source | `src/ts/dialogs.ts` |
+| Browser global and Node CommonJS output | `src/js/dialogs.js` |
+| Source map | `src/js/dialogs.js.map` |
+| Generated API declarations | `src/js/dialogs.d.ts` |
+| Build CSS tokens and runtime output | `npm run build` |
+| Build runtime output only | `npm run build:runtime` |
+| Strict type check without emitting | `npm run typecheck` |
+
+The generated `src/js/dialogs.js` remains usable as a classic browser script exposing `window.KihonDialogs`, and through Node `require()` at its existing path. The bundle is built once from `src/ts/dialogs.ts`; there is no second handwritten helper. TypeScript and esbuild are development dependencies only. The JavaScript output and declarations are committed so consumers can use them without a build step, and `npm run check:generated` detects stale outputs without rewriting them.
+
+When adding reusable behavior, place source in `src/ts/`, export a small typed API, add or extend generated output through `scripts/build-runtime.js`, and cover both the compiled Node path and browser path where applicable. New CSS-only components do not need JavaScript. Existing style-guide scripts, token/build scripts, and tests remain JavaScript for now; consider migrating them incrementally when shared runtime behavior or stronger type guarantees make that useful. Future Phase 3B sidebar behavior should use TypeScript only for behavior that native HTML and CSS cannot provide. Phase 3C toolbars should remain native unless scripting is necessary.
 
 ## Design Tokens
 
 `src/css/base.css` is the consumer entry point. It imports generated tokens,
-then buttons, forms, grouped-settings, and dialog styles in that order;
+then buttons, forms, grouped-settings, dialog, and application-shell styles in that order;
 applications do not need to import files from `style-guide/`. The optional
-dialog helper is at `src/js/dialogs.js` and has no runtime dependencies.
+dialog helper is authored in TypeScript at `src/ts/dialogs.ts` and generated at
+`src/js/dialogs.js`; the generated helper has no runtime dependencies.
 
 ### Token Source Structure
 
@@ -250,9 +278,9 @@ Run this before committing token changes.
 - Opt-in `.kh-input`, `.kh-textarea`, `.kh-select`, `.kh-checkbox`, `.kh-radio`, and `.kh-label` styles
 - Focus and keyboard navigation
 - Accessibility features (reduced motion, forced colours)
-- Layout utility classes
+- Layout utility classes and the application-shell component
 
-`base.css` imports generated `tokens.css`, followed by `src/css/components/buttons.css`. Button rules stay in that component file, while `base.css` remains the public entry point and preserves existing `.kh-button` usage. Button styling is opt-in through documented classes; unclassed controls retain browser styling, selects retain native appearance, and the root font size remains the browser's default. Do not edit token values in `base.css`; regenerate CSS from the token source instead.
+`base.css` imports generated `tokens.css`, followed by the button, form, grouped-settings, dialog, and app-shell components. Component rules stay in their own files, while `base.css` remains the public entry point. Styling is opt-in through documented classes; unclassed controls retain browser styling, selects retain native appearance, and the root font size remains the browser's default. Do not edit token values in `base.css`; regenerate CSS from the token source instead.
 
 Button classes, tokens, markup, state responsibilities and accessibility guidance are documented in [`components/buttons.md`](components/buttons.md). Consuming applications do not need style-guide CSS or JavaScript.
 
@@ -268,6 +296,7 @@ The static style guide lives in `style-guide/` and demonstrates:
 - Keyboard navigation
 - Theme switching
 - Application preview examples
+- Application-shell region combinations and narrow-width stacking
 
 ### Preview the Style Guide
 
@@ -340,7 +369,7 @@ Explicit preferences are stored under `kihon-theme` when browser storage is avai
 npm run test
 ```
 
-Runs unit, token schema/value, contrast, HTML/CSS parsing, generated-file consistency, and Chromium browser checks. It does not run the manual verification checklist.
+Runs unit, token schema/value, contrast, HTML/CSS parsing, generated-file consistency, and Chromium browser checks. CI also runs strict TypeScript checking. The app-shell checks measure region geometry at 320, 480, 768, 1024, and 1280 CSS px. The automation does not run the manual verification checklist.
 
 ### Manual Verification Checklist
 
@@ -425,29 +454,11 @@ Colour-only overrides without testing WCAG requirements will break accessibility
 
 ## Continuous Integration
 
-The CI pipeline should:
-
-1. Run `npm install`
-2. Run `npm run build`
-3. Run `npm run validate`
-4. Fail if tokens.css differs from the expected output (detects stale builds)
-5. Optionally run accessibility or visual regression checks
-
-Example `.github/workflows/ci.yml`:
-
-```yaml
-- name: Build tokens
-  run: npm run build
-
-- name: Validate tokens
-  run: npm run validate
-
-- name: Check for stale CSS
-  run: |
-    npm run build
-    git diff --exit-code src/css/tokens.css || \
-      (echo "Stale generated CSS. Run: npm run build" && exit 1)
-```
+The CI workflow runs `npm ci` with Node.js 24, builds the token and runtime
+outputs, runs strict type checking, installs Playwright Chromium, and runs
+`npm test`. The generated-file check compares expected output without rebuilding
+committed files first, so stale CSS, JavaScript, source maps, or declarations
+fail CI.
 
 ## Troubleshooting
 

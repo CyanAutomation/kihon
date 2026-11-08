@@ -10,7 +10,7 @@ const read = (file) => fs.readFileSync(path.join(root, file), 'utf8');
 test('generated tokens, foundation, component, and guide styles parse as CSS', () => {
   for (const file of [
     'src/css/tokens.css', 'src/css/base.css', 'src/css/components/buttons.css',
-    'src/css/components/forms.css', 'src/css/components/settings.css',
+    'src/css/components/forms.css', 'src/css/components/settings.css', 'src/css/components/app-shell.css',
     'src/css/components/dialogs.css', 'style-guide/styles.css'
   ]) {
     assert.doesNotThrow(() => postcss.parse(read(file), { from: file }), `${file} should parse`);
@@ -41,7 +41,7 @@ test('base.css imports tokens and components in a deterministic order', () => {
   assert.deepEqual(imports, [
     "url('./tokens.css')", "url('./components/buttons.css')",
     "url('./components/forms.css')", "url('./components/settings.css')",
-    "url('./components/dialogs.css')"
+    "url('./components/dialogs.css')", "url('./components/app-shell.css')"
   ]);
 });
 
@@ -142,4 +142,32 @@ test('button component exposes namespaced variants, sizes, states, and token-bas
   }
   assert.ok(declarations.some((decl) => decl.prop === 'background-color' && decl.value.includes('var(--kh-color-accent)')));
   assert.ok(declarations.some((decl) => decl.prop === 'outline' && decl.value.includes('var(--kh-color-focus-ring)')));
+});
+
+test('application-shell styles are opt-in, token-based, responsive, and independent of guide CSS', () => {
+  const css = postcss.parse(read('src/css/components/app-shell.css'));
+  const selectors = [];
+  const declarations = [];
+  css.walkRules((rule) => selectors.push(...(rule.selectors || [])));
+  css.walkDecls((decl) => declarations.push(decl));
+
+  for (const selector of selectors) {
+    assert.match(selector, /^\.kh-app-shell/, `shell selector must be namespaced: ${selector}`);
+    assert.doesNotMatch(selector, /\.kh-sg-/i, `component CSS must not depend on the guide: ${selector}`);
+  }
+  for (const decl of declarations) {
+    assert.doesNotMatch(decl.value, /#[\da-f]{3,8}\b|\b(?:rgb|hsl)a?\(/i, `hard-coded colour in ${decl.prop}`);
+  }
+
+  for (const selector of [
+    '.kh-app-shell', '.kh-app-shell__header', '.kh-app-shell__nav', '.kh-app-shell__main',
+    '.kh-app-shell__details', '.kh-app-shell--with-nav', '.kh-app-shell--with-details',
+    '.kh-app-shell--with-nav-and-details'
+  ]) {
+    assert.ok(selectors.some((candidate) => candidate.includes(selector)), `missing selector ${selector}`);
+  }
+  assert.ok(declarations.some((decl) => decl.prop === 'grid-template-columns'));
+  assert.ok(declarations.some((decl) => decl.value.includes('var(--kh-color-border-subtle)')));
+  assert.ok(css.nodes.some((node) => node.type === 'atrule' && node.name === 'media' && node.params.includes('56rem')));
+  assert.doesNotMatch(read('src/css/components/app-shell.css'), /overflow:\s*hidden/i);
 });

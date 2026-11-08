@@ -17,6 +17,10 @@ document.querySelector('#about-dialog-trigger')?.addEventListener('click', (even
   openDemoDialog(aboutDialog, event.currentTarget, document.querySelector('#about-dialog-close'));
 });
 
+document.querySelector('#app-shell-about-trigger')?.addEventListener('click', (event) => {
+  openDemoDialog(aboutDialog, event.currentTarget, document.querySelector('#about-dialog-close'));
+});
+
 const preferencesForm = document.querySelector('#preferences-form');
 const preferencesName = document.querySelector('#preferences-name');
 const preferencesError = document.querySelector('#preferences-name-error');
