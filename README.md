@@ -4,7 +4,7 @@
 
 Kihon defines a lightweight, framework-free design system for CyanAutomation web applications: shared design decisions, accessible interface conventions, reusable CSS and small, optional TypeScript enhancements. It draws inspiration from Apple's Human Interface Guidelines—particularly the clarity and ergonomics of macOS and iOS—while remaining a web-native system rather than an imitation of SwiftUI.
 
-> **Status: Draft foundation; Phase 2A buttons and actions, Phase 2B forms and grouped settings, Phase 2C accessible dialogs, and Phase 3A application shell with a TypeScript runtime foundation are implemented.** Automated checks cover DTCG token validation, selected WCAG contrast pairings, generated-file consistency, strict TypeScript checking, HTML/CSS parsing, and Chromium interactions. These checks do not certify WCAG conformance. Phase 3B navigation behavior, Phase 3C toolbars, and public package distribution remain planned. Kihon v1.0 has not been released. See [`docs/development.md`](docs/development.md) for build and contribution information.
+> **Status: Draft foundation; Phase 2A buttons and actions, Phase 2B forms and grouped settings, Phase 2C accessible dialogs, Phase 3A application shell, and Phase 3B accessible sidebar navigation are implemented.** Automated checks cover DTCG token validation, selected WCAG contrast pairings, generated-file consistency, strict TypeScript checking, HTML/CSS parsing, and Chromium interactions. These checks do not certify WCAG conformance. Phase 3C toolbars and public package distribution remain planned. Kihon v1.0 has not been released. See [`docs/development.md`](docs/development.md) for build and contribution information.
 
 ## Why Kihon?
 
@@ -149,6 +149,7 @@ The style guide demonstrates:
 - **Forms** — native controls, field states, help and error associations, and a local validation example
 - **Grouped settings** — responsive preference sections with native controls
 - **Application shell** — content-only, navigation, and optional details layouts
+- **Sidebar navigation** — grouped links, current-page styling, optional collapse/reveal, and narrow layouts
 - **Dialogs** — native modal information, validated preferences, and confirmation examples
 - **Foundations** — surfaces and application layouts
 - **Accessibility** — keyboard navigation, reduced motion, forced colours
@@ -184,7 +185,7 @@ For Kihon components, consuming applications can import the foundation entry poi
 
 No frontend framework is required. Kihon works with vanilla HTML, CSS and optional JavaScript.
 
-The application shell is documented in [`docs/components/app-shell.md`](docs/components/app-shell.md). Dialogs use native `<dialog>` opened with `showModal()`; the TypeScript source, generated browser/CommonJS helper, and consumer responsibilities are documented in [`docs/components/dialogs.md`](docs/components/dialogs.md) and [`docs/development.md`](docs/development.md).
+The application shell and sidebar are documented in [`docs/components/app-shell.md`](docs/components/app-shell.md) and [`docs/components/sidebar.md`](docs/components/sidebar.md). Dialogs use native `<dialog>` opened with `showModal()`; the TypeScript source, generated browser/CommonJS helpers, and consumer responsibilities are documented in the component guides and [`docs/development.md`](docs/development.md).
 
 Kihon is intended for CyanAutomation applications with a web UI. Headless Workers, APIs and background services are **not applicable**, rather than non-compliant.
 
@@ -216,7 +217,8 @@ The planned `swiftui-mapping.md` will describe conceptual equivalents—for exam
 - [x] Add accessible form styling with documented states (Phase 2B).
 - [x] Implement grouped settings patterns with responsive rows (Phase 2B).
 - [x] Implement native accessible dialogs with local examples (Phase 2C).
-- [ ] Document and implement desktop sidebar/toolbar conventions.
+- [x] Implement accessible desktop sidebar navigation (Phase 3B).
+- [ ] Implement toolbar and page-header conventions (Phase 3C).
 - [x] Build a static, framework-free style-guide site with live examples.
 - [ ] Add automated validation and manual review checklists.
 - [ ] Pilot adoption in one CyanAutomation web application.

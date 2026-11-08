@@ -48,7 +48,7 @@ test('keyboard focus follows the document order through header, navigation, cont
   await page.keyboard.press('Tab');
   await expect(page.locator('#app-shell-activity')).toBeFocused();
   await page.keyboard.press('Tab');
-  await expect(page.getByRole('link', { name: 'Settings' })).toBeFocused();
+  await expect(page.getByRole('navigation', { name: 'Primary project navigation' }).getByRole('link', { name: 'Settings' })).toBeFocused();
   await page.keyboard.press('Tab');
   await expect(page.locator('#app-shell-project-name')).toBeFocused();
   await page.keyboard.press('Tab');

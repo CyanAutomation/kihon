@@ -38,6 +38,20 @@ On the style guide (`style-guide/index.html`):
 - [ ] Escape does not close content unexpectedly
 - [ ] Form inputs accept keyboard input without issue
 
+### Sidebar Navigation
+
+In the style guide's **Sidebar Navigation** and **Application Shell** sections:
+
+- [ ] Navigate into each named navigation landmark and verify its group headings and list items.
+- [ ] Confirm only the current destination has `aria-current="page"` and its state remains visible without color.
+- [ ] Collapse the sidebar while focus is inside a link; verify focus moves to the toggle before links are hidden.
+- [ ] Reveal the sidebar and verify focus remains on the toggle and links become reachable again.
+- [ ] Verify the toggle stays outside the navigation and remains available at 320 CSS px.
+- [ ] Resize between desktop and narrow widths while expanded and collapsed; verify no destination becomes unreachable.
+- [ ] Disable JavaScript and verify navigation remains visible while the nonfunctional toggle stays hidden.
+- [ ] Test the component with 200% text resize, 400% browser zoom, light and dark themes, forced colours, and reduced motion.
+- [ ] Test touch target spacing and ordinary anchor behavior on an actual mobile browser.
+
 ### Native Modal Dialogs
 
 In the style guide's **Dialogs** section, verify each example with keyboard-only interaction:
@@ -91,6 +105,7 @@ Test with **one desktop screen reader** (e.g., NVDA, JAWS, VoiceOver):
 - [ ] Navigation landmark is present and labeled
 - [ ] Main content landmark is present
 - [ ] No unlabeled landmark sections
+- [ ] Each sidebar navigation landmark has a meaningful unique name and uses native links rather than menu/tree roles.
 
 ### Colour and Meaning
 - [ ] Content is understandable without relying on colour
@@ -232,6 +247,8 @@ Test with **one desktop screen reader** (e.g., NVDA, JAWS, VoiceOver):
 - [ ] Repeat with 200% text size and at 400% browser zoom where applicable.
 - [ ] Check light and dark themes, forced colours, and reduced motion.
 - [ ] On mobile browsers, check page scrolling with dynamic browser chrome and on-screen keyboards.
+- [ ] At a 1280px viewport, constrain the shell to 56rem and verify the main content retains usable width.
+- [ ] Collapse navigation in two-column and three-column shells and verify no empty track remains.
 
 ---
 
@@ -430,9 +447,11 @@ _[Add notes as needed]_
 
 **Result:** ☐ PASS ☐ FAIL ☐ PARTIAL
 
-**Last updated:** 2026-11-07. This checklist is not executed by `npm test`; record manual results above when those checks are performed.
+**Last updated:** 2026-11-08. This checklist is not executed by `npm test`; record manual results above when those checks are performed.
 
 **Phase 2C manual status:** Not yet performed. VoiceOver, NVDA, actual browser zoom, mobile touch, and cross-browser forced-colours checks remain outstanding; automated Chromium results are recorded separately.
 
 **Phase 3A manual status:** Not yet performed. VoiceOver, NVDA, actual 200% text resizing and 400% browser zoom, mobile viewport behavior, and Firefox/WebKit layout checks remain outstanding; automated Chromium results are recorded separately.
+
+**Phase 3B manual status:** Not yet performed. VoiceOver, NVDA, actual 200% text resizing and 400% browser zoom, mobile touch, and Firefox/WebKit focus and responsive checks remain outstanding; automated Chromium results are recorded separately.
 
