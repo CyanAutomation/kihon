@@ -551,6 +551,100 @@
       <p class="kh-sg-demo-status" data-kh-demo-settings-status role="status" aria-live="polite">Change a control to update this local status.</p>
     </section>
 
+    <!-- Application shell -->
+    <section id="app-shell" class="kh-sg-section" aria-labelledby="app-shell-heading">
+      <h2 id="app-shell-heading">Application Shell</h2>
+      <p>The shell combines an optional application header, primary navigation, main content and complementary details. These examples use layout-only containers inside the style guide; consuming applications should use one semantic <code>&lt;main&gt;</code> landmark per view.</p>
+
+      <div class="kh-sg-app-shell-examples">
+        <section class="kh-sg-app-shell-example" aria-labelledby="app-shell-content-title">
+          <h3 id="app-shell-content-title">Main content only</h3>
+          <div id="app-shell-content-only" class="kh-app-shell">
+            <div class="kh-app-shell__main">
+              <h3>Activity</h3>
+              <p>This layout has one content column. The code block can scroll horizontally without widening the page.</p>
+              <pre><code>const project = { name: 'Kihon', phase: '3A' };</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <section class="kh-sg-app-shell-example" aria-labelledby="app-shell-nav-title">
+          <h3 id="app-shell-nav-title">Navigation and main content</h3>
+          <div id="app-shell-nav-main" class="kh-app-shell kh-app-shell--with-nav">
+            <nav class="kh-app-shell__nav" aria-label="Example project navigation">
+              <a href="#app-shell-overview" aria-current="page">Overview</a>
+              <a href="#app-shell-activity">Activity</a>
+            </nav>
+            <div class="kh-app-shell__main">
+              <h3>Overview</h3>
+              <p>Navigation stays visible beside the primary content when space allows.</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="kh-sg-app-shell-example" aria-labelledby="app-shell-details-title">
+          <h3 id="app-shell-details-title">Main content and details</h3>
+          <div id="app-shell-main-details" class="kh-app-shell kh-app-shell--with-details">
+            <div class="kh-app-shell__main">
+              <h3>Selected service</h3>
+              <p>The primary view can pair with contextual details without requiring a navigation sidebar.</p>
+            </div>
+            <aside class="kh-app-shell__details" aria-label="Service details">
+              <h3>Service details</h3>
+              <p>Region: Europe</p>
+              <p>Status: Operational</p>
+            </aside>
+          </div>
+        </section>
+
+        <section class="kh-sg-app-shell-example" aria-labelledby="app-shell-full-title">
+          <h3 id="app-shell-full-title">Navigation, main content and details</h3>
+          <p><a class="kh-sg-skip-link" href="#app-shell-main">Skip project navigation</a></p>
+          <div id="app-shell-full" class="kh-app-shell kh-app-shell--with-nav-and-details">
+            <header class="kh-app-shell__header">
+              <strong>Project workspace</strong>
+              <div class="kh-sg-app-shell-actions">
+                <button class="kh-button kh-button--secondary kh-button--sm" id="app-shell-about-trigger" type="button">About Kihon</button>
+                <button class="kh-button kh-button--primary kh-button--sm" type="button">New project</button>
+              </div>
+            </header>
+            <nav class="kh-app-shell__nav" aria-label="Primary project navigation">
+              <a id="app-shell-overview" href="#app-shell-overview" aria-current="page">Overview</a>
+              <a id="app-shell-activity" href="#app-shell-activity">Activity</a>
+              <a href="#app-shell-settings">Settings</a>
+            </nav>
+            <div class="kh-app-shell__main" id="app-shell-main" tabindex="-1">
+              <h3>Overview</h3>
+              <p>Project information remains in the main reading order. The shell adds no JavaScript and uses the existing button, form and grouped-settings classes.</p>
+
+              <section class="kh-settings-group" aria-labelledby="app-shell-settings">
+                <h4 class="kh-settings-heading" id="app-shell-settings">Project settings</h4>
+                <div class="kh-settings-list">
+                  <div class="kh-settings-row">
+                    <div class="kh-settings-row-content">
+                      <label class="kh-settings-row-title" for="app-shell-project-name">Project name</label>
+                      <p class="kh-settings-row-description" id="app-shell-project-help">This local example is not saved.</p>
+                    </div>
+                    <div class="kh-settings-row-control">
+                      <input class="kh-input" id="app-shell-project-name" type="text" value="Kihon" aria-describedby="app-shell-project-help">
+                    </div>
+                  </div>
+                </div>
+              </section>
+              <button class="kh-button kh-button--primary" id="app-shell-main-action" type="button">Review activity</button>
+            </div>
+            <aside class="kh-app-shell__details" aria-label="Project details">
+              <h3>Project details</h3>
+              <p><strong>Phase:</strong> 3A — Application Shell</p>
+              <p>Details are complementary. They follow the main content in both document and keyboard order.</p>
+              <a href="#app-shell-main">Return to project overview</a>
+            </aside>
+          </div>
+        </section>
+      </div>
+      <p class="kh-sg-demo-status">The examples use document scrolling. At narrow widths the regions stack in document order; no region is hidden.</p>
+    </section>
+
     <!-- Dialogs -->
     <section id="dialogs" class="kh-sg-section" aria-labelledby="dialogs-heading">
       <h2 id="dialogs-heading" tabindex="-1">Dialogs</h2>
