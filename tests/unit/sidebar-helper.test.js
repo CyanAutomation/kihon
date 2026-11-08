@@ -78,12 +78,16 @@ class FakeElement {
     this.ownerDocument.activeElement = this;
   }
 
+  blur() {
+    if (this.ownerDocument.activeElement === this) this.ownerDocument.activeElement = null;
+  }
+
   closest(selector) {
     return selector === '.kh-app-shell' ? this.shell ?? null : null;
   }
 }
 
-function createFixture({ expanded = true } = {}) {
+function createFixture({ expanded = true, passShell = false, autoDetectShell = true } = {}) {
   const document = new FakeDocument();
   const shell = new FakeElement(document, 'div', 'shell');
   const sidebar = new FakeElement(document, 'nav', 'primary-sidebar');
@@ -94,9 +98,11 @@ function createFixture({ expanded = true } = {}) {
   toggleButton.setAttribute('aria-controls', sidebar.id);
   sidebar.setAttribute('aria-label', 'Primary navigation');
   sidebar.children.add(link);
-  sidebar.shell = shell;
+  if (autoDetectShell) sidebar.shell = shell;
   shell.children.add(sidebar);
-  const controller = createSidebarController({ sidebar, toggleButton, initialExpanded: expanded });
+  const options = { sidebar, toggleButton, initialExpanded: expanded };
+  if (passShell) options.shell = shell;
+  const controller = createSidebarController(options);
   return { document, shell, sidebar, toggleButton, link, controller };
 }
 
@@ -121,6 +127,17 @@ test('controller synchronizes visibility, ARIA state, and app-shell tracks idemp
   assert.equal(shell.classList.contains('kh-app-shell--nav-collapsed'), false);
 });
 
+test('explicit shell option controls its layout when automatic discovery is unavailable', () => {
+  const { shell, sidebar, controller } = createFixture({ passShell: true, autoDetectShell: false });
+
+  controller.collapse();
+  assert.equal(shell.classList.contains('kh-app-shell--nav-collapsed'), true);
+
+  controller.expand();
+  assert.equal(shell.classList.contains('kh-app-shell--nav-collapsed'), false);
+  controller.dispose();
+});
+
 test('collapse moves focus out of navigation before hiding its links', () => {
   const { document, sidebar, toggleButton, link, controller } = createFixture();
   link.focus();
@@ -128,6 +145,17 @@ test('collapse moves focus out of navigation before hiding its links', () => {
 
   assert.equal(document.activeElement, toggleButton);
   assert.equal(sidebar.hidden, true);
+});
+
+test('collapse blurs focused content if its detached toggle cannot receive focus', () => {
+  const { document, sidebar, toggleButton, link, controller } = createFixture();
+  link.focus();
+  toggleButton.isConnected = false;
+
+  assert.doesNotThrow(() => controller.collapse());
+  assert.equal(document.activeElement, null);
+  assert.equal(sidebar.hidden, true);
+  assert.equal(toggleButton.getAttribute('aria-expanded'), 'false');
 });
 
 test('native button clicks toggle state and disposal restores the visible fallback', () => {
@@ -158,6 +186,23 @@ test('repeated initialization is rejected and disposal permits a new controller'
   controller.dispose();
   const replacement = createSidebarController({ sidebar, toggleButton });
   assert.equal(toggleButton.listeners.get('click').size, 1);
+  replacement.dispose();
+});
+
+test('disposal removes listeners and releases the controller even if state restoration throws', () => {
+  const { sidebar, shell, toggleButton, controller } = createFixture();
+  controller.collapse();
+  const originalToggle = shell.classList.toggle;
+  shell.classList.toggle = () => { throw new Error('simulated class-list failure'); };
+
+  assert.throws(() => controller.dispose(), /simulated class-list failure/);
+  assert.equal(toggleButton.listeners.get('click').size, 0);
+  assert.equal(toggleButton.getAttribute('data-kh-sidebar-ready'), null);
+  assert.equal(toggleButton.getAttribute('hidden'), '');
+  assert.equal(sidebar.hidden, false);
+
+  shell.classList.toggle = originalToggle;
+  const replacement = createSidebarController({ sidebar, toggleButton, shell });
   replacement.dispose();
 });
 

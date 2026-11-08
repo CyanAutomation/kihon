@@ -173,6 +173,31 @@ test('navigation is visible without JavaScript and hides the inactive toggle', a
   await context.close();
 });
 
+test('a malformed guide toggle does not stop later sidebar controllers from initializing', async ({ browser, baseURL }) => {
+  const context = await browser.newContext();
+  const page = await context.newPage();
+  const consoleErrors = [];
+  page.on('console', (message) => {
+    if (message.type() === 'error') consoleErrors.push(message.text());
+  });
+  await page.route('**/style-guide/', async (route) => {
+    const response = await route.fetch();
+    const html = await response.text();
+    const marker = '<button class="kh-button kh-button--quiet kh-sidebar-toggle" id="sidebar-demo-toggle"';
+    const malformedToggle = '<button class="kh-sidebar-toggle" aria-controls="sidebar-demo-nav">Malformed toggle</button>\n          ';
+    await route.fulfill({ response, body: html.replace(marker, `${malformedToggle}${marker}`) });
+  });
+
+  await page.goto(`${baseURL}/style-guide/`);
+  const navigation = page.locator('#sidebar-demo-nav');
+  const toggle = page.locator('#sidebar-demo-toggle');
+  await expect(toggle).toBeVisible();
+  expect(consoleErrors).toHaveLength(1);
+  await toggle.click();
+  await expect(navigation).toBeHidden();
+  await context.close();
+});
+
 test('repeated toggle use is stable and controller disposal removes its listener', async ({ page }) => {
   const pageErrors = [];
   page.on('pageerror', (error) => pageErrors.push(error.message));
