@@ -7,23 +7,25 @@ const { execFileSync } = require('node:child_process');
 const esbuild = require('esbuild');
 
 const ROOT = path.join(__dirname, '..');
-const SOURCE = path.join(ROOT, 'src', 'ts', 'dialogs.ts');
-const OUTPUT = path.join(ROOT, 'src', 'js', 'dialogs.js');
 const DECLARATION_CONFIG = path.join(ROOT, 'tsconfig.declarations.json');
 const TSC = path.join(ROOT, 'node_modules', 'typescript', 'bin', 'tsc');
+const RUNTIMES = [
+  { name: 'dialogs', globalName: 'KihonDialogs' },
+  { name: 'sidebar', globalName: 'KihonSidebar' }
+];
 
-async function createRuntimeOutputs() {
+async function createRuntimeOutput(runtime) {
   const result = await esbuild.build({
-    entryPoints: [SOURCE],
-    outfile: OUTPUT,
+    entryPoints: [path.join(ROOT, 'src', 'ts', `${runtime.name}.ts`)],
+    outfile: path.join(ROOT, 'src', 'js', `${runtime.name}.js`),
     bundle: true,
     format: 'iife',
-    globalName: 'KihonDialogs',
+    globalName: runtime.globalName,
     target: 'es2022',
     sourcemap: 'external',
     sourcesContent: true,
     footer: {
-      js: 'if (typeof module === "object" && module.exports) module.exports = KihonDialogs;'
+      js: `if (typeof module === "object" && module.exports) module.exports = ${runtime.globalName};`
     },
     write: false,
     logLevel: 'silent'
@@ -39,8 +41,10 @@ async function createDeclarationOutputs() {
       cwd: ROOT,
       stdio: 'pipe'
     });
-    const declaration = await fs.readFile(path.join(temporaryOutput, 'dialogs.d.ts'));
-    return [{ path: path.join(ROOT, 'src', 'js', 'dialogs.d.ts'), contents: declaration }];
+    return await Promise.all(RUNTIMES.map(async (runtime) => ({
+      path: path.join(ROOT, 'src', 'js', `${runtime.name}.d.ts`),
+      contents: await fs.readFile(path.join(temporaryOutput, `${runtime.name}.d.ts`))
+    })));
   } catch (error) {
     const compilerOutput = [error.stdout, error.stderr]
       .filter(Boolean)
@@ -53,11 +57,11 @@ async function createDeclarationOutputs() {
 }
 
 async function getRuntimeOutputs() {
-  const [bundleOutputs, declarationOutputs] = await Promise.all([
-    createRuntimeOutputs(),
+  const [bundleOutputGroups, declarationOutputs] = await Promise.all([
+    Promise.all(RUNTIMES.map(createRuntimeOutput)),
     createDeclarationOutputs()
   ]);
-  return [...bundleOutputs, ...declarationOutputs];
+  return [...bundleOutputGroups.flat(), ...declarationOutputs];
 }
 
 async function buildRuntime() {
@@ -66,7 +70,7 @@ async function buildRuntime() {
     await fs.mkdir(path.dirname(output.path), { recursive: true });
     await fs.writeFile(output.path, output.contents);
   }
-  console.log('✓ Generated browser/CommonJS dialog helper and TypeScript declarations');
+  console.log('✓ Generated browser/CommonJS runtime helpers and TypeScript declarations');
 }
 
 if (require.main === module) {

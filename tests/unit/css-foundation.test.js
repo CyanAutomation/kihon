@@ -11,7 +11,7 @@ test('generated tokens, foundation, component, and guide styles parse as CSS', (
   for (const file of [
     'src/css/tokens.css', 'src/css/base.css', 'src/css/components/buttons.css',
     'src/css/components/forms.css', 'src/css/components/settings.css', 'src/css/components/app-shell.css',
-    'src/css/components/dialogs.css', 'style-guide/styles.css'
+    'src/css/components/dialogs.css', 'src/css/components/sidebar.css', 'style-guide/styles.css'
   ]) {
     assert.doesNotThrow(() => postcss.parse(read(file), { from: file }), `${file} should parse`);
   }
@@ -41,7 +41,8 @@ test('base.css imports tokens and components in a deterministic order', () => {
   assert.deepEqual(imports, [
     "url('./tokens.css')", "url('./components/buttons.css')",
     "url('./components/forms.css')", "url('./components/settings.css')",
-    "url('./components/dialogs.css')", "url('./components/app-shell.css')"
+    "url('./components/dialogs.css')", "url('./components/app-shell.css')",
+    "url('./components/sidebar.css')"
   ]);
 });
 
@@ -162,7 +163,8 @@ test('application-shell styles are opt-in, token-based, responsive, and independ
   for (const selector of [
     '.kh-app-shell', '.kh-app-shell__header', '.kh-app-shell__nav', '.kh-app-shell__main',
     '.kh-app-shell__details', '.kh-app-shell--with-nav', '.kh-app-shell--with-details',
-    '.kh-app-shell--with-nav-and-details'
+    '.kh-app-shell--with-nav-and-details', '.kh-app-shell--nav-collapsed',
+    '.kh-app-shell__nav[hidden]'
   ]) {
     assert.ok(selectors.some((candidate) => candidate.includes(selector)), `missing selector ${selector}`);
   }
@@ -170,4 +172,35 @@ test('application-shell styles are opt-in, token-based, responsive, and independ
   assert.ok(declarations.some((decl) => decl.value.includes('var(--kh-color-border-subtle)')));
   assert.ok(css.nodes.some((node) => node.type === 'atrule' && node.name === 'media' && node.params.includes('56rem')));
   assert.doesNotMatch(read('src/css/components/app-shell.css'), /overflow:\s*hidden/i);
+});
+
+test('sidebar styles are opt-in, token-based, semantic, and independent of the guide', () => {
+  const css = postcss.parse(read('src/css/components/sidebar.css'));
+  const selectors = [];
+  const declarations = [];
+  css.walkRules((rule) => selectors.push(...(rule.selectors || [])));
+  css.walkDecls((decl) => declarations.push(decl));
+
+  for (const selector of selectors) {
+    assert.match(selector, /\.kh-sidebar/, `sidebar selector must be namespaced: ${selector}`);
+    assert.doesNotMatch(selector, /\.kh-sg-/i, `component CSS must not depend on the guide: ${selector}`);
+  }
+  for (const decl of declarations) {
+    assert.doesNotMatch(decl.value, /#[\da-f]{3,8}\b|\b(?:rgb|hsl)a?\(/i, `hard-coded colour in ${decl.prop}`);
+  }
+
+  for (const selector of [
+    '.kh-sidebar', '.kh-sidebar__header', '.kh-sidebar__section', '.kh-sidebar__section-title',
+    '.kh-sidebar__list', '.kh-sidebar__item', '.kh-sidebar__link',
+    '.kh-sidebar__link[aria-current="page"]', '.kh-sidebar__icon', '.kh-sidebar__label',
+    '.kh-sidebar__description', '.kh-sidebar__footer', '.kh-sidebar[hidden]',
+    'button.kh-sidebar-toggle:not([data-kh-sidebar-ready])'
+  ]) {
+    assert.ok(selectors.some((candidate) => candidate.includes(selector)), `missing selector ${selector}`);
+  }
+  assert.ok(declarations.some((decl) => decl.value.includes('var(--kh-color-surface)')));
+  assert.ok(declarations.some((decl) => decl.value.includes('var(--kh-color-focus-ring)')));
+  assert.ok(css.nodes.some((node) => node.type === 'atrule' && node.name === 'media' && node.params.includes('prefers-reduced-motion')));
+  assert.ok(css.nodes.some((node) => node.type === 'atrule' && node.name === 'media' && node.params.includes('forced-colors')));
+  assert.doesNotMatch(read('src/css/components/sidebar.css'), /role\s*=\s*["'](?:menu|menuitem|tree)/i);
 });
