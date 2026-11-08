@@ -4,7 +4,7 @@
 
 Kihon defines a lightweight, framework-free design system for CyanAutomation web applications: shared design decisions, accessible interface conventions, reusable CSS and small, optional TypeScript enhancements. It draws inspiration from Apple's Human Interface Guidelines—particularly the clarity and ergonomics of macOS and iOS—while remaining a web-native system rather than an imitation of SwiftUI.
 
-> **Status: Draft foundation; Phase 2A buttons and actions, Phase 2B forms and grouped settings, Phase 2C accessible dialogs, Phase 3A application shell, and Phase 3B accessible sidebar navigation are implemented.** Automated checks cover DTCG token validation, selected WCAG contrast pairings, generated-file consistency, strict TypeScript checking, HTML/CSS parsing, and Chromium interactions. These checks do not certify WCAG conformance. Phase 3C toolbars and public package distribution remain planned. Kihon v1.0 has not been released. See [`docs/development.md`](docs/development.md) for build and contribution information.
+> **Status: provisional foundation; Phase 2A buttons and actions, Phase 2B forms and grouped settings, Phase 2C accessible dialogs, Phase 3A application shell, and Phase 3B accessible sidebar navigation are implemented.** Automated checks cover DTCG token validation, selected WCAG contrast pairings, generated-file consistency, strict TypeScript checking, HTML/CSS parsing, and Chromium interactions. These checks do not certify WCAG conformance. Phase 3C toolbars and public package distribution remain planned. See [`docs/development.md`](docs/development.md) for build and contribution information.
 
 ## Why Kihon?
 
@@ -242,8 +242,4 @@ Use [GitHub Issues](https://github.com/CyanAutomation/kihon/issues) for proposal
 - [Design Tokens Community Group — 2025.10](https://www.designtokens.org/TR/2025.10/)
 - [MDN Web Docs: HTML `<dialog>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/dialog)
 
-Kihon is an independent CyanAutomation project inspired by established design principles. It is **not affiliated with or endorsed by Apple**. Apple names and trademarks belong to their respective owners.
-
-## License
-
-A project licence has **not yet been specified in this README**. Confirm the repository licence and distribution terms before publishing reusable packages or assets.
+Kihon is an independent CyanAutomation project inspired by established design principles. It is **not affiliated with or endorsed by Apple**.
