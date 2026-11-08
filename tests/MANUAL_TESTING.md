@@ -222,6 +222,17 @@ Test with **one desktop screen reader** (e.g., NVDA, JAWS, VoiceOver):
 - [ ] Sidebar and main content are side-by-side if applicable
 - [ ] No excessive line lengths (90 characters is reasonable)
 
+### Application Shell
+- [ ] At 320 and 480 CSS px, navigation, main content, and details stack in document order and remain visible.
+- [ ] At 768 CSS px, confirm no shell region is compressed or hidden.
+- [ ] At 1024 and 1280 CSS px, verify each present region has usable width and no empty column is reserved for an absent region.
+- [ ] Navigate through header actions, nav links, main controls, and details links using Tab and Shift+Tab.
+- [ ] Use the skip link and confirm focus reaches the main content without being obscured.
+- [ ] Scroll long content and code, and confirm focused controls remain visible.
+- [ ] Repeat with 200% text size and at 400% browser zoom where applicable.
+- [ ] Check light and dark themes, forced colours, and reduced motion.
+- [ ] On mobile browsers, check page scrolling with dynamic browser chrome and on-screen keyboards.
+
 ---
 
 ## Form Usability
@@ -422,4 +433,6 @@ _[Add notes as needed]_
 **Last updated:** 2026-11-07. This checklist is not executed by `npm test`; record manual results above when those checks are performed.
 
 **Phase 2C manual status:** Not yet performed. VoiceOver, NVDA, actual browser zoom, mobile touch, and cross-browser forced-colours checks remain outstanding; automated Chromium results are recorded separately.
+
+**Phase 3A manual status:** Not yet performed. VoiceOver, NVDA, actual 200% text resizing and 400% browser zoom, mobile viewport behavior, and Firefox/WebKit layout checks remain outstanding; automated Chromium results are recorded separately.
 
