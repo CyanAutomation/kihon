@@ -45,6 +45,7 @@
       }
 
       if (controller.disposeAfterClose) {
+        controller.disposeAfterClose = false;
         dialog.removeEventListener('close', controller.onClose);
         controllers.delete(dialog);
       }
@@ -110,7 +111,7 @@
     const controller = controllers.get(dialog);
     if (!controller) return false;
     if (controller.sessionActive) {
-      // `close` is dispatched asynchronously; let native and fallback restoration run first.
+      // If the close event is still pending, restore focus before removing this listener.
       controller.disposeAfterClose = true;
       return true;
     }

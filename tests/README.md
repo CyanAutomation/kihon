@@ -9,7 +9,7 @@ npm test
 
 The suite runs:
 
-1. Node unit tests for alias resolution, typed token validation, contrast calculations, and parsed button, form, grouped-settings, and dialog CSS contracts.
+1. Node unit tests for alias resolution, typed token validation, contrast calculations, dialog-helper cleanup with synchronous and asynchronous close events, and parsed button, form, grouped-settings, and dialog CSS contracts.
 2. DTCG 2025.10 schema and value validation, including required theme tokens and approved contrast pairings.
 3. `html-validate` for the style-guide HTML and PostCSS parsing for committed stylesheets.
 4. A generated CSS consistency check that compares output without rebuilding the committed file first.
