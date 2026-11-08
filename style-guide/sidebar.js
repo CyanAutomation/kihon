@@ -2,10 +2,14 @@
 document.querySelectorAll('.kh-sidebar-toggle[aria-controls]').forEach((toggleButton) => {
   const sidebar = document.getElementById(toggleButton.getAttribute('aria-controls'));
   if (sidebar && window.KihonSidebar) {
-    window.KihonSidebar.createSidebarController({
-      sidebar,
-      toggleButton
-    });
+    try {
+      window.KihonSidebar.createSidebarController({
+        sidebar,
+        toggleButton
+      });
+    } catch (error) {
+      console.error('[KihonSidebar] Failed to initialize sidebar controller:', error);
+    }
   }
 });
 

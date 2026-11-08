@@ -186,10 +186,12 @@ toggle again. Disposal is idempotent; methods on a disposed controller throw.
 Only one controller may be active for a given navigation at a time.
 
 If focus is inside the navigation when it is collapsed programmatically, focus
-moves to the connected toggle before the navigation is hidden. Activating the
-toggle to reveal the sidebar leaves focus on the toggle; it does not move focus
-into the navigation. The controller adds no focus trap and installs no global
-keyboard handler.
+moves to the connected toggle before the navigation is hidden. If the toggle was
+removed while the controller remains active, the focused link is blurred before
+the navigation is hidden. Keep the toggle connected for normal use and dispose
+the controller when removing the view. Activating the toggle to reveal the
+sidebar leaves focus on the toggle; it does not move focus into the navigation.
+The controller adds no focus trap and installs no global keyboard handler.
 
 ### Browser JavaScript usage
 

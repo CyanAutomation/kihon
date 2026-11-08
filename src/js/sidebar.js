@@ -98,10 +98,13 @@ var KihonSidebar = (() => {
     let disposed = false;
     const setExpanded = (expanded) => {
       if (!expanded && sidebar.contains(sidebar.ownerDocument.activeElement)) {
-        if (!toggleButton.isConnected) {
-          throw new Error("Keep the sidebar toggle connected while the sidebar is collapsible.");
+        if (toggleButton.isConnected) {
+          toggleButton.focus();
+        } else {
+          const activeElement = sidebar.ownerDocument.activeElement;
+          const blur = activeElement && Reflect.get(activeElement, "blur");
+          if (typeof blur === "function") Reflect.apply(blur, activeElement, []);
         }
-        toggleButton.focus();
       }
       sidebar.hidden = !expanded;
       toggleButton.setAttribute("aria-expanded", String(expanded));
@@ -125,12 +128,15 @@ var KihonSidebar = (() => {
       },
       dispose() {
         if (disposed) return;
-        setExpanded(true);
-        toggleButton.removeEventListener("click", onToggle);
-        toggleButton.removeAttribute(READY_ATTRIBUTE);
-        toggleButton.setAttribute("hidden", "");
-        controllers.delete(sidebar);
-        disposed = true;
+        try {
+          setExpanded(true);
+        } finally {
+          toggleButton.removeEventListener("click", onToggle);
+          toggleButton.removeAttribute(READY_ATTRIBUTE);
+          toggleButton.setAttribute("hidden", "");
+          controllers.delete(sidebar);
+          disposed = true;
+        }
       }
     };
     const onToggle = () => setExpanded(Boolean(sidebar.hidden));

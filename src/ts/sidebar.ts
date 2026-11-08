@@ -137,10 +137,13 @@ export function createSidebarController(options: SidebarOptions): SidebarControl
 
   const setExpanded = (expanded: boolean): void => {
     if (!expanded && sidebar.contains(sidebar.ownerDocument.activeElement)) {
-      if (!toggleButton.isConnected) {
-        throw new Error('Keep the sidebar toggle connected while the sidebar is collapsible.');
+      if (toggleButton.isConnected) {
+        toggleButton.focus();
+      } else {
+        const activeElement = sidebar.ownerDocument.activeElement;
+        const blur = activeElement && Reflect.get(activeElement, 'blur');
+        if (typeof blur === 'function') Reflect.apply(blur, activeElement, []);
       }
-      toggleButton.focus();
     }
 
     sidebar.hidden = !expanded;
@@ -169,12 +172,15 @@ export function createSidebarController(options: SidebarOptions): SidebarControl
       if (disposed) return;
 
       // Restore the native, visible-by-default fallback before hiding the control.
-      setExpanded(true);
-      toggleButton.removeEventListener('click', onToggle);
-      toggleButton.removeAttribute(READY_ATTRIBUTE);
-      toggleButton.setAttribute('hidden', '');
-      controllers.delete(sidebar);
-      disposed = true;
+      try {
+        setExpanded(true);
+      } finally {
+        toggleButton.removeEventListener('click', onToggle);
+        toggleButton.removeAttribute(READY_ATTRIBUTE);
+        toggleButton.setAttribute('hidden', '');
+        controllers.delete(sidebar);
+        disposed = true;
+      }
     }
   };
 
