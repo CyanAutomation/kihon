@@ -71,10 +71,16 @@ test('shell regions stack at narrow widths and remain within the viewport', asyn
         const bounds = shell.querySelector(selector).getBoundingClientRect();
         return { left: bounds.left, right: bounds.right, top: bounds.top, bottom: bounds.bottom };
       };
+      const shellBounds = shell.getBoundingClientRect();
       return {
         viewportWidth: window.innerWidth,
         documentWidth: document.documentElement.scrollWidth,
-        shell: rect('.kh-app-shell__main'),
+        shell: {
+          left: shellBounds.left,
+          right: shellBounds.right,
+          top: shellBounds.top,
+          bottom: shellBounds.bottom
+        },
         nav: rect('.kh-app-shell__nav'),
         main: rect('.kh-app-shell__main'),
         details: rect('.kh-app-shell__details')
