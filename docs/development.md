@@ -2,7 +2,7 @@
 
 This document explains how Kihon's design tokens, CSS and style guide are organized and built.
 
-Phase 2A buttons and actions, and Phase 2B forms and grouped settings, are implemented as framework-free CSS components. See [`components/buttons.md`](components/buttons.md), [`components/forms.md`](components/forms.md), and [`components/grouped-settings.md`](components/grouped-settings.md) for their public classes and accessibility contracts.
+Phase 2A buttons and actions, Phase 2B forms and grouped settings, and Phase 2C accessible dialogs are implemented as framework-free components. See [`components/buttons.md`](components/buttons.md), [`components/forms.md`](components/forms.md), [`components/grouped-settings.md`](components/grouped-settings.md), and [`components/dialogs.md`](components/dialogs.md) for their public classes and accessibility contracts. Dialog behavior remains native to `<dialog>`; the optional helper is documented separately from the CSS API.
 
 Use Node.js 24 or later and npm. The minimum version covers the HTML validation and browser-test development tools; the delivered CSS and theme switcher have no npm runtime dependencies.
 
@@ -23,14 +23,18 @@ kihon/
 │       └── components/          # Component rules imported by base.css
 │           ├── buttons.css
 │           ├── forms.css
-│           └── settings.css
+│           ├── settings.css
+│           └── dialogs.css
+├── src/js/
+│   └── dialogs.js               # Optional native-dialog helper
 ├── style-guide/                 # Static documentation site
 │   ├── index.html               # Main style guide page
 │   ├── styles.css               # Style guide-specific styles
 │   ├── theme.js                 # Style-guide theme switcher
 │   ├── buttons.js               # Style-guide button demonstrations
 │   ├── forms.js                 # Local form and validation demonstrations
-│   └── settings.js              # Local grouped-settings demonstration
+│   ├── settings.js              # Local grouped-settings demonstration
+│   └── dialogs.js               # Local dialog demonstrations
 ├── scripts/
 │   ├── build-tokens.js          # Generates tokens.css from source
 │   ├── token-resolver.js        # Resolves aliases and formats typed values
@@ -48,15 +52,17 @@ kihon/
 │   └── components/              # Public component contracts
 │       ├── buttons.md
 │       ├── forms.md
-│       └── grouped-settings.md
+│       ├── grouped-settings.md
+│       └── dialogs.md
 └── package.json                 # Build configuration
 ```
 
 ## Design Tokens
 
 `src/css/base.css` is the consumer entry point. It imports generated tokens,
-then buttons, forms, and grouped-settings styles in that order; applications do
-not need to import files from `style-guide/`.
+then buttons, forms, grouped-settings, and dialog styles in that order;
+applications do not need to import files from `style-guide/`. The optional
+dialog helper is at `src/js/dialogs.js` and has no runtime dependencies.
 
 ### Token Source Structure
 

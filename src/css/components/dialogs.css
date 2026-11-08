@@ -1,0 +1,104 @@
+/* Kihon Dialogs
+ * Public classes: .kh-dialog, .kh-dialog__{header,title,description,body,footer},
+ * .kh-dialog--{sm,lg}. Styling is opt-in; native <dialog> owns modal behavior.
+ */
+
+dialog.kh-dialog:modal {
+  --kh-dialog-inline-size: 36rem;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  inline-size: min(var(--kh-dialog-inline-size), calc(100vw - 2rem));
+  max-inline-size: calc(100vw - 2rem);
+  max-block-size: min(calc(100vh - 2rem), 56rem);
+  max-block-size: min(calc(100dvh - 2rem), 56rem);
+  margin: auto;
+  padding: 0;
+  overflow: visible;
+  border: 1px solid var(--kh-color-border-subtle);
+  border-radius: var(--kh-radius-lg);
+  background-color: var(--kh-color-surface);
+  color: var(--kh-color-text-primary);
+  box-shadow: var(--kh-shadow-md);
+}
+
+dialog.kh-dialog--sm:modal {
+  --kh-dialog-inline-size: 26rem;
+}
+
+dialog.kh-dialog--lg:modal {
+  --kh-dialog-inline-size: 52rem;
+}
+
+dialog.kh-dialog::backdrop {
+  background-color: color-mix(in srgb, var(--kh-color-text-primary) 38%, transparent);
+}
+
+.kh-dialog__header,
+.kh-dialog__body,
+.kh-dialog__footer {
+  min-inline-size: 0;
+  padding-inline: var(--kh-space-6);
+}
+
+.kh-dialog__header {
+  display: grid;
+  gap: var(--kh-space-2);
+  padding-block: var(--kh-space-6) var(--kh-space-3);
+}
+
+.kh-dialog__title {
+  margin: 0;
+  overflow-wrap: anywhere;
+  font-size: var(--kh-type-size-xl);
+}
+
+.kh-dialog__description {
+  margin: 0;
+  color: var(--kh-color-text-secondary);
+  overflow-wrap: anywhere;
+}
+
+.kh-dialog__body {
+  min-block-size: 0;
+  overflow: auto;
+  overscroll-behavior: contain;
+  padding-block: var(--kh-space-3) var(--kh-space-6);
+  overflow-wrap: anywhere;
+}
+
+.kh-dialog__body > :last-child {
+  margin-block-end: 0;
+}
+
+.kh-dialog__footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: var(--kh-space-3);
+  border-block-start: 1px solid var(--kh-color-border-subtle);
+  padding-block: var(--kh-space-4);
+}
+
+.kh-dialog__footer > * {
+  max-inline-size: 100%;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 32rem) {
+  .kh-dialog__footer > * {
+    flex: 1 1 100%;
+  }
+}
+
+@media (forced-colors: active) {
+  dialog.kh-dialog:modal {
+    border: 2px solid CanvasText;
+    box-shadow: none;
+  }
+
+  dialog.kh-dialog::backdrop {
+    background-color: Canvas;
+    opacity: 0.75;
+  }
+}
