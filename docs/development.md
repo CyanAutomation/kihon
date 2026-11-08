@@ -2,9 +2,9 @@
 
 This document explains how Kihon's design tokens, CSS, reusable TypeScript behavior, and style guide are organized and built.
 
-Phase 2A buttons and actions, Phase 2B forms and grouped settings, Phase 2C accessible dialogs, and Phase 3A application shell are implemented as framework-free components. See [`components/buttons.md`](components/buttons.md), [`components/forms.md`](components/forms.md), [`components/grouped-settings.md`](components/grouped-settings.md), [`components/dialogs.md`](components/dialogs.md), and [`components/app-shell.md`](components/app-shell.md) for their public contracts. Dialog behavior remains native to `<dialog>`; the optional helper is documented separately from the CSS API.
+Phase 2A buttons and actions, Phase 2B forms and grouped settings, Phase 2C accessible dialogs, Phase 3A application shell, and Phase 3B sidebar navigation are implemented as framework-free components. See [`components/buttons.md`](components/buttons.md), [`components/forms.md`](components/forms.md), [`components/grouped-settings.md`](components/grouped-settings.md), [`components/dialogs.md`](components/dialogs.md), [`components/app-shell.md`](components/app-shell.md), and [`components/sidebar.md`](components/sidebar.md) for their public contracts. Dialog and sidebar behaviors are optional and documented separately from their CSS APIs.
 
-Use Node.js 24 or later and npm. The minimum version covers the HTML validation and browser-test tools. Generated Kihon CSS and the compiled dialog helper have no npm runtime dependencies; TypeScript and esbuild are development-only.
+Use Node.js 24 or later and npm. The minimum version covers the HTML validation and browser-test tools. Generated Kihon CSS and the compiled dialog and sidebar helpers have no npm runtime dependencies; TypeScript and esbuild are development-only.
 
 ## Repository Structure
 
@@ -25,24 +25,30 @@ kihon/
 │           ├── forms.css
 │           ├── settings.css
 │           ├── dialogs.css
-│           └── app-shell.css
+│           ├── app-shell.css
+│           └── sidebar.css
 ├── src/ts/
-│   └── dialogs.ts               # Reusable runtime source
+│   ├── dialogs.ts               # Reusable dialog runtime source
+│   └── sidebar.ts               # Reusable sidebar runtime source
 ├── src/js/
 │   ├── dialogs.js               # Generated browser/CommonJS helper
 │   ├── dialogs.js.map            # Generated source map
-│   └── dialogs.d.ts              # Generated public declarations
+│   ├── dialogs.d.ts              # Generated public declarations
+│   ├── sidebar.js                # Generated browser/CommonJS helper
+│   ├── sidebar.js.map             # Generated source map
+│   └── sidebar.d.ts               # Generated public declarations
 ├── style-guide/                 # Static documentation site
 │   ├── index.html               # Main style guide page
 │   ├── styles.css               # Style guide-specific styles
 │   ├── theme.js                 # Style-guide theme switcher
+│   ├── sidebar.js               # Local sidebar navigation demo
 │   ├── buttons.js               # Style-guide button demonstrations
 │   ├── forms.js                 # Local form and validation demonstrations
 │   ├── settings.js              # Local grouped-settings demonstration
 │   └── dialogs.js               # Local dialog demonstrations
 ├── scripts/
 │   ├── build-tokens.js          # Generates tokens.css from source
-│   ├── build-runtime.js         # Generates the dialog bundle and declarations
+│   ├── build-runtime.js         # Generates runtime bundles and declarations
 │   ├── token-resolver.js        # Resolves aliases and formats typed values
 │   ├── token-validation.js     # DTCG schema and value validation
 │   ├── contrast.js              # WCAG contrast calculations
@@ -60,7 +66,8 @@ kihon/
 │       ├── forms.md
 │       ├── grouped-settings.md
 │       ├── dialogs.md
-│       └── app-shell.md
+│       ├── app-shell.md
+│       └── sidebar.md
 └── package.json                 # Build configuration
 ```
 
@@ -68,29 +75,32 @@ kihon/
 
 TypeScript is the preferred source language for new reusable Kihon runtime behavior. CSS remains responsible for presentation, HTML for structure and native semantics, and generated JavaScript for browser and Node consumers. Applications do not need TypeScript or a runtime framework.
 
-The first TypeScript helper is the native-dialog helper:
+Reusable TypeScript helpers have one source file per component:
 
-| Purpose | Path or command |
+| Helper | TypeScript source | Browser global / Node CommonJS output | Declarations |
+| --- | --- | --- | --- |
+| Dialogs | `src/ts/dialogs.ts` | `src/js/dialogs.js` (`window.KihonDialogs`) | `src/js/dialogs.d.ts` |
+| Sidebar | `src/ts/sidebar.ts` | `src/js/sidebar.js` (`window.KihonSidebar`) | `src/js/sidebar.d.ts` |
+
+Each JavaScript output has a generated `.js.map` source map beside it.
+
+| Build command | Purpose |
 | --- | --- |
-| TypeScript source | `src/ts/dialogs.ts` |
-| Browser global and Node CommonJS output | `src/js/dialogs.js` |
-| Source map | `src/js/dialogs.js.map` |
-| Generated API declarations | `src/js/dialogs.d.ts` |
-| Build CSS tokens and runtime output | `npm run build` |
-| Build runtime output only | `npm run build:runtime` |
-| Strict type check without emitting | `npm run typecheck` |
+| `npm run build` | Build tokens and runtime outputs. |
+| `npm run build:runtime` | Build runtime outputs only. |
+| `npm run typecheck` | Strict type check without emitting. |
 
-The generated `src/js/dialogs.js` remains usable as a classic browser script exposing `window.KihonDialogs`, and through Node `require()` at its existing path. The bundle is built once from `src/ts/dialogs.ts`; there is no second handwritten helper. TypeScript and esbuild are development dependencies only. The JavaScript output and declarations are committed so consumers can use them without a build step, and `npm run check:generated` detects stale outputs without rewriting them.
+The generated helpers remain usable as classic browser scripts exposing `window.KihonDialogs` and `window.KihonSidebar`, and through Node `require()` at their existing paths. Each bundle is built from its TypeScript source; there is no second handwritten implementation. TypeScript and esbuild are development dependencies only. JavaScript outputs, source maps, and declarations are committed so consumers can use them without a build step, and `npm run check:generated` detects stale outputs without rewriting them. These are browser-global/CommonJS bundles, not browser ES modules.
 
-When adding reusable behavior, place source in `src/ts/`, export a small typed API, add or extend generated output through `scripts/build-runtime.js`, and cover both the compiled Node path and browser path where applicable. New CSS-only components do not need JavaScript. Existing style-guide scripts, token/build scripts, and tests remain JavaScript for now; consider migrating them incrementally when shared runtime behavior or stronger type guarantees make that useful. Future Phase 3B sidebar behavior should use TypeScript only for behavior that native HTML and CSS cannot provide. Phase 3C toolbars should remain native unless scripting is necessary.
+When adding reusable behavior, place source in `src/ts/`, export a small typed API, add generated output through `scripts/build-runtime.js`, and cover both the compiled Node path and browser path where applicable. New CSS-only components do not need JavaScript. Existing style-guide scripts, token/build scripts, and tests remain JavaScript for now; consider migrating them incrementally when shared runtime behavior or stronger type guarantees make that useful. Phase 3C toolbars should remain native unless scripting is necessary.
 
 ## Design Tokens
 
 `src/css/base.css` is the consumer entry point. It imports generated tokens,
-then buttons, forms, grouped-settings, dialog, and application-shell styles in that order;
-applications do not need to import files from `style-guide/`. The optional
-dialog helper is authored in TypeScript at `src/ts/dialogs.ts` and generated at
-`src/js/dialogs.js`; the generated helper has no runtime dependencies.
+then buttons, forms, grouped-settings, dialog, application-shell, and sidebar
+styles in that order; applications do not need to import files from
+`style-guide/`. Optional dialog and sidebar helpers are authored in `src/ts/`
+and generated at `src/js/`; neither has runtime dependencies.
 
 ### Token Source Structure
 
@@ -280,9 +290,9 @@ Run this before committing token changes.
 - Accessibility features (reduced motion, forced colours)
 - Layout utility classes and the application-shell component
 
-`base.css` imports generated `tokens.css`, followed by the button, form, grouped-settings, dialog, and app-shell components. Component rules stay in their own files, while `base.css` remains the public entry point. Styling is opt-in through documented classes; unclassed controls retain browser styling, selects retain native appearance, and the root font size remains the browser's default. Do not edit token values in `base.css`; regenerate CSS from the token source instead.
+`base.css` imports generated `tokens.css`, followed by button, form, grouped-settings, dialog, app-shell, and sidebar components. Component rules stay in their own files, while `base.css` remains the public entry point. Styling is opt-in through documented classes; unclassed controls retain browser styling, selects retain native appearance, and the root font size remains the browser's default. Do not edit token values in `base.css`; regenerate CSS from the token source instead.
 
-Button classes, tokens, markup, state responsibilities and accessibility guidance are documented in [`components/buttons.md`](components/buttons.md). Consuming applications do not need style-guide CSS or JavaScript.
+Button classes, tokens, markup, state responsibilities and accessibility guidance are documented in [`components/buttons.md`](components/buttons.md). Sidebar CSS and optional controller behavior are documented in [`components/sidebar.md`](components/sidebar.md). Consuming applications do not need style-guide CSS or JavaScript.
 
 ## Style Guide
 
@@ -369,7 +379,7 @@ Explicit preferences are stored under `kihon-theme` when browser storage is avai
 npm run test
 ```
 
-Runs unit, token schema/value, contrast, HTML/CSS parsing, generated-file consistency, and Chromium browser checks. CI also runs strict TypeScript checking. The app-shell checks measure region geometry at 320, 480, 768, 1024, and 1280 CSS px. The automation does not run the manual verification checklist.
+Runs unit, token schema/value, contrast, HTML/CSS parsing, generated-file consistency, and Chromium browser checks. CI also runs strict TypeScript checking. App-shell and sidebar checks measure region geometry at 320, 480, 768, 1024, and 1280 CSS px; sidebar checks include collapse, focus, no-script fallback, and a constrained parent. The automation does not run the manual verification checklist.
 
 ### Manual Verification Checklist
 

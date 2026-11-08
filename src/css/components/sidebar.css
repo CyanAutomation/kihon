@@ -1,0 +1,152 @@
+/* Kihon Sidebar Navigation
+ * Public classes are opt-in and use native nav, list, anchor, and button semantics.
+ */
+
+.kh-sidebar {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--kh-space-4);
+  min-inline-size: 0;
+  padding: var(--kh-space-3);
+  background-color: var(--kh-color-surface);
+}
+
+.kh-sidebar[hidden] {
+  display: none;
+}
+
+.kh-sidebar__header,
+.kh-sidebar__footer {
+  min-inline-size: 0;
+  padding-inline: var(--kh-space-2);
+  overflow-wrap: anywhere;
+}
+
+.kh-sidebar__section {
+  display: grid;
+  gap: var(--kh-space-1);
+  min-inline-size: 0;
+}
+
+.kh-sidebar__section-title {
+  margin: 0;
+  padding: var(--kh-space-1) var(--kh-space-2);
+  color: var(--kh-color-text-secondary);
+  font-size: var(--kh-type-size-sm);
+  font-weight: var(--kh-type-weight-medium);
+  line-height: var(--kh-type-line-height-tight);
+  overflow-wrap: anywhere;
+}
+
+.kh-sidebar__list {
+  display: grid;
+  gap: var(--kh-space-1);
+  min-inline-size: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.kh-sidebar__item {
+  min-inline-size: 0;
+  margin: 0;
+}
+
+.kh-sidebar__link {
+  display: flex;
+  align-items: center;
+  gap: var(--kh-space-3);
+  min-block-size: var(--kh-space-12);
+  min-inline-size: 0;
+  padding: var(--kh-space-2) var(--kh-space-3);
+  border: 1px solid transparent;
+  border-inline-start-width: 0.25rem;
+  border-radius: var(--kh-radius-md);
+  color: var(--kh-color-text-primary);
+  line-height: var(--kh-type-line-height-normal);
+  text-decoration: none;
+  opacity: 1;
+  overflow-wrap: anywhere;
+  transition:
+    background-color var(--kh-motion-fast) ease-in-out,
+    border-color var(--kh-motion-fast) ease-in-out,
+    color var(--kh-motion-fast) ease-in-out;
+}
+
+.kh-sidebar__link:hover {
+  background-color: var(--kh-color-background);
+  opacity: 1;
+}
+
+.kh-sidebar__link:focus-visible {
+  border-radius: var(--kh-radius-md);
+  outline: 2px solid var(--kh-color-focus-ring);
+  outline-offset: 2px;
+}
+
+.kh-sidebar__link[aria-current="page"] {
+  border-inline-start-color: var(--kh-color-accent);
+  background-color: var(--kh-color-background);
+  color: var(--kh-color-accent);
+  font-weight: var(--kh-type-weight-medium);
+}
+
+.kh-sidebar__icon {
+  display: inline-grid;
+  flex: none;
+  inline-size: 1.25em;
+  block-size: 1.25em;
+  place-items: center;
+  color: currentColor;
+}
+
+.kh-sidebar__icon svg {
+  inline-size: 1em;
+  block-size: 1em;
+}
+
+.kh-sidebar__label {
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+}
+
+.kh-sidebar__description {
+  display: block;
+  margin-block-start: var(--kh-space-1);
+  color: var(--kh-color-text-secondary);
+  font-size: var(--kh-type-size-xs);
+  font-weight: normal;
+  line-height: var(--kh-type-line-height-normal);
+  overflow-wrap: anywhere;
+}
+
+.kh-sidebar__footer {
+  margin-block-start: auto;
+  padding-block-start: var(--kh-space-3);
+  border-block-start: 1px solid var(--kh-color-border-subtle);
+}
+
+/* The toggle is revealed only after its controller is attached. Navigation itself
+   remains visible if scripts are unavailable or fail during initialization. */
+button.kh-sidebar-toggle:not([data-kh-sidebar-ready]) {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kh-sidebar__link {
+    transition: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .kh-sidebar__link:focus-visible {
+    outline-color: Highlight;
+  }
+
+  .kh-sidebar__link[aria-current="page"] {
+    border-inline-start-color: LinkText;
+    outline: 1px solid LinkText;
+    outline-offset: -1px;
+  }
+}

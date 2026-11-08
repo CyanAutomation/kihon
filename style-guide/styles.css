@@ -302,6 +302,23 @@ body {
   gap: var(--kh-space-2);
 }
 
+.kh-sg-sidebar-preview {
+  max-inline-size: 72rem;
+  margin-inline: auto;
+  border: 1px solid var(--kh-color-border-subtle);
+  border-radius: var(--kh-radius-md);
+}
+
+.kh-sg-sidebar-preview .kh-app-shell__main > section + section {
+  margin-block-start: var(--kh-space-6);
+  padding-block-start: var(--kh-space-4);
+  border-block-start: 1px solid var(--kh-color-border-subtle);
+}
+
+.kh-sg-sidebar-preview .kh-app-shell__main h3 {
+  margin-block-end: var(--kh-space-2);
+}
+
 .kh-sg-dialog-errors {
   margin-block-end: var(--kh-space-4);
   padding: var(--kh-space-4);
