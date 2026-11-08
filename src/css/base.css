@@ -11,6 +11,7 @@
 @import url('./components/settings.css');
 @import url('./components/dialogs.css');
 @import url('./components/app-shell.css');
+@import url('./components/sidebar.css');
 
 /* ============================================================================
    Root and global defaults

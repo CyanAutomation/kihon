@@ -571,9 +571,18 @@
         <section class="kh-sg-app-shell-example" aria-labelledby="app-shell-nav-title">
           <h3 id="app-shell-nav-title">Navigation and main content</h3>
           <div id="app-shell-nav-main" class="kh-app-shell kh-app-shell--with-nav">
-            <nav class="kh-app-shell__nav" aria-label="Example project navigation">
-              <a href="#app-shell-overview" aria-current="page">Overview</a>
-              <a href="#app-shell-activity">Activity</a>
+            <header class="kh-app-shell__header">
+              <strong>Project workspace</strong>
+              <button class="kh-button kh-button--quiet kh-sidebar-toggle" id="app-shell-nav-main-toggle" type="button" aria-controls="app-shell-nav-main-navigation" aria-expanded="true" hidden>Toggle navigation</button>
+            </header>
+            <nav id="app-shell-nav-main-navigation" class="kh-app-shell__nav kh-sidebar" aria-label="Example project navigation">
+              <section class="kh-sidebar__section" aria-labelledby="app-shell-nav-main-group">
+                <h4 class="kh-sidebar__section-title" id="app-shell-nav-main-group">Example project</h4>
+                <ul class="kh-sidebar__list">
+                  <li class="kh-sidebar__item"><a class="kh-sidebar__link" href="#app-shell-overview" aria-current="page">Overview</a></li>
+                  <li class="kh-sidebar__item"><a class="kh-sidebar__link" href="#app-shell-activity">Activity</a></li>
+                </ul>
+              </section>
             </nav>
             <div class="kh-app-shell__main">
               <h3>Overview</h3>
@@ -608,10 +617,20 @@
                 <button class="kh-button kh-button--primary kh-button--sm" type="button">New project</button>
               </div>
             </header>
-            <nav class="kh-app-shell__nav" aria-label="Primary project navigation">
-              <a id="app-shell-overview" href="#app-shell-overview" aria-current="page">Overview</a>
-              <a id="app-shell-activity" href="#app-shell-activity">Activity</a>
-              <a href="#app-shell-settings">Settings</a>
+            <nav class="kh-app-shell__nav kh-sidebar" aria-label="Primary project navigation">
+              <section class="kh-sidebar__section" aria-labelledby="app-shell-project-group">
+                <h4 class="kh-sidebar__section-title" id="app-shell-project-group">Project</h4>
+                <ul class="kh-sidebar__list">
+                  <li class="kh-sidebar__item"><a class="kh-sidebar__link" id="app-shell-overview" href="#app-shell-overview" aria-current="page">Overview</a></li>
+                  <li class="kh-sidebar__item"><a class="kh-sidebar__link" id="app-shell-activity" href="#app-shell-activity">Activity</a></li>
+                </ul>
+              </section>
+              <section class="kh-sidebar__section" aria-labelledby="app-shell-settings-group">
+                <h4 class="kh-sidebar__section-title" id="app-shell-settings-group">Preferences</h4>
+                <ul class="kh-sidebar__list">
+                  <li class="kh-sidebar__item"><a class="kh-sidebar__link" href="#app-shell-settings">Settings</a></li>
+                </ul>
+              </section>
             </nav>
             <div class="kh-app-shell__main" id="app-shell-main" tabindex="-1">
               <h3>Overview</h3>
@@ -643,6 +662,84 @@
         </section>
       </div>
       <p class="kh-sg-demo-status">The examples use document scrolling. At narrow widths the regions stack in document order; no region is hidden.</p>
+    </section>
+
+    <!-- Sidebar navigation -->
+    <section id="sidebar" class="kh-sg-section" aria-labelledby="sidebar-heading">
+      <h2 id="sidebar-heading">Sidebar Navigation</h2>
+      <p>Use a named navigation landmark with grouped native links. The current destination is supplied by the application through <code>aria-current="page"</code>; the controller adds optional collapse and reveal behavior.</p>
+
+      <div class="kh-sg-sidebar-preview">
+        <div id="sidebar-demo" class="kh-app-shell kh-app-shell--with-nav-and-details">
+          <header class="kh-app-shell__header">
+            <strong>Project workspace</strong>
+            <button class="kh-button kh-button--quiet kh-sidebar-toggle" id="sidebar-demo-toggle" type="button" aria-controls="sidebar-demo-nav" aria-expanded="true" hidden>Toggle navigation</button>
+          </header>
+          <nav id="sidebar-demo-nav" class="kh-app-shell__nav kh-sidebar" aria-label="Workspace navigation">
+            <div class="kh-sidebar__header"><strong>Workspace</strong></div>
+
+            <section class="kh-sidebar__section" aria-labelledby="sidebar-demo-workspace-title">
+              <h3 class="kh-sidebar__section-title" id="sidebar-demo-workspace-title">Workspace</h3>
+              <ul class="kh-sidebar__list">
+                <li class="kh-sidebar__item">
+                  <a class="kh-sidebar__link" href="#sidebar-demo-overview" aria-current="page">
+                    <span class="kh-sidebar__icon" aria-hidden="true"><svg viewBox="0 0 16 16" focusable="false"><path fill="currentColor" d="M2 2h5v5H2zm7 0h5v3H9zm0 5h5v7H9zM2 9h5v5H2z"/></svg></span>
+                    <span class="kh-sidebar__label">Overview</span>
+                  </a>
+                </li>
+                <li class="kh-sidebar__item">
+                  <a class="kh-sidebar__link" href="#sidebar-demo-projects">
+                    <span class="kh-sidebar__icon" aria-hidden="true"><svg viewBox="0 0 16 16" focusable="false"><path fill="currentColor" d="M2 3.5A1.5 1.5 0 0 1 3.5 2h3l1.5 1.5h4.5A1.5 1.5 0 0 1 14 5v7.5a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 12.5z"/></svg></span>
+                    <span class="kh-sidebar__label">Projects</span>
+                  </a>
+                </li>
+                <li class="kh-sidebar__item">
+                  <a class="kh-sidebar__link" href="#sidebar-demo-reports">
+                    <span class="kh-sidebar__icon" aria-hidden="true"><svg viewBox="0 0 16 16" focusable="false"><path fill="currentColor" d="M2 13h12v1H1V2h1zm2-2 2.5-3 2 1.5L12 5l1 1-4 5-2.5-1.5L5 12z"/></svg></span>
+                    <span class="kh-sidebar__label">Deployment notifications and service-level reports
+                      <small class="kh-sidebar__description">Alert history, delivery status, and service health</small>
+                    </span>
+                  </a>
+                </li>
+              </ul>
+            </section>
+
+            <section class="kh-sidebar__section" aria-labelledby="sidebar-demo-account-title">
+              <h3 class="kh-sidebar__section-title" id="sidebar-demo-account-title">Account</h3>
+              <ul class="kh-sidebar__list">
+                <li class="kh-sidebar__item"><a class="kh-sidebar__link" href="#sidebar-demo-settings"><span class="kh-sidebar__label">Settings</span></a></li>
+              </ul>
+            </section>
+
+            <div class="kh-sidebar__footer"><small>Local style-guide example</small></div>
+          </nav>
+          <div class="kh-app-shell__main" id="sidebar-demo-main">
+            <section id="sidebar-demo-overview" aria-labelledby="sidebar-demo-overview-title">
+              <h3 id="sidebar-demo-overview-title">Overview</h3>
+              <p>The sidebar works with the Phase 3A shell. Use the labelled control to collapse it; the main view then uses the available space.</p>
+            </section>
+            <section id="sidebar-demo-projects" aria-labelledby="sidebar-demo-projects-title">
+              <h3 id="sidebar-demo-projects-title">Projects</h3>
+              <p>This local destination demonstrates ordinary in-page navigation and current-page styling.</p>
+            </section>
+            <section id="sidebar-demo-reports" aria-labelledby="sidebar-demo-reports-title">
+              <h3 id="sidebar-demo-reports-title">Reports</h3>
+              <p>Long labels wrap to the available width and remain readable at narrow sizes.</p>
+            </section>
+            <section id="sidebar-demo-settings" aria-labelledby="sidebar-demo-settings-title">
+              <h3 id="sidebar-demo-settings-title">Settings</h3>
+              <p>Applications determine the current destination and update <code>aria-current</code> when their route changes.</p>
+            </section>
+          </div>
+          <aside class="kh-app-shell__details" aria-label="Workspace details">
+            <h3>Workspace details</h3>
+            <p><strong>Phase:</strong> 3B — Sidebar Navigation</p>
+            <p>The sidebar remains a navigation landmark when the optional details region is present.</p>
+          </aside>
+        </div>
+      </div>
+      <p class="kh-sg-demo-status" data-kh-sidebar-status role="status" aria-live="polite">Current demonstration destination: Overview.</p>
+      <p>At narrow widths the application shell stacks the regions. The toggle remains available, while navigation stays visible unless the user collapses it.</p>
     </section>
 
     <!-- Dialogs -->
@@ -849,6 +946,8 @@
   <script src="buttons.js" defer></script>
   <script src="forms.js" defer></script>
   <script src="settings.js" defer></script>
+  <script src="../src/js/sidebar.js" defer></script>
+  <script src="sidebar.js" defer></script>
   <script src="../src/js/dialogs.js" defer></script>
   <script src="dialogs.js" defer></script>
 </body>

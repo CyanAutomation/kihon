@@ -9,14 +9,14 @@ npm test
 
 The suite runs:
 
-1. Node unit tests for alias resolution, typed token validation, contrast calculations, dialog-helper cleanup with synchronous and asynchronous close events, stale `returnValue` resets, and parsed button, form, grouped-settings, dialog, and app-shell CSS contracts.
-2. Strict type-checking in CI for the TypeScript source and a consumer fixture that imports the generated declarations.
+1. Node unit tests for alias resolution, typed token validation, contrast calculations, dialog-helper cleanup with synchronous and asynchronous close events, stale `returnValue` resets, sidebar-controller state, focus restoration and disposal, and parsed button, form, grouped-settings, dialog, app-shell, and sidebar CSS contracts.
+2. Strict type-checking in CI for both TypeScript helpers and consumer fixtures that import their generated declarations.
 3. DTCG 2025.10 schema and value validation, including required theme tokens and approved contrast pairings.
 4. `html-validate` for the style-guide HTML and PostCSS parsing for committed stylesheets.
-5. A generated CSS, JavaScript, source-map, and declaration consistency check that compares output without rebuilding the committed files first.
-6. Playwright checks in Chromium for theme behaviour, button variants and states, native form labels and interactions, validation relationships, settings rows, app-shell region geometry at 320, 480, 768, 1024, and 1280 CSS px, navigation order, skip navigation, modal dialog naming and descriptions, native focus containment and restoration, cancellation, preference validation, destructive confirmation, responsive widths, and in-page links.
+5. A generated CSS, JavaScript, source-map, and declaration consistency check for both helpers that compares output without rebuilding the committed files first.
+6. Playwright checks in Chromium for theme behaviour, button variants and states, native form labels and interactions, validation relationships, settings rows, app-shell region geometry at 320, 480, 768, 1024, and 1280 CSS px, sidebar semantics and grouping, collapse/reveal, hidden-link focus, focus restoration, constrained parents, 320px reflow, no-JavaScript fallback, modal dialog naming and descriptions, native focus containment and restoration, cancellation, preference validation, destructive confirmation, responsive widths, and in-page links.
 
-`npm run build` regenerates `src/css/tokens.css` and the compiled dialog helper outputs. It is intentionally not run before the consistency check in `npm test`, so stale committed output fails validation. Run `npm run typecheck` for strict TypeScript checking; CI runs it before the suite.
+`npm run build` regenerates `src/css/tokens.css` and the compiled dialog and sidebar helper outputs. It is intentionally not run before the consistency check in `npm test`, so stale committed output fails validation. Run `npm run typecheck` for strict TypeScript checking; CI runs it before the suite.
 
 When a system Chromium binary is available but Playwright's managed browser cannot be downloaded, set `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH` to its executable path for local tests. CI continues to use the Chromium version installed by its workflow.
 
