@@ -1,0 +1,135 @@
+/* Kihon Application Shell
+ * Public classes: .kh-app-shell, .kh-app-shell__{header,nav,main,details},
+ * .kh-app-shell--{with-nav,with-details,with-nav-and-details}.
+ * The shell sets layout only; document scrolling remains the default.
+ */
+
+.kh-app-shell {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas:
+    "header"
+    "main";
+  align-content: start;
+  min-inline-size: 0;
+}
+
+.kh-app-shell--with-nav {
+  grid-template-columns: minmax(12rem, clamp(12rem, 18vw, 16rem)) minmax(0, 1fr);
+  grid-template-areas:
+    "header header"
+    "nav main";
+}
+
+.kh-app-shell--with-details {
+  grid-template-columns: minmax(0, 1fr) minmax(14rem, clamp(14rem, 22vw, 20rem));
+  grid-template-areas:
+    "header header"
+    "main details";
+}
+
+.kh-app-shell--with-nav-and-details {
+  grid-template-columns:
+    minmax(12rem, clamp(12rem, 18vw, 16rem))
+    minmax(0, 1fr)
+    minmax(14rem, clamp(14rem, 22vw, 20rem));
+  grid-template-areas:
+    "header header header"
+    "nav main details";
+}
+
+.kh-app-shell__header {
+  grid-area: header;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--kh-space-3);
+  min-inline-size: 0;
+  padding: var(--kh-space-4);
+  border-block-end: 1px solid var(--kh-color-border-subtle);
+  background-color: var(--kh-color-surface);
+}
+
+.kh-app-shell__nav {
+  grid-area: nav;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--kh-space-1);
+  min-inline-size: 0;
+  padding: var(--kh-space-3);
+  border-inline-end: 1px solid var(--kh-color-border-subtle);
+  background-color: var(--kh-color-surface);
+}
+
+.kh-app-shell__nav a {
+  display: block;
+  max-inline-size: 100%;
+  padding: var(--kh-space-2) var(--kh-space-3);
+  border-radius: var(--kh-radius-sm);
+  color: var(--kh-color-text-primary);
+  overflow-wrap: anywhere;
+}
+
+.kh-app-shell__nav a[aria-current="page"] {
+  background-color: var(--kh-color-background);
+  color: var(--kh-color-accent);
+  font-weight: var(--kh-type-weight-medium);
+}
+
+.kh-app-shell__nav a:hover {
+  background-color: var(--kh-color-background);
+  opacity: 1;
+}
+
+.kh-app-shell__main {
+  grid-area: main;
+  min-inline-size: 0;
+  padding: var(--kh-space-6);
+  overflow-wrap: anywhere;
+}
+
+.kh-app-shell__details {
+  grid-area: details;
+  min-inline-size: 0;
+  padding: var(--kh-space-4);
+  border-inline-start: 1px solid var(--kh-color-border-subtle);
+  background-color: var(--kh-color-surface);
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 56rem) {
+  .kh-app-shell--with-nav,
+  .kh-app-shell--with-details,
+  .kh-app-shell--with-nav-and-details {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      "header"
+      "nav"
+      "main"
+      "details";
+  }
+
+  .kh-app-shell__nav {
+    border-inline-end: 0;
+    border-block-end: 1px solid var(--kh-color-border-subtle);
+  }
+
+  .kh-app-shell__details {
+    border-inline-start: 0;
+    border-block-start: 1px solid var(--kh-color-border-subtle);
+  }
+}
+
+@media (forced-colors: active) {
+  .kh-app-shell__header,
+  .kh-app-shell__nav,
+  .kh-app-shell__details {
+    border-color: CanvasText;
+  }
+
+  .kh-app-shell__nav a[aria-current="page"] {
+    outline: 1px solid LinkText;
+  }
+}
