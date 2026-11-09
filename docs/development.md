@@ -181,7 +181,7 @@ Themes are implemented using the `data-kh-theme` attribute on the root `<html>` 
 
 Each theme file defines how semantic tokens resolve in that mode. For example:
 
-- Light theme: `color.text-primary` → `#141518` (dark gray)
+- Light theme: `color.text-primary` → `#171a17` (warm charcoal)
 - Dark theme: `color.text-primary` → `#f5f5f7` (light gray)
 
 ### Token Aliases
@@ -220,9 +220,8 @@ This runs `scripts/build-tokens.js`, which:
 2. Resolves all token aliases recursively
 3. Detects circular references and unresolved tokens
 4. Generates `src/css/tokens.css` with:
-   - Light theme tokens in `:root`
-   - Dark theme tokens in `@media (prefers-color-scheme: dark)` and `[data-kh-theme="dark"]`
-   - System-preference-aware defaults
+   - Dark theme tokens in `:root` and `[data-kh-theme="dark"]`
+   - Light theme tokens in `[data-kh-theme="light"]` and system mode when `prefers-color-scheme: light`
 
 ### Output Example
 
@@ -230,27 +229,30 @@ The generated `tokens.css` contains:
 
 ```css
 :root {
-  color-scheme: light;
-  --kh-color-background: #f5f5f7;
-  --kh-color-surface: #ffffff;
-  --kh-color-text-primary: #141518;
-  --kh-color-accent: #175cd3;
-  /* ... more tokens ... */
+  color-scheme: dark;
+  --kh-color-background: #141518;
+  --kh-color-accent: #fb923c;
+  --kh-color-accent-text: #fb923c;
+  /* ... more dark tokens and shared primitives ... */
 }
 
-@media (prefers-color-scheme: dark) {
-  :root:not([data-kh-theme]) {
-    color-scheme: dark;
-    --kh-color-background: #141518;
-    --kh-color-surface: #1f2024;
-    --kh-color-text-primary: #f5f5f7;
-    --kh-color-accent: #85b4ff;
+@media (prefers-color-scheme: light) {
+  :root[data-kh-theme="system"] {
+    color-scheme: light;
+    --kh-color-background: #f3f4f0;
+    --kh-color-accent: #f45738;
+    --kh-color-accent-text: #bf3b2c;
+    --kh-color-on-accent: #171a17;
+    /* ... more light tokens ... */
   }
 }
 
 :root[data-kh-theme="light"] {
   color-scheme: light;
-  /* Light theme tokens */
+  --kh-color-background: #f3f4f0;
+  --kh-color-accent: #f45738;
+  --kh-color-accent-text: #bf3b2c;
+  /* ... more light tokens ... */
 }
 
 :root[data-kh-theme="dark"] {
@@ -300,7 +302,7 @@ Run this before committing token changes.
 - Accessibility features (reduced motion, forced colours)
 - Layout utility classes and the application-shell component
 
-`base.css` imports generated `tokens.css`, followed by button, form, grouped-settings, dialog, app-shell, sidebar, page-header, and toolbar components. Component rules stay in their own files, while `base.css` remains the public entry point. Styling is opt-in through documented classes; unclassed controls retain browser styling, selects retain native appearance, and the root font size remains the browser's default. Do not edit token values in `base.css`; regenerate CSS from the token source instead.
+`base.css` imports generated `tokens.css`, followed by button, form, grouped-settings, dialog, app-shell, sidebar, page-header, toolbar, card, and badge components. Component rules stay in their own files, while `base.css` remains the public entry point. Styling is opt-in through documented classes; unclassed controls retain browser styling, selects retain native appearance, and the root font size remains the browser's default. Do not edit token values in `base.css`; regenerate CSS from the token source instead.
 
 Button classes, tokens, markup, state responsibilities and accessibility guidance are documented in [`components/buttons.md`](components/buttons.md). Sidebar CSS and optional controller behavior are documented in [`components/sidebar.md`](components/sidebar.md). Page-header and toolbar CSS contracts are documented in [`components/page-header.md`](components/page-header.md) and [`components/toolbar.md`](components/toolbar.md). Consuming applications do not need style-guide CSS or JavaScript.
 
@@ -376,11 +378,11 @@ Explicit preferences are stored under `kihon-theme` when browser storage is avai
 
 ### Changing Colour Values
 
-1. Update the light theme in `tokens/themes/light.json`
-2. Update the dark theme in `tokens/themes/dark.json`
+1. Add or update primitive values in `tokens/primitives.json` when a new palette colour is needed.
+2. Assign semantic roles in the affected file under `tokens/themes/`. Change dark values only when the design calls for a dark-theme change.
 3. Rebuild: `npm run build`
-4. Check contrast with WCAG guidelines
-5. Test in the style guide
+4. Check text and control-boundary contrast in every affected theme and state.
+5. Review the style guide in light, dark, and system appearance.
 
 ## Testing
 
@@ -420,8 +422,11 @@ Critical pairs to test:
 | --- | --- | --- | --- |
 | text-primary | background | 4.5:1 | light & dark |
 | text-primary | surface | 4.5:1 | light & dark |
-| text-secondary | surface | 3:1 | light & dark |
+| text-secondary | background and surface | 4.5:1 | light & dark |
 | on-accent | accent | 4.5:1 | light & dark |
+| on-accent | button-primary-hover | 4.5:1 | light & dark |
+| accent-text | background and surface | 4.5:1 | light & dark |
+| accent and button-primary-hover | background and surface | 3:1 | light & dark |
 | focus-ring | background | 3:1 | light & dark |
 
 ## Public vs. Internal Interfaces

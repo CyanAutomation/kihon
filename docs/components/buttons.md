@@ -32,7 +32,7 @@ Apply `.kh-button` with at most one variant and one size modifier:
 | `.kh-button` | Base button; defaults to primary and medium. |
 | `.kh-button--primary` | Main action in a view or form. |
 | `.kh-button--secondary` | Supporting or alternative action. |
-| `.kh-button--quiet` | Contextual action in a toolbar or compact interface. Accent text keeps the control visibly interactive. |
+| `.kh-button--quiet` | Contextual action in a toolbar or compact interface. Accessible accent text keeps the control visibly interactive. |
 | `.kh-button--destructive` | Action that removes, deletes, resets or otherwise changes data destructively. Use clear wording as well as the danger colour. |
 | `.kh-button--sm` | Compact desktop actions. The minimum target is 40 CSS px; leave adequate spacing around dense controls. |
 | `.kh-button--md` | Standard size and default when no size class is present. Minimum target is 48 CSS px. |
@@ -104,8 +104,9 @@ The four variants adapt to Kihon's system, light and dark themes. Button-specifi
 
 | Token | Use |
 | --- | --- |
-| `--kh-color-accent` | Primary background and border, plus quiet label. |
-| `--kh-color-on-accent` | Primary label and icon. |
+| `--kh-color-accent` | Primary background and border. |
+| `--kh-color-on-accent` | Primary label and icon; charcoal in light mode for the coral fill. |
+| `--kh-color-accent-text` | Quiet button and link text where the brighter action fill would not have sufficient text contrast. |
 | `--kh-color-button-primary-hover` | Primary pointer-hover background and border. |
 | `--kh-color-surface` | Secondary background and quiet/destructive hover background. |
 | `--kh-color-background` | Secondary hover background. |
@@ -115,7 +116,7 @@ The four variants adapt to Kihon's system, light and dark themes. Button-specifi
 | `--kh-color-border-subtle` | Quiet hover boundary. |
 | `--kh-color-focus-ring` | Keyboard focus indicator. |
 
-Applications may override documented semantic token values at the root or theme scope. Recheck text and non-text contrast for every button state in both themes after overrides. Kihon also preserves system forced-colours behavior and removes component transitions and spinner motion under `prefers-reduced-motion: reduce`.
+Applications may override documented semantic token values at the root or theme scope. Recheck text and non-text contrast for every button state in both themes after overrides. Kihon's bright coral light-mode fill uses a dark label; `--kh-color-accent-text` is a separate, darker coral for readable links and quiet actions. Kihon also preserves system forced-colours behavior and removes component transitions and spinner motion under `prefers-reduced-motion: reduce`.
 
 Button geometry and typography use existing tokens such as `--kh-space-*`, `--kh-radius-md`, `--kh-type-size-*`, and `--kh-type-weight-medium`. Transitions use `--kh-motion-fast`; the decorative loading cycle uses `--kh-motion-loading`. These tokens are generated from the existing DTCG source and do not require a runtime stylesheet or script beyond `base.css`.
 

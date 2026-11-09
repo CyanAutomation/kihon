@@ -3,6 +3,14 @@
  * Structure remains application-owned and can use article, section, or div semantics.
  */
 
+.kh-card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+  align-items: stretch;
+  gap: var(--kh-space-4);
+  min-inline-size: 0;
+}
+
 .kh-card {
   display: grid;
   gap: var(--kh-space-4);

@@ -39,3 +39,21 @@ test('reusable cards and badges use semantic tokens in dark and light appearance
   await expect.poll(() => successBadge.evaluate((element) => getComputedStyle(element).backgroundColor))
     .toBe(await tokenColor('--kh-color-success-background'));
 });
+
+test('reusable card grid reflows from one column to a multi-column collection', async ({ page }) => {
+  const grid = page.locator('#component-card-grid-demo');
+  await expect(grid).toBeVisible();
+  await expect(grid.locator('.kh-card')).toHaveCount(3);
+
+  for (const width of [320, 768, 1280]) {
+    await page.setViewportSize({ width, height: 900 });
+    const layout = await grid.evaluate((element) => ({
+      columns: getComputedStyle(element).gridTemplateColumns.trim().split(/\s+/).length,
+      width: element.getBoundingClientRect().width,
+      scrollWidth: element.scrollWidth
+    }));
+    expect(layout.scrollWidth).toBeLessThanOrEqual(layout.width + 1);
+    if (width === 320) expect(layout.columns).toBe(1);
+    if (width === 1280) expect(layout.columns).toBeGreaterThan(1);
+  }
+});
