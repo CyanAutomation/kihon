@@ -244,7 +244,7 @@ Every public component MUST document its name, purpose, markup contract, classes
 - Toolbars SHOULD be visually restrained and may be sticky only when they do not hide headings, focus targets or anchor destinations.
 - A plain group of controls does **not** need `role="toolbar"`. Only use that role when implementing and testing its expected composite keyboard behaviour, including arrow-key navigation.
 - Keyboard shortcuts MAY be provided for frequent actions, but MUST be discoverable, MUST avoid browser/system-reserved combinations and MUST not be the only way to invoke an action.
-- Prefer responsive overflow menus over crowded or clipped buttons.
+- Prefer wrapping groups over hiding or clipping controls. An application that needs an overflow menu MUST implement and test its menu semantics, focus, dismissal, and keyboard behavior as a separate pattern.
 
 ### 7.6 Modal dialog
 

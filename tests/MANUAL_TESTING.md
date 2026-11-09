@@ -52,6 +52,18 @@ In the style guide's **Sidebar Navigation** and **Application Shell** sections:
 - [ ] Test the component with 200% text resize, 400% browser zoom, light and dark themes, forced colours, and reduced motion.
 - [ ] Test touch target spacing and ordinary anchor behavior on an actual mobile browser.
 
+### Page Headers and Toolbars
+
+In the style guide's **Page Headers**, **Toolbars**, and **Application Shell** sections:
+
+- [ ] Confirm each page header title uses the heading level that fits its containing view and its description is announced as context.
+- [ ] Check that primary and secondary page actions remain visible, readable, and in source order at 320 CSS px and at 200% text size.
+- [ ] Tab through each toolbar and confirm the search, select, and buttons follow DOM order with visible focus.
+- [ ] Confirm every search/filter control has a persistent label and native controls retain their standard keyboard behavior.
+- [ ] Check long action labels wrap without clipping or causing page-level horizontal scrolling.
+- [ ] Review light and dark appearance, forced-colours boundaries and focus, and reduced-motion behavior.
+- [ ] Repeat in one supported desktop screen reader; automated tests do not establish how names and descriptions are announced.
+
 ### Native Modal Dialogs
 
 In the style guide's **Dialogs** section, verify each example with keyboard-only interaction:
@@ -247,7 +259,8 @@ Test with **one desktop screen reader** (e.g., NVDA, JAWS, VoiceOver):
 - [ ] Repeat with 200% text size and at 400% browser zoom where applicable.
 - [ ] Check light and dark themes, forced colours, and reduced motion.
 - [ ] On mobile browsers, check page scrolling with dynamic browser chrome and on-screen keyboards.
-- [ ] At a 1280px viewport, constrain the shell to 56rem and verify the main content retains usable width.
+- [ ] At a 1280px viewport, constrain the shell to about 38rem. Confirm a three-region desktop layout needs `.kh-app-shell--compact`, then check navigation, main content, details, page header, and toolbar in both expanded and collapsed states.
+- [ ] Check the two-region layout at the same constrained width with and without `.kh-app-shell--compact`; choose compact stacking when the view's content needs the full width.
 - [ ] Collapse navigation in two-column and three-column shells and verify no empty track remains.
 
 ---
