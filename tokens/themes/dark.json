@@ -21,6 +21,10 @@
       "$type": "color",
       "$value": "{colors.orange.500}"
     },
+    "accent-text": {
+      "$type": "color",
+      "$value": "{colors.orange.500}"
+    },
     "on-accent": {
       "$type": "color",
       "$value": "{colors.gray.900}"

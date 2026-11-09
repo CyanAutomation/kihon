@@ -3,7 +3,7 @@
   "color": {
     "background": {
       "$type": "color",
-      "$value": "{colors.gray.100}"
+      "$value": "{colors.warm-gray.100}"
     },
     "surface": {
       "$type": "color",
@@ -11,23 +11,27 @@
     },
     "text-primary": {
       "$type": "color",
-      "$value": "{colors.gray.900}"
+      "$value": "{colors.warm-gray.900}"
     },
     "text-secondary": {
       "$type": "color",
-      "$value": "{colors.gray.700}"
+      "$value": "{colors.warm-gray.700}"
     },
     "accent": {
       "$type": "color",
-      "$value": "{colors.orange.700}"
+      "$value": "{colors.coral.500}"
+    },
+    "accent-text": {
+      "$type": "color",
+      "$value": "{colors.coral.700}"
     },
     "on-accent": {
       "$type": "color",
-      "$value": "{colors.white}"
+      "$value": "{colors.warm-gray.900}"
     },
     "button-primary-hover": {
       "$type": "color",
-      "$value": "{colors.orange.800}"
+      "$value": "{colors.coral.600}"
     },
     "danger": {
       "$type": "color",
@@ -43,15 +47,15 @@
     },
     "border-subtle": {
       "$type": "color",
-      "$value": "{colors.gray.300}"
+      "$value": "{colors.warm-gray.300}"
     },
     "border-strong": {
       "$type": "color",
-      "$value": "{colors.gray.600}"
+      "$value": "{colors.warm-gray.600}"
     },
     "focus-ring": {
       "$type": "color",
-      "$value": "{colors.orange.700}"
+      "$value": "{colors.coral.700}"
     }
   },
   "$description": "Light appearance theme for Kihon UI Foundation"

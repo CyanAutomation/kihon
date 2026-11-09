@@ -139,7 +139,7 @@
     <!-- Colours -->
     <section class="kh-sg-section">
       <h2>Semantic Colours</h2>
-      <p>Kihon uses semantic colour tokens that adapt to light and dark themes automatically.</p>
+      <p>Kihon uses semantic colour tokens that adapt to light and dark themes automatically. Light mode pairs warm paper neutrals with a coral action accent.</p>
 
       <h3>Theme-adaptive palette</h3>
       <div class="kh-sg-grid">
@@ -157,6 +157,11 @@
           <div class="kh-sg-swatch" style="background-color: var(--kh-color-accent);"></div>
           <strong>Accent</strong>
           <div class="kh-sg-swatch-value">--kh-color-accent</div>
+        </div>
+        <div class="kh-sg-card">
+          <div class="kh-sg-swatch" style="background-color: var(--kh-color-accent-text);"></div>
+          <strong>Accent text</strong>
+          <div class="kh-sg-swatch-value">--kh-color-accent-text</div>
         </div>
         <div class="kh-sg-card">
           <div class="kh-sg-swatch" style="background-color: var(--kh-color-danger);"></div>
@@ -1031,7 +1036,47 @@
       <h2>Surfaces and Elevation</h2>
 
       <h3>Reusable card and status badges</h3>
-      <p>Cards group related content; badges label states with text and semantic colors.</p>
+      <p>Cards group related content; the responsive card grid composes reusable cards into collections. Badges label states with text and semantic colours.</p>
+      <div class="kh-card-grid" id="component-card-grid-demo">
+        <article class="kh-card">
+          <header class="kh-card__header">
+            <span class="kh-badge kh-badge--accent">Judo / data API</span>
+            <h3 class="kh-card__title">Budokon</h3>
+            <p class="kh-card__description">Version-controlled source data for official Judo cards.</p>
+          </header>
+          <div class="kh-card__body">
+            <p>One source of truth for card definitions, statistics, and metadata.</p>
+          </div>
+          <footer class="kh-card__footer">
+            <button class="kh-button kh-button--primary" type="button">Open project</button>
+            <button class="kh-button kh-button--secondary" type="button">View details</button>
+          </footer>
+        </article>
+        <article class="kh-card">
+          <header class="kh-card__header">
+            <span class="kh-badge kh-badge--neutral">Judo / training</span>
+            <h3 class="kh-card__title">Matmetrics</h3>
+            <p class="kh-card__description">A practice log for tracking sessions and training patterns.</p>
+          </header>
+          <footer class="kh-card__footer">
+            <button class="kh-button kh-button--primary" type="button">Open project</button>
+            <button class="kh-button kh-button--secondary" type="button">View details</button>
+          </footer>
+        </article>
+        <article class="kh-card">
+          <header class="kh-card__header">
+            <span class="kh-badge kh-badge--neutral">Software / experiments</span>
+            <h3 class="kh-card__title">Mermaid tools</h3>
+            <p class="kh-card__description">Small utilities for authoring and checking Mermaid diagrams.</p>
+          </header>
+          <footer class="kh-card__footer">
+            <button class="kh-button kh-button--primary" type="button">Open project</button>
+            <button class="kh-button kh-button--secondary" type="button">View details</button>
+          </footer>
+        </article>
+      </div>
+
+      <h3>Single card and status badges</h3>
       <article class="kh-card" id="component-card-demo" style="max-inline-size: 30rem;">
         <header class="kh-card__header">
           <h3 class="kh-card__title">Bedroom left</h3>

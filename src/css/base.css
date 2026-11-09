@@ -125,7 +125,7 @@ em, i {
 
 /* Links */
 a {
-  color: var(--kh-color-accent);
+  color: var(--kh-color-accent-text);
   text-decoration: none;
   transition: opacity 120ms ease-in-out;
 }

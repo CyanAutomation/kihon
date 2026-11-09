@@ -258,7 +258,7 @@ test('light, dark, forced-colours, and reduced-motion states retain clear cues',
   const selected = page.locator('#sidebar-demo-nav [aria-current="page"]');
   await page.locator('html').evaluate((element) => element.setAttribute('data-kh-theme', 'light'));
   await expect.poll(() => selected.evaluate((element) => getComputedStyle(element).backgroundColor))
-    .toBe('rgb(245, 245, 247)');
+    .toBe('rgb(243, 244, 240)');
   const lightColours = await page.evaluate(() => ({
     token: getComputedStyle(document.documentElement).getPropertyValue('--kh-color-background').trim(),
     selected: getComputedStyle(document.querySelector('#sidebar-demo-nav [aria-current="page"]')).backgroundColor
