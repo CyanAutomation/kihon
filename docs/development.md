@@ -2,7 +2,7 @@
 
 This document explains how Kihon's design tokens, CSS, reusable TypeScript behavior, and style guide are organized and built.
 
-Phase 2A buttons and actions, Phase 2B forms and grouped settings, Phase 2C accessible dialogs, Phase 3A application shell, and Phase 3B sidebar navigation are implemented as framework-free components. See [`components/buttons.md`](components/buttons.md), [`components/forms.md`](components/forms.md), [`components/grouped-settings.md`](components/grouped-settings.md), [`components/dialogs.md`](components/dialogs.md), [`components/app-shell.md`](components/app-shell.md), and [`components/sidebar.md`](components/sidebar.md) for their public contracts. Dialog and sidebar behaviors are optional and documented separately from their CSS APIs.
+Phases 2A–2C and 3A–3C are implemented as framework-free components. See [`components/buttons.md`](components/buttons.md), [`components/forms.md`](components/forms.md), [`components/grouped-settings.md`](components/grouped-settings.md), [`components/dialogs.md`](components/dialogs.md), [`components/app-shell.md`](components/app-shell.md), [`components/sidebar.md`](components/sidebar.md), [`components/page-header.md`](components/page-header.md), and [`components/toolbar.md`](components/toolbar.md) for their public contracts. Dialog and sidebar behaviors are optional and documented separately from their CSS APIs. Page headers and toolbars are CSS-only.
 
 Use Node.js 24 or later and npm. The minimum version covers the HTML validation and browser-test tools. Generated Kihon CSS and the compiled dialog and sidebar helpers have no npm runtime dependencies; TypeScript and esbuild are development-only.
 
@@ -26,7 +26,9 @@ kihon/
 │           ├── settings.css
 │           ├── dialogs.css
 │           ├── app-shell.css
-│           └── sidebar.css
+│           ├── sidebar.css
+│           ├── page-header.css
+│           └── toolbar.css
 ├── src/ts/
 │   ├── dialogs.ts               # Reusable dialog runtime source
 │   └── sidebar.ts               # Reusable sidebar runtime source
@@ -67,7 +69,9 @@ kihon/
 │       ├── grouped-settings.md
 │       ├── dialogs.md
 │       ├── app-shell.md
-│       └── sidebar.md
+│       ├── sidebar.md
+│       ├── page-header.md
+│       └── toolbar.md
 └── package.json                 # Build configuration
 ```
 
@@ -92,7 +96,7 @@ Each JavaScript output has a generated `.js.map` source map beside it.
 
 The generated helpers remain usable as classic browser scripts exposing `window.KihonDialogs` and `window.KihonSidebar`, and through Node `require()` at their existing paths. Each bundle is built from its TypeScript source; there is no second handwritten implementation. TypeScript and esbuild are development dependencies only. JavaScript outputs, source maps, and declarations are committed so consumers can use them without a build step, and `npm run check:generated` detects stale outputs without rewriting them. These are browser-global/CommonJS bundles, not browser ES modules.
 
-When adding reusable behavior, place source in `src/ts/`, export a small typed API, add generated output through `scripts/build-runtime.js`, and cover both the compiled Node path and browser path where applicable. New CSS-only components do not need JavaScript. Existing style-guide scripts, token/build scripts, and tests remain JavaScript for now; consider migrating them incrementally when shared runtime behavior or stronger type guarantees make that useful. Phase 3C toolbars should remain native unless scripting is necessary.
+When adding reusable behavior, place source in `src/ts/`, export a small typed API, add generated output through `scripts/build-runtime.js`, and cover both the compiled Node path and browser path where applicable. New CSS-only components do not need JavaScript. Existing style-guide scripts, token/build scripts, and tests remain JavaScript for now; consider migrating them incrementally when shared runtime behavior or stronger type guarantees make that useful. Phase 3C page headers and toolbars use native semantics and CSS only.
 
 ## Design Tokens
 
@@ -290,9 +294,9 @@ Run this before committing token changes.
 - Accessibility features (reduced motion, forced colours)
 - Layout utility classes and the application-shell component
 
-`base.css` imports generated `tokens.css`, followed by button, form, grouped-settings, dialog, app-shell, and sidebar components. Component rules stay in their own files, while `base.css` remains the public entry point. Styling is opt-in through documented classes; unclassed controls retain browser styling, selects retain native appearance, and the root font size remains the browser's default. Do not edit token values in `base.css`; regenerate CSS from the token source instead.
+`base.css` imports generated `tokens.css`, followed by button, form, grouped-settings, dialog, app-shell, sidebar, page-header, and toolbar components. Component rules stay in their own files, while `base.css` remains the public entry point. Styling is opt-in through documented classes; unclassed controls retain browser styling, selects retain native appearance, and the root font size remains the browser's default. Do not edit token values in `base.css`; regenerate CSS from the token source instead.
 
-Button classes, tokens, markup, state responsibilities and accessibility guidance are documented in [`components/buttons.md`](components/buttons.md). Sidebar CSS and optional controller behavior are documented in [`components/sidebar.md`](components/sidebar.md). Consuming applications do not need style-guide CSS or JavaScript.
+Button classes, tokens, markup, state responsibilities and accessibility guidance are documented in [`components/buttons.md`](components/buttons.md). Sidebar CSS and optional controller behavior are documented in [`components/sidebar.md`](components/sidebar.md). Page-header and toolbar CSS contracts are documented in [`components/page-header.md`](components/page-header.md) and [`components/toolbar.md`](components/toolbar.md). Consuming applications do not need style-guide CSS or JavaScript.
 
 ## Style Guide
 
@@ -307,6 +311,7 @@ The static style guide lives in `style-guide/` and demonstrates:
 - Theme switching
 - Application preview examples
 - Application-shell region combinations and narrow-width stacking
+- Page headers and toolbar groups with native buttons and form controls
 
 ### Preview the Style Guide
 
@@ -379,7 +384,7 @@ Explicit preferences are stored under `kihon-theme` when browser storage is avai
 npm run test
 ```
 
-Runs unit, token schema/value, contrast, HTML/CSS parsing, generated-file consistency, and Chromium browser checks. CI also runs strict TypeScript checking. App-shell and sidebar checks measure region geometry at 320, 480, 768, 1024, and 1280 CSS px; sidebar checks include collapse, focus, no-script fallback, and a constrained parent. The automation does not run the manual verification checklist.
+Runs unit, token schema/value, contrast, HTML/CSS parsing, generated-file consistency, and Chromium browser checks. CI also runs strict TypeScript checking. App-shell, sidebar, page-header, and toolbar checks measure region geometry at 320, 480, 768, 1024, and 1280 CSS px; they include constrained-parent compact layouts, wrapping, focus, no-script fallback, and sidebar collapse. The automation does not run the manual verification checklist.
 
 ### Manual Verification Checklist
 

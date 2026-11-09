@@ -87,7 +87,7 @@ class FakeElement {
   }
 }
 
-function createFixture({ expanded = true, passShell = false, autoDetectShell = true } = {}) {
+function createFixture({ expanded = true, passShell = false, autoDetectShell = true, initialize = true } = {}) {
   const document = new FakeDocument();
   const shell = new FakeElement(document, 'div', 'shell');
   const sidebar = new FakeElement(document, 'nav', 'primary-sidebar');
@@ -102,7 +102,7 @@ function createFixture({ expanded = true, passShell = false, autoDetectShell = t
   shell.children.add(sidebar);
   const options = { sidebar, toggleButton, initialExpanded: expanded };
   if (passShell) options.shell = shell;
-  const controller = createSidebarController(options);
+  const controller = initialize ? createSidebarController(options) : null;
   return { document, shell, sidebar, toggleButton, link, controller };
 }
 
@@ -187,6 +187,71 @@ test('repeated initialization is rejected and disposal permits a new controller'
   const replacement = createSidebarController({ sidebar, toggleButton });
   assert.equal(toggleButton.listeners.get('click').size, 1);
   replacement.dispose();
+});
+
+test('failed initialization rolls back state and listeners, then allows a retry', () => {
+  const { shell, sidebar, toggleButton } = createFixture({ expanded: false, initialize: false });
+  toggleButton.setAttribute('aria-expanded', 'true');
+  toggleButton.setAttribute('hidden', '');
+  const originalSetAttribute = toggleButton.setAttribute.bind(toggleButton);
+  toggleButton.setAttribute = (name, value) => {
+    if (name === 'data-kh-sidebar-ready' && value === '') {
+      throw new Error('simulated readiness update failure');
+    }
+    originalSetAttribute(name, value);
+  };
+
+  assert.throws(
+    () => createSidebarController({ sidebar, toggleButton, shell, initialExpanded: false }),
+    /simulated readiness update failure/
+  );
+  assert.equal(toggleButton.listeners.get('click')?.size ?? 0, 0);
+  assert.equal(toggleButton.getAttribute('data-kh-sidebar-ready'), null);
+  assert.equal(toggleButton.getAttribute('hidden'), '');
+  assert.equal(sidebar.hidden, false);
+  assert.equal(sidebar.getAttribute('hidden'), null);
+  assert.equal(toggleButton.getAttribute('aria-expanded'), 'true');
+  assert.equal(shell.classList.contains('kh-app-shell--nav-collapsed'), false);
+
+  toggleButton.setAttribute = originalSetAttribute;
+  const retry = createSidebarController({ sidebar, toggleButton, shell });
+  assert.equal(toggleButton.listeners.get('click')?.size, 1);
+  assert.equal(toggleButton.getAttribute('data-kh-sidebar-ready'), '');
+  toggleButton.dispatch('click');
+  assert.equal(sidebar.hidden, true);
+  retry.dispose();
+});
+
+test('an initial sidebar state failure restores the visible fallback and permits retry', () => {
+  const { shell, sidebar, toggleButton } = createFixture({ initialize: false });
+  toggleButton.setAttribute('aria-expanded', 'true');
+  toggleButton.setAttribute('hidden', '');
+  const originalToggle = shell.classList.toggle.bind(shell.classList);
+  let shouldThrow = true;
+  shell.classList.toggle = (name, force) => {
+    const result = originalToggle(name, force);
+    if (shouldThrow) {
+      shouldThrow = false;
+      throw new Error('simulated shell-state failure');
+    }
+    return result;
+  };
+
+  assert.throws(
+    () => createSidebarController({ sidebar, toggleButton, shell, initialExpanded: false }),
+    /simulated shell-state failure/
+  );
+  assert.equal(sidebar.hidden, false);
+  assert.equal(toggleButton.getAttribute('aria-expanded'), 'true');
+  assert.equal(toggleButton.getAttribute('hidden'), '');
+  assert.equal(toggleButton.getAttribute('data-kh-sidebar-ready'), null);
+  assert.equal(toggleButton.listeners.get('click')?.size ?? 0, 0);
+  assert.equal(shell.classList.contains('kh-app-shell--nav-collapsed'), false);
+
+  shell.classList.toggle = originalToggle;
+  const retry = createSidebarController({ sidebar, toggleButton, shell });
+  assert.equal(toggleButton.listeners.get('click')?.size, 1);
+  retry.dispose();
 });
 
 test('disposal removes listeners and releases the controller even if state restoration throws', () => {

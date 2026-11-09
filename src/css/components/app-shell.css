@@ -53,6 +53,41 @@
     "main details";
 }
 
+/* Explicit opt-in for shells embedded in a narrow parent on a wide viewport. */
+.kh-app-shell--with-nav.kh-app-shell--compact,
+.kh-app-shell--with-details.kh-app-shell--compact,
+.kh-app-shell--with-nav-and-details.kh-app-shell--compact {
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas:
+    "header"
+    "nav"
+    "main"
+    "details";
+}
+
+.kh-app-shell--with-nav.kh-app-shell--compact.kh-app-shell--nav-collapsed {
+  grid-template-areas:
+    "header"
+    "main";
+}
+
+.kh-app-shell--with-nav-and-details.kh-app-shell--compact.kh-app-shell--nav-collapsed {
+  grid-template-areas:
+    "header"
+    "main"
+    "details";
+}
+
+.kh-app-shell--compact .kh-app-shell__nav {
+  border-inline-end: 0;
+  border-block-end: 1px solid var(--kh-color-border-subtle);
+}
+
+.kh-app-shell--compact .kh-app-shell__details {
+  border-inline-start: 0;
+  border-block-start: 1px solid var(--kh-color-border-subtle);
+}
+
 .kh-app-shell__header {
   grid-area: header;
   display: flex;

@@ -140,11 +140,56 @@ var KihonSidebar = (() => {
       }
     };
     const onToggle = () => setExpanded(Boolean(sidebar.hidden));
-    toggleButton.addEventListener("click", onToggle);
-    toggleButton.removeAttribute("hidden");
-    toggleButton.setAttribute(READY_ATTRIBUTE, "");
-    setExpanded(initialExpanded);
-    controllers.set(sidebar, controller);
+    const previousState = {
+      sidebarHidden: sidebar.hidden,
+      sidebarHiddenAttribute: sidebar.getAttribute("hidden"),
+      expandedAttribute: toggleButton.getAttribute("aria-expanded"),
+      toggleHiddenAttribute: toggleButton.getAttribute("hidden"),
+      readyAttribute: toggleButton.getAttribute(READY_ATTRIBUTE),
+      shellCollapsed: shell?.classList.contains(COLLAPSED_CLASS) ?? false,
+      focusedElement: sidebar.ownerDocument.activeElement
+    };
+    let listenerMayBeAttached = false;
+    try {
+      setExpanded(initialExpanded);
+      listenerMayBeAttached = true;
+      toggleButton.addEventListener("click", onToggle);
+      toggleButton.removeAttribute("hidden");
+      toggleButton.setAttribute(READY_ATTRIBUTE, "");
+      controllers.set(sidebar, controller);
+    } catch (error) {
+      const restoreAttribute = (element, name, value) => {
+        if (value === null) element.removeAttribute(name);
+        else element.setAttribute(name, value);
+      };
+      const rollbackSteps = [
+        () => {
+          if (listenerMayBeAttached) toggleButton.removeEventListener("click", onToggle);
+        },
+        () => controllers.delete(sidebar),
+        () => {
+          sidebar.hidden = previousState.sidebarHidden;
+        },
+        () => restoreAttribute(sidebar, "hidden", previousState.sidebarHiddenAttribute),
+        () => restoreAttribute(toggleButton, "aria-expanded", previousState.expandedAttribute),
+        () => shell?.classList.toggle(COLLAPSED_CLASS, previousState.shellCollapsed),
+        () => restoreAttribute(toggleButton, READY_ATTRIBUTE, previousState.readyAttribute),
+        () => restoreAttribute(toggleButton, "hidden", previousState.toggleHiddenAttribute),
+        () => {
+          const focusedElement = previousState.focusedElement;
+          if (!previousState.sidebarHidden && focusedElement && sidebar.contains(focusedElement) && typeof Reflect.get(focusedElement, "focus") === "function") {
+            Reflect.apply(Reflect.get(focusedElement, "focus"), focusedElement, []);
+          }
+        }
+      ];
+      for (const rollback of rollbackSteps) {
+        try {
+          rollback();
+        } catch {
+        }
+      }
+      throw error;
+    }
     return controller;
   }
   return __toCommonJS(sidebar_exports);
