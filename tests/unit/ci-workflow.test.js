@@ -33,4 +33,10 @@ test('CI builds generated runtime files and checks TypeScript before running tes
   assert.match(workflow, /^\s*- run: npm run build\s*$/m);
   assert.match(workflow, /^\s*- run: npm run typecheck\s*$/m);
   assert.match(workflow, /^\s*- run: npm test\s*$/m);
+  assert.match(workflow, /^\s*- run: npm run test:package\s*$/m);
+});
+
+test('CI only validates local package archives and has no publishing permissions', () => {
+  assert.match(workflow, /^permissions:\s*\n\s+contents:\s*read\s*$/m);
+  assert.doesNotMatch(workflow, /npm publish|packages:\s*write|gh release create/i);
 });

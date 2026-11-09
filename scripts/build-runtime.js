@@ -80,4 +80,4 @@ if (require.main === module) {
   });
 }
 
-module.exports = { getRuntimeOutputs };
+module.exports = { getRuntimeOutputs, RUNTIMES };
