@@ -4,7 +4,7 @@
 
 Kihon defines a lightweight, framework-free design system for CyanAutomation web applications: shared design decisions, accessible interface conventions, reusable CSS and small, optional TypeScript enhancements. It draws inspiration from Apple's Human Interface Guidelines—particularly the clarity and ergonomics of macOS and iOS—while remaining a web-native system rather than an imitation of SwiftUI.
 
-> **Status: provisional foundation; Phases 2A–2C and 3A–3C are implemented.** Automated checks cover DTCG token validation, selected WCAG contrast pairings, generated-file consistency, strict TypeScript checking, HTML/CSS parsing, and Chromium interactions. These checks do not certify WCAG conformance. Public package distribution remains planned. See [`docs/development.md`](docs/development.md) for build and contribution information.
+> **Status: provisional foundation; Phases 2A–2C, 3A–3C and internal packaging Phase 4A are implemented.** The `@cyanautomation/kihon` package remains private, `UNLICENSED`, unpublished and prerelease. Automated checks cover DTCG token validation, selected WCAG contrast pairings, generated-file consistency, strict TypeScript checking, HTML/CSS parsing, and Chromium interactions. These checks do not certify WCAG conformance. See [`docs/distribution.md`](docs/distribution.md) for internal package use and [`docs/development.md`](docs/development.md) for build and contribution information.
 
 ## Why Kihon?
 
@@ -66,29 +66,24 @@ Components must document and test, as applicable:
 
 Automated checks are useful evidence, **not proof of WCAG conformance**; manual keyboard and assistive-technology checks remain necessary.
 
-## Architecture (proposed)
+## Architecture
 
-The intended repository structure is:
+The repository separates editable source from generated consumer artifacts:
 
 ```text
 kihon/
 ├── tokens/                 # Platform-neutral design token source
-├── src/
-│   ├── css/                # Foundation and reusable CSS components
-│   │   └── components/     # Buttons and future component styles
-│   └── components/         # Optional vanilla TypeScript behaviours
+├── src/css/                # Foundation and reusable CSS components
+├── src/ts/                 # Optional vanilla TypeScript behaviors
+├── src/js/                 # Existing browser-global compatibility outputs
+├── dist/                   # Generated package artifacts; ignored and recreated by build/prepack
 ├── style-guide/            # Static documentation and live examples
-├── docs/
-│   ├── foundation.md       # Normative v1.0 baseline and adoption rules
-│   ├── macos-patterns.md   # Desktop interaction conventions
-│   ├── accessibility.md    # Component and testing requirements
-│   ├── swiftui-mapping.md  # Conceptual mapping to native SwiftUI
-│   └── adopting-kihon.md   # Migration guidance for existing apps
-├── tests/
-└── package.json            # Only when packaging is introduced
+├── docs/                   # Foundation and component contracts
+├── tests/                  # Unit, browser, and package consumer checks
+└── package.json            # Private identity and explicit public exports
 ```
 
-This is a **proposed layout**, not a list of files that currently exist.
+`src/ts/` and `src/css/` remain the source of truth. `dist/` is disposable package output and is created automatically before `npm pack`.
 
 ### Tokens and styling
 
@@ -122,7 +117,7 @@ Kihon will use a predictable `kh-` prefix for its CSS classes and public custom 
 # Install the locked development dependencies
 npm ci
 
-# Generate CSS from design tokens
+# Generate tokens and all generated runtime/package outputs
 npm run build
 
 # Validate tokens and generated output
@@ -130,6 +125,9 @@ npm run validate
 
 # Run unit, token, contrast, HTML/CSS, generated-file, and Chromium checks
 npm test
+
+# Pack and install the private archive in isolated JavaScript, TypeScript, and browser consumers
+npm run test:package
 
 # Build and serve the style guide
 npm run dev
@@ -159,11 +157,12 @@ The style guide demonstrates:
 
 ### Using Kihon in Your Application
 
-For Kihon components, consuming applications can import the foundation entry point:
+For Kihon components, CyanAutomation applications consume the private package from a locally built archive. There is no public npm or GitHub Packages installation. See [`docs/distribution.md`](docs/distribution.md) for the tested archive workflow and package contract.
 
-1. Import the generated CSS:
-   ```html
-   <link rel="stylesheet" href="path/to/kihon/src/css/base.css">
+1. Install an archive supplied through the approved internal process, then import its CSS through an application build tool that resolves package specifiers:
+   ```css
+   <!-- In a bundler entry stylesheet: -->
+   @import "@cyanautomation/kihon/styles.css";
    ```
 
 2. Use semantic CSS variables in application styles:
@@ -185,20 +184,20 @@ For Kihon components, consuming applications can import the foundation entry poi
 
 4. Let CSS follow the system appearance or set `data-kh-theme="light"` / `data-kh-theme="dark"` on `<html>`. The theme switcher in `style-guide/` is a demonstration, not a production component.
 
-No frontend framework is required. Kihon works with vanilla HTML, CSS and optional JavaScript.
+No frontend framework is required. Kihon works with vanilla HTML, CSS and optional JavaScript. A browser's native stylesheet loader does not resolve a bare npm package specifier; serve the packaged `dist/styles.css` from an application-owned asset path when no build-tool resolver is available.
 
 The application shell, sidebar, page header, and toolbar are documented in [`docs/components/app-shell.md`](docs/components/app-shell.md), [`docs/components/sidebar.md`](docs/components/sidebar.md), [`docs/components/page-header.md`](docs/components/page-header.md), and [`docs/components/toolbar.md`](docs/components/toolbar.md). Dialogs use native `<dialog>` opened with `showModal()`; the TypeScript source, generated browser/CommonJS helpers, and consumer responsibilities are documented in the component guides and [`docs/development.md`](docs/development.md).
 
 Kihon is intended for CyanAutomation applications with a web UI. Headless Workers, APIs and background services are **not applicable**, rather than non-compliant.
 
 1. Audit the app's current HTML, CSS, interaction patterns and accessibility baseline.
-2. Adopt the published Kihon foundation stylesheet and semantic tokens.
+2. Adopt the Kihon foundation stylesheet and semantic tokens from the approved internal archive.
 3. Replace duplicated common styling incrementally; retain application-specific branding and layouts.
 4. Adopt optional component behaviours only where native HTML/CSS is insufficient.
 5. Run automated checks, keyboard checks and visual reviews; document any intentional exceptions.
-6. Pin a released Kihon version and update it intentionally.
+6. Pin an explicit prerelease archive and update it intentionally.
 
-A future package may allow a consumer to import Kihon's styles directly; **there is no valid installation command or published API yet**. Examples will be added when package names and exports are finalised.
+Kihon currently supports locally generated `.tgz` archives for internal consumer testing and adoption. No package has been published. Git dependency installation and registry-backed installation are not supported in Phase 4A; future private GitHub Packages use requires a separate access-control and release decision.
 
 ### Working with Testacoda
 
@@ -224,14 +223,15 @@ The planned `swiftui-mapping.md` will describe conceptual equivalents—for exam
 - [x] Build a static, framework-free style-guide site with live examples.
 - [ ] Add automated validation and manual review checklists.
 - [ ] Pilot adoption in one CyanAutomation web application.
-- [ ] Decide package exports, versioning, distribution and licensing before v1.0 release.
+- [x] Define provisional internal package exports, prerelease versioning and local archive validation (Phase 4A).
+- [ ] Decide release versioning, private registry distribution and licensing before any v1.0 release.
 - [ ] Define a lightweight adoption-reporting contract for Testacoda.
 
 Roadmap order and scope may evolve through implementation and review.
 
 ## Versioning and stability
 
-**Kihon v1.0 is a target specification**, not an assertion that a package has shipped. Before v1.0, APIs, token names and file paths may change. Once published, releases should follow semantic versioning, document breaking changes and provide migration notes. The specification version and package version should be identifiable independently if they later evolve at different rates.
+**Kihon v1.0 is a target specification**, not an assertion that a stable package has shipped. The internal package currently uses the prerelease version `1.0.0-draft.2`; before v1.0, APIs, token names and file paths may change. Consumers should pin explicit versions or immutable archives. Any future release should follow semantic versioning, document breaking changes and provide migration notes. The specification version and package version should be identifiable independently if they later evolve at different rates.
 
 ## Contributing
 

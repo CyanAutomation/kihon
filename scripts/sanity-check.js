@@ -6,41 +6,94 @@ const postcss = require('postcss');
 const { HtmlValidate } = require('html-validate');
 
 const ROOT = path.join(__dirname, '..');
-const HTML_PATH = path.join(ROOT, 'style-guide', 'index.html');
-const CSS_PATHS = [
-  path.join(ROOT, 'src', 'css', 'tokens.css'),
-  path.join(ROOT, 'src', 'css', 'base.css'),
-  path.join(ROOT, 'src', 'css', 'components', 'buttons.css'),
-  path.join(ROOT, 'src', 'css', 'components', 'forms.css'),
-  path.join(ROOT, 'src', 'css', 'components', 'settings.css'),
-  path.join(ROOT, 'src', 'css', 'components', 'dialogs.css'),
-  path.join(ROOT, 'src', 'css', 'components', 'app-shell.css'),
-  path.join(ROOT, 'src', 'css', 'components', 'page-header.css'),
-  path.join(ROOT, 'src', 'css', 'components', 'toolbar.css'),
-  path.join(ROOT, 'style-guide', 'styles.css')
-];
 
-async function runSanityChecks() {
+function collectCssPaths(root = ROOT) {
+  const componentsDirectory = path.join(root, 'src', 'css', 'components');
+  const componentPaths = fs.readdirSync(componentsDirectory, { withFileTypes: true })
+    .filter((entry) => entry.isFile() && path.extname(entry.name) === '.css')
+    .map((entry) => path.join(componentsDirectory, entry.name))
+    .sort((left, right) => left < right ? -1 : left > right ? 1 : 0);
+
+  return [
+    path.join(root, 'src', 'css', 'tokens.css'),
+    path.join(root, 'src', 'css', 'base.css'),
+    ...componentPaths,
+    path.join(root, 'style-guide', 'styles.css')
+  ];
+}
+
+function importedPath(params) {
+  const value = params.trim();
+  const urlMatch = /^url\(\s*(['"]?)(.*?)\1\s*\)$/i.exec(value);
+  if (urlMatch) return urlMatch[2];
+  const quotedMatch = /^(['"])(.*?)\1$/.exec(value);
+  if (quotedMatch) return quotedMatch[2];
+  return value;
+}
+
+function findComponentImportErrors(root, baseStylesheet, componentPaths) {
   const errors = [];
+  const basePath = path.join(root, 'src', 'css', 'base.css');
+  const importedFiles = new Set();
+
+  baseStylesheet.walkAtRules('import', (rule) => {
+    const specifier = importedPath(rule.params);
+    if (!specifier.startsWith('.')) return;
+
+    const resolved = path.resolve(path.dirname(basePath), specifier);
+    importedFiles.add(resolved);
+    if (!fs.existsSync(resolved)) {
+      errors.push(`${path.relative(root, basePath)}:${rule.source.start.line} referenced stylesheet does not exist: ${specifier}`);
+    }
+  });
+
+  const expectedImports = [
+    path.join(root, 'src', 'css', 'tokens.css'),
+    ...componentPaths
+  ];
+  for (const stylesheetPath of expectedImports) {
+    if (!importedFiles.has(stylesheetPath)) {
+      const specifier = `./${path.relative(path.dirname(basePath), stylesheetPath).split(path.sep).join('/')}`;
+      errors.push(`${path.relative(root, basePath)} is missing required stylesheet import ${specifier}`);
+    }
+  }
+
+  return errors;
+}
+
+async function runSanityChecks(root = ROOT) {
+  const errors = [];
+  const htmlPath = path.join(root, 'style-guide', 'index.html');
+  const cssPaths = collectCssPaths(root);
   const validator = new HtmlValidate({
     extends: ['html-validate:recommended'],
     // The style guide uses inline declarations to show token values beside examples.
     rules: { 'no-inline-style': 'off' }
   });
-  const htmlResult = await validator.validateFile(HTML_PATH);
+  const htmlResult = await validator.validateFile(htmlPath);
   for (const result of htmlResult.results) {
     for (const message of result.messages) {
-      errors.push(`${path.relative(ROOT, result.filePath)}:${message.line}:${message.column} ${message.ruleId}: ${message.message}`);
+      errors.push(`${path.relative(root, result.filePath)}:${message.line}:${message.column} ${message.ruleId}: ${message.message}`);
     }
   }
 
-  for (const filePath of CSS_PATHS) {
+  let baseStylesheet = null;
+  for (const filePath of cssPaths) {
+    // Keep filesystem errors distinct from PostCSS syntax errors.
     const css = fs.readFileSync(filePath, 'utf8');
     try {
-      postcss.parse(css, { from: filePath });
+      const stylesheet = postcss.parse(css, { from: filePath });
+      if (filePath === path.join(root, 'src', 'css', 'base.css')) baseStylesheet = stylesheet;
     } catch (error) {
-      errors.push(`${path.relative(ROOT, filePath)}:${error.line}:${error.column} CSS parse error: ${error.reason}`);
+      errors.push(`${path.relative(root, filePath)}:${error.line}:${error.column} CSS parse error: ${error.reason}`);
     }
+  }
+
+  if (baseStylesheet) {
+    const componentPaths = cssPaths.filter((filePath) =>
+      path.dirname(filePath) === path.join(root, 'src', 'css', 'components')
+    );
+    errors.push(...findComponentImportErrors(root, baseStylesheet, componentPaths));
   }
 
   return errors;
@@ -56,7 +109,7 @@ async function main() {
   }
 
   console.log('✓ Style guide HTML passes html-validate');
-  console.log('✓ Generated, base, component, and style guide CSS parse successfully');
+  console.log('✓ Generated, base, all discovered component, and style guide CSS parse successfully');
 }
 
 if (require.main === module) main().catch((error) => {
@@ -64,4 +117,4 @@ if (require.main === module) main().catch((error) => {
   process.exitCode = 1;
 });
 
-module.exports = { runSanityChecks };
+module.exports = { collectCssPaths, findComponentImportErrors, runSanityChecks };

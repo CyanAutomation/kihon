@@ -90,21 +90,27 @@ Each JavaScript output has a generated `.js.map` source map beside it.
 
 | Build command | Purpose |
 | --- | --- |
-| `npm run build` | Build tokens and runtime outputs. |
-| `npm run build:runtime` | Build runtime outputs only. |
+| `npm run build` | Build tokens, legacy runtime outputs, and package outputs in `dist/`. |
+| `npm run build:runtime` | Build the existing browser-global/CommonJS compatibility outputs and declarations in `src/js/`. |
+| `npm run build:package` | Build ESM, CommonJS, browser-global, declaration, and bundled CSS package artifacts in `dist/`. |
+| `npm run test:package` | Pack and install the archive in isolated JavaScript, TypeScript, and browser consumers. |
 | `npm run typecheck` | Strict type check without emitting. |
 
-The generated helpers remain usable as classic browser scripts exposing `window.KihonDialogs` and `window.KihonSidebar`, and through Node `require()` at their existing paths. Each bundle is built from its TypeScript source; there is no second handwritten implementation. TypeScript and esbuild are development dependencies only. JavaScript outputs, source maps, and declarations are committed so consumers can use them without a build step, and `npm run check:generated` detects stale outputs without rewriting them. These are browser-global/CommonJS bundles, not browser ES modules.
+The generated helpers in `src/js/` remain usable as classic browser scripts exposing `window.KihonDialogs` and `window.KihonSidebar`, and through Node `require()` at their existing paths. Each bundle is built from its TypeScript source; there is no second handwritten implementation. TypeScript and esbuild are development dependencies only. The existing compatibility JavaScript, source maps, and declarations are committed; `npm run check:generated` detects stale output without rewriting it. These compatibility bundles are not browser ES modules.
+
+The internal package generates separate native ESM (`.mjs`), CommonJS (`.cjs`), module-specific declaration (`.d.mts`/`.d.cts`), browser-global, and CSS artifacts under `dist/`. `dist/` is ignored by Git. `npm pack` runs the `prepack` build automatically, and package tests verify that this archive contains every export and only the consumer files. The package contract is described in [`distribution.md`](distribution.md).
 
 When adding reusable behavior, place source in `src/ts/`, export a small typed API, add generated output through `scripts/build-runtime.js`, and cover both the compiled Node path and browser path where applicable. New CSS-only components do not need JavaScript. Existing style-guide scripts, token/build scripts, and tests remain JavaScript for now; consider migrating them incrementally when shared runtime behavior or stronger type guarantees make that useful. Phase 3C page headers and toolbars use native semantics and CSS only.
 
 ## Design Tokens
 
-`src/css/base.css` is the consumer entry point. It imports generated tokens,
-then buttons, forms, grouped-settings, dialog, application-shell, and sidebar
-styles in that order; applications do not need to import files from
-`style-guide/`. Optional dialog and sidebar helpers are authored in `src/ts/`
-and generated at `src/js/`; neither has runtime dependencies.
+`src/css/base.css` is the CSS source entry point. It imports generated tokens,
+then buttons, forms, grouped-settings, dialogs, application-shell, sidebar,
+page-header, and toolbar styles in that order. Package builds resolve those
+imports into the self-contained `dist/styles.css`; applications do not need to
+import files from Kihon's source tree or `style-guide/`. Optional dialog and
+sidebar helpers are authored in `src/ts/` and generated at `src/js/` and `dist/`;
+neither has runtime dependencies.
 
 ### Token Source Structure
 
@@ -526,4 +532,4 @@ A token references a path that doesn't exist. Example:
 
 ---
 
-**Status**: Kihon v1.0 is in development. This guide reflects the Phase 1 implementation scope.
+**Status**: Kihon remains provisional. Phase 4A adds internal package archives; it does not publish a stable release or configure registry distribution.
