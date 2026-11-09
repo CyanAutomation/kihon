@@ -336,14 +336,16 @@
         <button class="kh-button kh-button--primary" type="button">Save changes</button>
       </div>
       <p>Compact toolbar action examples:</p>
-      <div class="kh-sg-toolbar" role="group" aria-label="Example actions">
-        <button class="kh-button kh-button--quiet kh-button--sm" type="button">New</button>
-        <button class="kh-button kh-button--quiet kh-button--sm" type="button">Export</button>
-        <button class="kh-button kh-button--quiet kh-button--sm kh-button--icon" type="button" aria-label="Refresh items">
-          <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
-            <path d="M13 5.5A5.5 5.5 0 1 0 13.2 9M13 2.5v3h-3" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-          </svg>
-        </button>
+      <div class="kh-toolbar" role="group" aria-label="Example actions">
+        <div class="kh-toolbar__group" role="group" aria-label="Page commands">
+          <button class="kh-button kh-button--quiet kh-button--sm" type="button">New</button>
+          <button class="kh-button kh-button--quiet kh-button--sm" type="button">Export</button>
+          <button class="kh-button kh-button--quiet kh-button--sm kh-button--icon" type="button" aria-label="Refresh items">
+            <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="M13 5.5A5.5 5.5 0 1 0 13.2 9M13 2.5v3h-3" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </button>
+        </div>
       </div>
 
       <h3>Working demonstrations</h3>
@@ -561,7 +563,24 @@
           <h3 id="app-shell-content-title">Main content only</h3>
           <div id="app-shell-content-only" class="kh-app-shell">
             <div class="kh-app-shell__main">
-              <h3>Activity</h3>
+              <header class="kh-page-header">
+                <div class="kh-page-header__content">
+                  <h4 class="kh-page-header__title">Activity</h4>
+                  <p class="kh-page-header__description">Recent events across the Kihon workspace.</p>
+                </div>
+                <div class="kh-page-header__actions" role="group" aria-label="Activity page actions">
+                  <button class="kh-button kh-button--primary" type="button">Export activity</button>
+                </div>
+              </header>
+              <div class="kh-toolbar" role="group" aria-label="Activity controls">
+                <div class="kh-toolbar__group" role="group" aria-label="Search activity">
+                  <label class="kh-toolbar__label" for="app-shell-content-search">Search activity</label>
+                  <input class="kh-input" id="app-shell-content-search" type="search" placeholder="Service or event">
+                </div>
+                <div class="kh-toolbar__group kh-toolbar__group--end" role="group" aria-label="Activity commands">
+                  <button class="kh-button kh-button--secondary" type="button">Refresh</button>
+                </div>
+              </div>
               <p>This layout has one content column. The code block can scroll horizontally without widening the page.</p>
               <pre><code>const project = { name: 'Kihon', phase: '3A' };</code></pre>
             </div>
@@ -573,7 +592,10 @@
           <div id="app-shell-nav-main" class="kh-app-shell kh-app-shell--with-nav">
             <header class="kh-app-shell__header">
               <strong>Project workspace</strong>
-              <button class="kh-button kh-button--quiet kh-sidebar-toggle" id="app-shell-nav-main-toggle" type="button" aria-controls="app-shell-nav-main-navigation" aria-expanded="true" hidden>Toggle navigation</button>
+              <div class="kh-sg-app-shell-actions">
+                <button class="kh-button kh-button--secondary kh-button--sm" type="button">Create project</button>
+                <button class="kh-button kh-button--quiet kh-sidebar-toggle" id="app-shell-nav-main-toggle" type="button" aria-controls="app-shell-nav-main-navigation" aria-expanded="true" hidden>Toggle navigation</button>
+              </div>
             </header>
             <nav id="app-shell-nav-main-navigation" class="kh-app-shell__nav kh-sidebar" aria-label="Example project navigation">
               <section class="kh-sidebar__section" aria-labelledby="app-shell-nav-main-group">
@@ -585,7 +607,29 @@
               </section>
             </nav>
             <div class="kh-app-shell__main">
-              <h3>Overview</h3>
+              <header class="kh-page-header">
+                <div class="kh-page-header__content">
+                  <h4 class="kh-page-header__title">Projects</h4>
+                  <p class="kh-page-header__description">Manage applications and service health.</p>
+                </div>
+                <div class="kh-page-header__actions" role="group" aria-label="Project page actions">
+                  <button class="kh-button kh-button--secondary" type="button">Import</button>
+                  <button class="kh-button kh-button--primary" type="button">Create project</button>
+                </div>
+              </header>
+              <div class="kh-toolbar" role="group" aria-label="Project controls">
+                <div class="kh-toolbar__group" role="group" aria-label="Search projects">
+                  <label class="kh-toolbar__label" for="app-shell-nav-search">Search projects</label>
+                  <input class="kh-input" id="app-shell-nav-search" type="search" placeholder="Search projects">
+                </div>
+                <div class="kh-toolbar__group" role="group" aria-label="Project sorting">
+                  <label class="kh-label" for="app-shell-nav-sort">Sort by</label>
+                  <select class="kh-select" id="app-shell-nav-sort">
+                    <option>Name</option>
+                    <option>Recently updated</option>
+                  </select>
+                </div>
+              </div>
               <p>Navigation stays visible beside the primary content when space allows.</p>
             </div>
           </div>
@@ -615,9 +659,10 @@
               <div class="kh-sg-app-shell-actions">
                 <button class="kh-button kh-button--secondary kh-button--sm" id="app-shell-about-trigger" type="button">About Kihon</button>
                 <button class="kh-button kh-button--primary kh-button--sm" type="button">New project</button>
+                <button class="kh-button kh-button--quiet kh-button--sm kh-sidebar-toggle" id="app-shell-full-toggle" type="button" aria-controls="app-shell-full-nav" aria-expanded="true" hidden>Toggle project navigation</button>
               </div>
             </header>
-            <nav class="kh-app-shell__nav kh-sidebar" aria-label="Primary project navigation">
+            <nav id="app-shell-full-nav" class="kh-app-shell__nav kh-sidebar" aria-label="Primary project navigation">
               <section class="kh-sidebar__section" aria-labelledby="app-shell-project-group">
                 <h4 class="kh-sidebar__section-title" id="app-shell-project-group">Project</h4>
                 <ul class="kh-sidebar__list">
@@ -633,8 +678,38 @@
               </section>
             </nav>
             <div class="kh-app-shell__main" id="app-shell-main" tabindex="-1">
-              <h3>Overview</h3>
-              <p>Project information remains in the main reading order. The shell adds no JavaScript and uses the existing button, form and grouped-settings classes.</p>
+              <header class="kh-page-header">
+                <div class="kh-page-header__content">
+                  <h4 class="kh-page-header__title" id="app-shell-page-title" aria-describedby="app-shell-page-description">Overview</h4>
+                  <p class="kh-page-header__description" id="app-shell-page-description">Project information stays in the main reading order and remains available beside contextual details.</p>
+                  <div class="kh-page-header__meta"><span>Project: Kihon</span><span>Region: Europe</span></div>
+                </div>
+                <div class="kh-page-header__actions" role="group" aria-label="Overview page actions">
+                  <button class="kh-button kh-button--secondary" type="button">Share report</button>
+                  <button class="kh-button kh-button--primary" type="button">Create project</button>
+                </div>
+              </header>
+
+              <div class="kh-toolbar" role="group" aria-label="Project controls">
+                <div class="kh-toolbar__group" role="group" aria-label="Search projects">
+                  <label class="kh-toolbar__label" for="app-shell-search">Search projects</label>
+                  <input class="kh-input" id="app-shell-search" type="search" placeholder="Search projects">
+                </div>
+                <div class="kh-toolbar__group" role="group" aria-label="Project filters">
+                  <label class="kh-label" for="app-shell-sort">Sort by</label>
+                  <select class="kh-select" id="app-shell-sort">
+                    <option value="name">Name</option>
+                    <option value="updated">Recently updated</option>
+                  </select>
+                </div>
+                <span class="kh-toolbar__separator" aria-hidden="true"></span>
+                <div class="kh-toolbar__group kh-toolbar__group--end" role="group" aria-label="Project actions">
+                  <button class="kh-button kh-button--secondary" id="app-shell-refresh" type="button">Refresh</button>
+                  <button class="kh-button kh-button--primary" type="button">Export project activity</button>
+                </div>
+              </div>
+
+              <p>Use native form controls and actions; applications provide the search and filtering behavior.</p>
 
               <section class="kh-settings-group" aria-labelledby="app-shell-settings">
                 <h4 class="kh-settings-heading" id="app-shell-settings">Project settings</h4>
@@ -714,6 +789,32 @@
             <div class="kh-sidebar__footer"><small>Local style-guide example</small></div>
           </nav>
           <div class="kh-app-shell__main" id="sidebar-demo-main">
+            <header class="kh-page-header">
+              <div class="kh-page-header__content">
+                <h3 class="kh-page-header__title">Workspace overview</h3>
+                <p class="kh-page-header__description">Monitor projects, deployments, and account activity.</p>
+              </div>
+              <div class="kh-page-header__actions" role="group" aria-label="Workspace page actions">
+                <button class="kh-button kh-button--primary" type="button">Invite member</button>
+              </div>
+            </header>
+            <div class="kh-toolbar" role="group" aria-label="Workspace controls">
+              <div class="kh-toolbar__group" role="group" aria-label="Search workspace">
+                <label class="kh-toolbar__label" for="sidebar-demo-search">Search workspace</label>
+                <input class="kh-input" id="sidebar-demo-search" type="search" placeholder="Search workspace">
+              </div>
+              <div class="kh-toolbar__group" role="group" aria-label="Filter activity">
+                <label class="kh-label" for="sidebar-demo-filter">Status</label>
+                <select class="kh-select" id="sidebar-demo-filter">
+                  <option>All services</option>
+                  <option>Operational</option>
+                  <option>Needs attention</option>
+                </select>
+              </div>
+              <div class="kh-toolbar__group kh-toolbar__group--end" role="group" aria-label="Workspace actions">
+                <button class="kh-button kh-button--secondary" type="button">Refresh</button>
+              </div>
+            </div>
             <section id="sidebar-demo-overview" aria-labelledby="sidebar-demo-overview-title">
               <h3 id="sidebar-demo-overview-title">Overview</h3>
               <p>The sidebar works with the Phase 3A shell. Use the labelled control to collapse it; the main view then uses the available space.</p>
@@ -740,6 +841,102 @@
       </div>
       <p class="kh-sg-demo-status" data-kh-sidebar-status role="status" aria-live="polite">Current demonstration destination: Overview.</p>
       <p>At narrow widths the application shell stacks the regions. The toggle remains available, while navigation stays visible unless the user collapses it.</p>
+    </section>
+
+    <!-- Page headers -->
+    <section id="page-headers" class="kh-sg-section" aria-labelledby="page-headers-heading">
+      <h2 id="page-headers-heading">Page Headers</h2>
+      <p>A page header identifies the current view and keeps its title, supporting context, and immediate actions together. Choose the heading level that fits the consuming page's hierarchy.</p>
+
+      <h3>Title only</h3>
+      <header class="kh-page-header">
+        <div class="kh-page-header__content">
+          <h4 class="kh-page-header__title">Activity</h4>
+        </div>
+      </header>
+
+      <h3>Title and description</h3>
+      <header class="kh-page-header">
+        <div class="kh-page-header__content">
+          <h4 class="kh-page-header__title">Projects</h4>
+          <p class="kh-page-header__description">Manage applications, deployments, and service health.</p>
+          <div class="kh-page-header__meta"><span>8 projects</span><span>Updated 4 minutes ago</span></div>
+        </div>
+      </header>
+
+      <h3>Page actions</h3>
+      <header class="kh-page-header">
+        <div class="kh-page-header__content">
+          <h4 class="kh-page-header__title">Settings</h4>
+          <p class="kh-page-header__description">Configure workspace preferences and team access.</p>
+        </div>
+        <div class="kh-page-header__actions" role="group" aria-label="Settings page actions">
+          <button class="kh-button kh-button--secondary" type="button">Cancel</button>
+          <button class="kh-button kh-button--primary" type="button">Save changes</button>
+        </div>
+      </header>
+
+      <h3>Long title and narrow layout</h3>
+      <div class="kh-sg-narrow-example">
+        <header class="kh-page-header">
+          <div class="kh-page-header__content">
+            <h4 class="kh-page-header__title">Deployment notification preferences for critical services</h4>
+            <p class="kh-page-header__description">Choose which operational updates are sent to your team and how those updates are grouped across multiple service environments.</p>
+          </div>
+          <div class="kh-page-header__actions" role="group" aria-label="Notification actions">
+            <button class="kh-button kh-button--secondary" type="button">Review settings</button>
+            <button class="kh-button kh-button--primary" type="button">Save preferences</button>
+          </div>
+        </header>
+      </div>
+    </section>
+
+    <!-- Toolbars -->
+    <section id="toolbars" class="kh-sg-section" aria-labelledby="toolbars-heading">
+      <h2 id="toolbars-heading">Toolbars</h2>
+      <p>Kihon toolbars arrange ordinary native controls. They keep normal Tab navigation and do not use the composite <code>role="toolbar"</code>.</p>
+
+      <h3>Action group</h3>
+      <div class="kh-toolbar" role="group" aria-label="Activity actions">
+        <div class="kh-toolbar__group" role="group" aria-label="Activity commands">
+          <button class="kh-button kh-button--secondary" type="button">Refresh</button>
+          <button class="kh-button kh-button--primary" type="button">Export activity</button>
+        </div>
+      </div>
+
+      <h3>Search, filters, and end-aligned actions</h3>
+      <div class="kh-toolbar" role="group" aria-label="Project controls">
+        <div class="kh-toolbar__group" role="group" aria-label="Search projects">
+          <label class="kh-toolbar__label" for="toolbar-search">Search</label>
+          <input class="kh-input" id="toolbar-search" type="search" placeholder="Project name or owner">
+        </div>
+        <div class="kh-toolbar__group" role="group" aria-label="Project filters">
+          <label class="kh-toolbar__label" for="toolbar-status">Status</label>
+          <select class="kh-select" id="toolbar-status">
+            <option>All projects</option>
+            <option>Operational</option>
+            <option>Needs attention</option>
+          </select>
+        </div>
+        <span class="kh-toolbar__separator" aria-hidden="true"></span>
+        <div class="kh-toolbar__group kh-toolbar__group--end" role="group" aria-label="Project commands">
+          <button class="kh-button kh-button--secondary" type="button">Refresh</button>
+          <button class="kh-button kh-button--primary" type="button">Export</button>
+        </div>
+      </div>
+
+      <h3>Long labels at narrow widths</h3>
+      <div class="kh-sg-narrow-example">
+        <div class="kh-toolbar" role="group" aria-label="Deployment controls">
+          <div class="kh-toolbar__group" role="group" aria-label="Deployment search">
+            <label class="kh-toolbar__label" for="toolbar-deployment-search">Search deployments</label>
+            <input class="kh-input" id="toolbar-deployment-search" type="search" placeholder="Name, region, or service">
+          </div>
+          <div class="kh-toolbar__group" role="group" aria-label="Deployment actions">
+            <button class="kh-button kh-button--secondary" type="button">Show all recent deployment notifications</button>
+          </div>
+        </div>
+      </div>
     </section>
 
     <!-- Dialogs -->

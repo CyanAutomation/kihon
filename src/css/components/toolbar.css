@@ -1,0 +1,53 @@
+/* Kihon Toolbar
+ * Public classes: .kh-toolbar and .kh-toolbar__{group,group--end,separator,label}.
+ * This is a visual arrangement of native controls, not an ARIA composite toolbar.
+ */
+
+.kh-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--kh-space-3);
+  min-inline-size: 0;
+  margin-block: var(--kh-space-4) var(--kh-space-6);
+}
+
+.kh-toolbar__group {
+  display: flex;
+  flex: 0 1 auto;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--kh-space-2);
+  min-inline-size: 0;
+  max-inline-size: 100%;
+}
+
+.kh-toolbar__group > .kh-input[type="search"] {
+  flex: 1 1 12rem;
+  inline-size: min(100%, 22rem);
+  min-inline-size: min(100%, 12rem);
+  max-inline-size: 100%;
+}
+
+.kh-toolbar__group--end {
+  margin-inline-start: auto;
+}
+
+.kh-toolbar__separator {
+  flex: none;
+  inline-size: 1px;
+  block-size: var(--kh-space-6);
+  background-color: var(--kh-color-border-subtle);
+}
+
+.kh-toolbar__label {
+  color: var(--kh-color-text-secondary);
+  font-size: var(--kh-type-size-sm);
+  font-weight: var(--kh-type-weight-medium);
+}
+
+@media (forced-colors: active) {
+  .kh-toolbar__separator {
+    background-color: CanvasText;
+  }
+}
