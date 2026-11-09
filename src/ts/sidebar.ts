@@ -186,11 +186,66 @@ export function createSidebarController(options: SidebarOptions): SidebarControl
 
   const onToggle = (): void => setExpanded(Boolean(sidebar.hidden));
 
-  toggleButton.addEventListener('click', onToggle);
-  toggleButton.removeAttribute('hidden');
-  toggleButton.setAttribute(READY_ATTRIBUTE, '');
-  setExpanded(initialExpanded);
-  controllers.set(sidebar, controller);
+  const previousState = {
+    sidebarHidden: sidebar.hidden,
+    sidebarHiddenAttribute: sidebar.getAttribute('hidden'),
+    expandedAttribute: toggleButton.getAttribute('aria-expanded'),
+    toggleHiddenAttribute: toggleButton.getAttribute('hidden'),
+    readyAttribute: toggleButton.getAttribute(READY_ATTRIBUTE),
+    shellCollapsed: shell?.classList.contains(COLLAPSED_CLASS) ?? false,
+    focusedElement: sidebar.ownerDocument.activeElement
+  };
+  let listenerMayBeAttached = false;
+
+  try {
+    // Set the requested state before exposing the control. Any later failure is
+    // rolled back to the visible-by-default navigation fallback.
+    setExpanded(initialExpanded);
+    listenerMayBeAttached = true;
+    toggleButton.addEventListener('click', onToggle);
+    toggleButton.removeAttribute('hidden');
+    toggleButton.setAttribute(READY_ATTRIBUTE, '');
+    controllers.set(sidebar, controller);
+  } catch (error) {
+    const restoreAttribute = (element: HTMLElement, name: string, value: string | null): void => {
+      if (value === null) element.removeAttribute(name);
+      else element.setAttribute(name, value);
+    };
+    const rollbackSteps: Array<() => void> = [
+      () => {
+        if (listenerMayBeAttached) toggleButton.removeEventListener('click', onToggle);
+      },
+      () => controllers.delete(sidebar),
+      () => { sidebar.hidden = previousState.sidebarHidden; },
+      () => restoreAttribute(sidebar, 'hidden', previousState.sidebarHiddenAttribute),
+      () => restoreAttribute(toggleButton, 'aria-expanded', previousState.expandedAttribute),
+      () => shell?.classList.toggle(COLLAPSED_CLASS, previousState.shellCollapsed),
+      () => restoreAttribute(toggleButton, READY_ATTRIBUTE, previousState.readyAttribute),
+      () => restoreAttribute(toggleButton, 'hidden', previousState.toggleHiddenAttribute),
+      () => {
+        const focusedElement = previousState.focusedElement;
+        if (
+          !previousState.sidebarHidden
+          && focusedElement
+          && sidebar.contains(focusedElement)
+          && typeof Reflect.get(focusedElement, 'focus') === 'function'
+        ) {
+          Reflect.apply(Reflect.get(focusedElement, 'focus') as (...args: never[]) => unknown, focusedElement, []);
+        }
+      }
+    ];
+
+    for (const rollback of rollbackSteps) {
+      try {
+        rollback();
+      } catch {
+        // Keep attempting cleanup so one failing DOM operation cannot prevent
+        // listener removal or restoration of the other fallback state.
+      }
+    }
+
+    throw error;
+  }
 
   return controller;
 }

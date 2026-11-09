@@ -11,7 +11,8 @@ test('generated tokens, foundation, component, and guide styles parse as CSS', (
   for (const file of [
     'src/css/tokens.css', 'src/css/base.css', 'src/css/components/buttons.css',
     'src/css/components/forms.css', 'src/css/components/settings.css', 'src/css/components/app-shell.css',
-    'src/css/components/dialogs.css', 'src/css/components/sidebar.css', 'style-guide/styles.css'
+    'src/css/components/dialogs.css', 'src/css/components/sidebar.css',
+    'src/css/components/page-header.css', 'src/css/components/toolbar.css', 'style-guide/styles.css'
   ]) {
     assert.doesNotThrow(() => postcss.parse(read(file), { from: file }), `${file} should parse`);
   }
@@ -42,7 +43,8 @@ test('base.css imports tokens and components in a deterministic order', () => {
     "url('./tokens.css')", "url('./components/buttons.css')",
     "url('./components/forms.css')", "url('./components/settings.css')",
     "url('./components/dialogs.css')", "url('./components/app-shell.css')",
-    "url('./components/sidebar.css')"
+    "url('./components/sidebar.css')", "url('./components/page-header.css')",
+    "url('./components/toolbar.css')"
   ]);
 });
 
@@ -163,7 +165,7 @@ test('application-shell styles are opt-in, token-based, responsive, and independ
   for (const selector of [
     '.kh-app-shell', '.kh-app-shell__header', '.kh-app-shell__nav', '.kh-app-shell__main',
     '.kh-app-shell__details', '.kh-app-shell--with-nav', '.kh-app-shell--with-details',
-    '.kh-app-shell--with-nav-and-details', '.kh-app-shell--nav-collapsed',
+    '.kh-app-shell--with-nav-and-details', '.kh-app-shell--nav-collapsed', '.kh-app-shell--compact',
     '.kh-app-shell__nav[hidden]'
   ]) {
     assert.ok(selectors.some((candidate) => candidate.includes(selector)), `missing selector ${selector}`);
@@ -172,6 +174,51 @@ test('application-shell styles are opt-in, token-based, responsive, and independ
   assert.ok(declarations.some((decl) => decl.value.includes('var(--kh-color-border-subtle)')));
   assert.ok(css.nodes.some((node) => node.type === 'atrule' && node.name === 'media' && node.params.includes('56rem')));
   assert.doesNotMatch(read('src/css/components/app-shell.css'), /overflow:\s*hidden/i);
+});
+
+test('page-header and toolbar styles are opt-in, namespaced, token-based, and presentational', () => {
+  const components = [
+    {
+      file: 'src/css/components/page-header.css',
+      classes: [
+        '.kh-page-header', '.kh-page-header__content', '.kh-page-header__title',
+        '.kh-page-header__description', '.kh-page-header__actions', '.kh-page-header__meta'
+      ]
+    },
+    {
+      file: 'src/css/components/toolbar.css',
+      classes: [
+        '.kh-toolbar', '.kh-toolbar__group', '.kh-toolbar__group--end',
+        '.kh-toolbar__separator', '.kh-toolbar__label'
+      ]
+    }
+  ];
+
+  for (const component of components) {
+    const css = postcss.parse(read(component.file));
+    const selectors = [];
+    const declarations = [];
+    css.walkRules((rule) => selectors.push(...(rule.selectors || [])));
+    css.walkDecls((decl) => declarations.push(decl));
+
+    for (const selector of selectors) {
+      assert.match(selector, /^\.kh-(?:page-header|toolbar)/, `selector must be public and namespaced: ${selector}`);
+      assert.doesNotMatch(selector, /\.kh-sg-/i, `component CSS must not depend on the guide: ${selector}`);
+      assert.doesNotMatch(selector, /(^|[\s>+~,])(?:h[1-6]|button|input|select)(?![\w-])/i, `component CSS must not reset global elements: ${selector}`);
+    }
+    for (const decl of declarations) {
+      assert.doesNotMatch(decl.value, /#[\da-f]{3,8}\b|\b(?:rgb|hsl)a?\(/i, `hard-coded colour in ${component.file}`);
+    }
+    for (const className of component.classes) {
+      assert.ok(selectors.some((selector) => selector.includes(className)), `missing selector ${className}`);
+    }
+    assert.ok(css.nodes.some((node) => node.type === 'atrule' && node.name === 'media' && node.params.includes('forced-colors')));
+    assert.ok(declarations.some((decl) => decl.value.includes('var(--kh-space-')));
+    assert.ok(declarations.some((decl) => decl.value.includes('var(--kh-type-')));
+  }
+
+  assert.doesNotMatch(read('src/css/components/toolbar.css'), /role\s*=\s*["']toolbar/i);
+  assert.doesNotMatch(read('src/css/components/page-header.css'), /<main/i);
 });
 
 test('sidebar styles are opt-in, token-based, semantic, and independent of the guide', () => {

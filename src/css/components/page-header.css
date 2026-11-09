@@ -1,0 +1,69 @@
+/* Kihon Page Header
+ * Public classes: .kh-page-header and .kh-page-header__{content,title,description,meta,actions}.
+ * Use inside the view's main content; the application shell remains responsible for page geometry.
+ */
+
+.kh-page-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--kh-space-4) var(--kh-space-6);
+  min-inline-size: 0;
+  margin-block-end: var(--kh-space-6);
+}
+
+.kh-page-header__content {
+  flex: 1 1 16rem;
+  min-inline-size: 0;
+}
+
+.kh-page-header__title {
+  margin: 0;
+  font-size: var(--kh-type-size-2xl);
+  font-weight: var(--kh-type-weight-semibold);
+  line-height: var(--kh-type-line-height-tight);
+  overflow-wrap: anywhere;
+}
+
+.kh-page-header__description {
+  max-inline-size: 70ch;
+  margin-block: var(--kh-space-2) 0;
+  color: var(--kh-color-text-secondary);
+  overflow-wrap: anywhere;
+}
+
+.kh-page-header__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--kh-space-2) var(--kh-space-4);
+  min-inline-size: 0;
+  margin-block-start: var(--kh-space-3);
+  color: var(--kh-color-text-secondary);
+  font-size: var(--kh-type-size-sm);
+}
+
+.kh-page-header__actions {
+  display: flex;
+  flex: 0 1 auto;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--kh-space-2);
+  min-inline-size: 0;
+  max-inline-size: 100%;
+}
+
+@media (max-width: 30rem) {
+  .kh-page-header__actions {
+    flex-basis: 100%;
+    justify-content: flex-start;
+  }
+}
+
+@media (forced-colors: active) {
+  .kh-page-header__description,
+  .kh-page-header__meta {
+    color: CanvasText;
+  }
+}

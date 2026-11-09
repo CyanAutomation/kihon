@@ -17,6 +17,7 @@ Load `src/css/base.css`. It imports the shell stylesheet; consumers do not need 
 | `.kh-app-shell--with-details` | Two columns: main content and details. |
 | `.kh-app-shell--with-nav-and-details` | Three columns: navigation, main content, and details. |
 | `.kh-app-shell--nav-collapsed` | Controller-managed state that removes the navigation track from a two- or three-region shell. |
+| `.kh-app-shell--compact` | Explicitly stacks present regions when the shell is embedded in a narrow parent. |
 
 Choose the modifier that matches the regions present. The base class is the content-only layout. The header may be omitted in every layout. The component does not create a track for an absent region when its matching modifier is used.
 
@@ -68,7 +69,13 @@ The component does not provide a skip-link style. Give the link a visible focus 
 
 CSS Grid places the header across the active columns. Navigation and details tracks use bounded, content-relative sizes; the main track uses `minmax(0, 1fr)` so it can shrink. At and below `56rem`, all regions stack in source order. Navigation and details remain visible and usable. This breakpoint is where the three-region desktop layout would otherwise leave too little room for main content; it is not a device category. If a sidebar controller collapses navigation, the shell removes that grid track as well as the hidden navigation. A two-region shell becomes one column; a three-region shell retains main content and details.
 
-The breakpoint uses the viewport because the shell has no required wrapper element that could provide an inline-size query. A shell embedded in a narrower parent on a wide viewport keeps desktop columns. The tested 56rem parent retains at least 300 CSS px for main content; narrower embedded layouts should provide an application-owned responsive state or place the shell at the application root.
+The breakpoint uses the viewport because the shell has no required wrapper element that could provide an inline-size query. A shell embedded in a narrower parent on a wide viewport keeps desktop columns. Regression coverage at a 38rem parent showed that a three-region shell leaves too little usable width for its page header and toolbar. Add `.kh-app-shell--compact` when the parent is constrained, regardless of viewport width; this stacks navigation, main content, and details in source order. When navigation is collapsed in this state, main content and details remain stacked. The modifier is explicit because CSS cannot query an element's own inline size. A two-region shell may still have usable width at 38rem, but can use the same modifier when its content needs a full-width layout.
+
+```html
+<div class="kh-app-shell kh-app-shell--with-nav-and-details kh-app-shell--compact">
+  <!-- header, navigation, main content, and details in source order -->
+</div>
+```
 
 The shell sets no fixed width or height, sticky positioning, or overflow clipping. The default is normal document scrolling, which keeps focused controls and anchor targets in the page's scroll path. Long code blocks retain the foundation's horizontal scrolling. For wide tables, provide an explicitly labelled, keyboard-reachable overflow wrapper rather than allowing the page itself to widen.
 
@@ -84,7 +91,7 @@ The shell preserves native links and buttons and uses Kihon's visible `:focus-vi
 - Do not use `aside` for primary content or unrelated navigation.
 - Do not pair a layout modifier with a missing navigation or details region.
 - Use `.kh-sidebar` for the canonical grouped links and states; the shell no longer styles descendant anchors directly. Existing bare navigation links remain native links, and can migrate by adding the sidebar classes and list markup.
-- The shell stacks navigation at narrow widths. An optional sidebar controller can collapse it, but keeps the labelled reveal button available and does not move navigation off canvas.
+- The shell stacks navigation at the viewport breakpoint and with `.kh-app-shell--compact`. An optional sidebar controller can collapse it, but keeps the labelled reveal button available and does not move navigation off canvas.
 - Do not expect the shell to implement routing, selected-item state, pane resizing, persistence, a toolbar, or independent scroll behavior.
 - Do not put essential content only in the details pane; it follows main content in source order.
 - Do not use operating-system window controls or traffic-light decorations.
@@ -95,7 +102,7 @@ The three-region arrangement is conceptually similar to `NavigationSplitView` wi
 
 ## Reference example
 
-The [Application Shell section in the style guide](../../style-guide/index.html#app-shell) demonstrates each supported region combination, existing Kihon buttons and form controls, a native dialog trigger, and narrow-width stacking.
+The [Application Shell section in the style guide](../../style-guide/index.html#app-shell) demonstrates each supported region combination, existing Kihon buttons and form controls, page headers, toolbars, a native dialog trigger, sidebar collapse, and narrow-width stacking.
 
 ## Reference screenshots
 

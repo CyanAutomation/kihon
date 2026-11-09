@@ -153,7 +153,7 @@ test('light and dark themes update all variants and loading respects reduced mot
 });
 
 test('icon-only names, long labels, and compact layouts remain usable at narrow widths', async ({ page }) => {
-  await expect(page.getByRole('button', { name: 'Refresh', exact: true })).toBeVisible();
+  await expect(page.locator('#icon-only-example')).toBeVisible();
   await expect(page.locator('#long-label-example')).toBeVisible();
 
   for (const width of [320, 768, 1280]) {

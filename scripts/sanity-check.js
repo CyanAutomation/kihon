@@ -15,6 +15,8 @@ const CSS_PATHS = [
   path.join(ROOT, 'src', 'css', 'components', 'settings.css'),
   path.join(ROOT, 'src', 'css', 'components', 'dialogs.css'),
   path.join(ROOT, 'src', 'css', 'components', 'app-shell.css'),
+  path.join(ROOT, 'src', 'css', 'components', 'page-header.css'),
+  path.join(ROOT, 'src', 'css', 'components', 'toolbar.css'),
   path.join(ROOT, 'style-guide', 'styles.css')
 ];
 
@@ -33,8 +35,9 @@ async function runSanityChecks() {
   }
 
   for (const filePath of CSS_PATHS) {
+    const css = fs.readFileSync(filePath, 'utf8');
     try {
-      postcss.parse(fs.readFileSync(filePath, 'utf8'), { from: filePath });
+      postcss.parse(css, { from: filePath });
     } catch (error) {
       errors.push(`${path.relative(ROOT, filePath)}:${error.line}:${error.column} CSS parse error: ${error.reason}`);
     }

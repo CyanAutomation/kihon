@@ -227,7 +227,9 @@ without losing access. Kihon does not turn the sidebar into a modal or
 off-canvas drawer, and it does not trap focus. The shell's viewport breakpoint
 does not adapt to a narrow parent container; see the [application shell
 limitations](app-shell.md#layout-and-responsive-behavior) when embedding it in
-a constrained region.
+a constrained region. Apply `.kh-app-shell--compact` to stack the regions when
+the available parent is narrow, even on a wide viewport; the sidebar controller
+continues to remove or restore the navigation track in that layout.
 
 ## Tokens, themes, and accessibility
 
