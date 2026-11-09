@@ -1,0 +1,58 @@
+/* Kihon Cards
+ * Public classes: .kh-card and its header, title, description, body, and footer parts.
+ * Structure remains application-owned and can use article, section, or div semantics.
+ */
+
+.kh-card {
+  display: grid;
+  gap: var(--kh-space-4);
+  min-inline-size: 0;
+  padding: var(--kh-space-4);
+  border: 1px solid var(--kh-color-border-subtle);
+  border-radius: var(--kh-radius-lg);
+  background-color: var(--kh-color-surface);
+  color: var(--kh-color-text-primary);
+}
+
+.kh-card__header {
+  display: grid;
+  gap: var(--kh-space-1);
+  min-inline-size: 0;
+}
+
+.kh-card__title {
+  margin: 0;
+  color: var(--kh-color-text-primary);
+  font-size: var(--kh-type-size-lg);
+  font-weight: var(--kh-type-weight-semibold);
+  line-height: var(--kh-type-line-height-tight);
+  overflow-wrap: anywhere;
+}
+
+.kh-card__description {
+  margin: 0;
+  color: var(--kh-color-text-secondary);
+  font-size: var(--kh-type-size-sm);
+  line-height: var(--kh-type-line-height-normal);
+}
+
+.kh-card__body {
+  min-inline-size: 0;
+}
+
+.kh-card__footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--kh-space-2);
+  padding-block-start: var(--kh-space-3);
+  border-block-start: 1px solid var(--kh-color-border-subtle);
+}
+
+@media (forced-colors: active) {
+  .kh-card {
+    border-color: CanvasText;
+    background-color: Canvas;
+    color: CanvasText;
+  }
+}

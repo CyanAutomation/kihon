@@ -17,30 +17,30 @@
         <div class="kh-sg-theme-controls">
           <button
             class="kh-sg-theme-button"
-            data-kh-theme-toggle="system"
+            data-kh-theme-toggle="dark"
             type="button"
-            aria-label="Use system theme preference"
-            title="System"
+            aria-label="Use dark theme"
+            title="Dark"
           >
-            System
+            Dark
           </button>
           <button
             class="kh-sg-theme-button"
             data-kh-theme-toggle="light"
             type="button"
-            aria-label="Force light theme"
+            aria-label="Use light theme"
             title="Light"
           >
             Light
           </button>
           <button
             class="kh-sg-theme-button"
-            data-kh-theme-toggle="dark"
+            data-kh-theme-toggle="system"
             type="button"
-            aria-label="Force dark theme"
-            title="Dark"
+            aria-label="Use system theme preference"
+            title="System"
           >
-            Dark
+            System
           </button>
         </div>
         <p class="kh-sg-theme-status" data-kh-theme-status role="status" aria-live="polite"></p>
@@ -58,8 +58,8 @@
         while preserving application independence.
       </p>
       <p>
-        This page demonstrates the design tokens, typography, colours, spacing, and foundational
-        elements that make up Kihon v1.0.
+        This page demonstrates Kihon's dark-first design tokens, typography, colours, spacing,
+        and reusable components alongside a light appearance and system preference option.
       </p>
     </section>
 
@@ -162,6 +162,11 @@
           <div class="kh-sg-swatch" style="background-color: var(--kh-color-danger);"></div>
           <strong>Danger</strong>
           <div class="kh-sg-swatch-value">--kh-color-danger</div>
+        </div>
+        <div class="kh-sg-card">
+          <div class="kh-sg-swatch" style="background-color: var(--kh-color-success-background); border: 1px solid var(--kh-color-success);"></div>
+          <strong>Success</strong>
+          <div class="kh-sg-swatch-value">--kh-color-success / --kh-color-success-background</div>
         </div>
         <div class="kh-sg-card">
           <div class="kh-sg-swatch" style="background-color: var(--kh-color-focus-ring);"></div>
@@ -985,9 +990,9 @@
           <div class="kh-field">
             <label class="kh-label" for="preferences-appearance">Appearance</label>
             <select class="kh-select" id="preferences-appearance" name="appearance" aria-describedby="preferences-appearance-help">
-              <option value="system">Match system</option>
+              <option value="dark" selected>Dark (default)</option>
               <option value="light">Light</option>
-              <option value="dark">Dark</option>
+              <option value="system">Match system</option>
             </select>
             <p class="kh-help" id="preferences-appearance-help">This choice does not change the style-guide theme.</p>
           </div>
@@ -1025,17 +1030,26 @@
     <section id="focus" class="kh-sg-section">
       <h2>Surfaces and Elevation</h2>
 
-      <h3>Surface card</h3>
-      <div class="kh-sg-surface" style="max-width: 400px;">
-        <h3>Card title</h3>
-        <p>
-          This is a surface card demonstrating the base surface elevation and styling.
-          It uses the --kh-color-surface background and has a subtle shadow.
-        </p>
-        <p>
-          Cards are commonly used for grouping related content or actions.
-        </p>
-      </div>
+      <h3>Reusable card and status badges</h3>
+      <p>Cards group related content; badges label states with text and semantic colors.</p>
+      <article class="kh-card" id="component-card-demo" style="max-inline-size: 30rem;">
+        <header class="kh-card__header">
+          <h3 class="kh-card__title">Bedroom left</h3>
+          <p class="kh-card__description">Window covering controls and recent activity.</p>
+        </header>
+        <div class="kh-card__body">
+          <p>Current position: <strong>Open</strong></p>
+          <div class="kh-sg-badge-examples" id="component-badge-examples">
+            <span class="kh-badge kh-badge--success" id="component-badge-success">Observed recently</span>
+            <span class="kh-badge kh-badge--neutral" id="component-badge-neutral">Queued</span>
+            <span class="kh-badge kh-badge--accent" id="component-badge-accent">In progress</span>
+          </div>
+        </div>
+        <footer class="kh-card__footer">
+          <button class="kh-button kh-button--primary" type="button">Open</button>
+          <button class="kh-button kh-button--secondary" type="button">Details</button>
+        </footer>
+      </article>
     </section>
 
     <!-- Focus -->

@@ -19,7 +19,7 @@
     },
     "accent": {
       "$type": "color",
-      "$value": "{colors.blue.400}"
+      "$value": "{colors.orange.500}"
     },
     "on-accent": {
       "$type": "color",
@@ -27,11 +27,19 @@
     },
     "button-primary-hover": {
       "$type": "color",
-      "$value": "{colors.blue.300}"
+      "$value": "{colors.orange.400}"
     },
     "danger": {
       "$type": "color",
       "$value": "{colors.red.500}"
+    },
+    "success": {
+      "$type": "color",
+      "$value": "{colors.green.300}"
+    },
+    "success-background": {
+      "$type": "color",
+      "$value": "{colors.green.900}"
     },
     "border-subtle": {
       "$type": "color",
@@ -43,7 +51,7 @@
     },
     "focus-ring": {
       "$type": "color",
-      "$value": "{colors.blue.400}"
+      "$value": "{colors.orange.400}"
     }
   },
   "$description": "Dark appearance theme for Kihon UI Foundation"

@@ -35,30 +35,30 @@ function generateTokensCss(tokensDir = path.join(ROOT, 'tokens')) {
  */
 
 :root {
-  color-scheme: light;
+  color-scheme: dark;
   font-family: var(--kh-type-font-stack, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif);
 `;
 
-  css = appendThemeColors(css, lightTokens);
+  css = appendThemeColors(css, darkTokens);
   css = appendPrimitives(css, primitives);
-  css += `}\n\n@media (prefers-color-scheme: dark) {
-  :root:not([data-kh-theme]) {
-    color-scheme: dark;
+  css += `}\n\n@media (prefers-color-scheme: light) {
+  :root[data-kh-theme="system"] {
+    color-scheme: light;
 `;
-  css = appendThemeColors(css, darkTokens, '    ');
+  css = appendThemeColors(css, lightTokens, '    ');
   css += `  }
 }
-
-:root[data-kh-theme="light"] {
-  color-scheme: light;
-`;
-  css = appendThemeColors(css, lightTokens);
-  css += `}
 
 :root[data-kh-theme="dark"] {
   color-scheme: dark;
 `;
   css = appendThemeColors(css, darkTokens);
+  css += `}
+
+:root[data-kh-theme="light"] {
+  color-scheme: light;
+`;
+  css = appendThemeColors(css, lightTokens);
   css += '}' + '\n';
 
   return css;
