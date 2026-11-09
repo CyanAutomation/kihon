@@ -1,8 +1,11 @@
 {
-  "name": "kihon",
-  "version": "1.0.0-draft.1",
+  "name": "@cyanautomation/kihon",
+  "version": "1.0.0-draft.2",
   "description": "Kihon UI Foundation — A lightweight, framework-free design system for CyanAutomation",
   "private": true,
+  "files": [
+    "dist/"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/CyanAutomation/kihon.git"
@@ -11,14 +14,42 @@
   "engines": {
     "node": ">=24.0.0"
   },
+  "exports": {
+    "./dialogs": {
+      "import": {
+        "types": "./dist/types/dialogs.d.mts",
+        "default": "./dist/esm/dialogs.mjs"
+      },
+      "require": {
+        "types": "./dist/types/dialogs.d.cts",
+        "default": "./dist/cjs/dialogs.cjs"
+      }
+    },
+    "./sidebar": {
+      "import": {
+        "types": "./dist/types/sidebar.d.mts",
+        "default": "./dist/esm/sidebar.mjs"
+      },
+      "require": {
+        "types": "./dist/types/sidebar.d.cts",
+        "default": "./dist/cjs/sidebar.cjs"
+      }
+    },
+    "./styles.css": "./dist/styles.css",
+    "./browser/dialogs.js": "./dist/browser/dialogs.global.js",
+    "./browser/sidebar.js": "./dist/browser/sidebar.global.js"
+  },
   "scripts": {
-    "build": "npm run build-tokens && npm run build:runtime",
+    "build": "npm run build-tokens && npm run build:runtime && npm run build:package",
     "build-tokens": "node scripts/build-tokens.js",
     "build:runtime": "node scripts/build-runtime.js",
+    "build:package": "node scripts/build-package.js",
+    "prepack": "npm run build",
     "typecheck": "tsc --project tsconfig.json",
     "validate": "node scripts/validate-tokens.js",
     "sanity": "node scripts/sanity-check.js",
     "check:generated": "node scripts/check-generated.js",
+    "test:package": "node tests/package/test-package.js",
     "test:unit": "node --test tests/unit/*.test.js",
     "test:browser": "playwright test",
     "test": "npm run test:unit && npm run validate && npm run sanity && npm run check:generated && npm run test:browser",
