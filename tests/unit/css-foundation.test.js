@@ -53,7 +53,7 @@ test('card and badge primitives are opt-in, semantic, token-based, and forced-co
   const components = [
     {
       file: 'src/css/components/cards.css',
-      classes: ['.kh-card', '.kh-card__header', '.kh-card__title', '.kh-card__description', '.kh-card__body', '.kh-card__footer']
+      classes: ['.kh-card-grid', '.kh-card', '.kh-card__header', '.kh-card__title', '.kh-card__description', '.kh-card__body', '.kh-card__footer']
     },
     {
       file: 'src/css/components/badges.css',
@@ -81,6 +81,13 @@ test('card and badge primitives are opt-in, semantic, token-based, and forced-co
     assert.ok(declarations.some((decl) => decl.value.includes('var(--kh-color-')));
     assert.ok(css.nodes.some((node) => node.type === 'atrule' && node.name === 'media' && node.params.includes('forced-colors')));
   }
+
+  const cards = postcss.parse(read('src/css/components/cards.css'));
+  let gridRule;
+  cards.walkRules('.kh-card-grid', (rule) => { gridRule = rule; });
+  assert.ok(gridRule, 'card collections expose a reusable grid layout primitive');
+  assert.equal(gridRule.nodes.find((node) => node.prop === 'display')?.value, 'grid');
+  assert.ok(gridRule.nodes.some((node) => node.prop === 'grid-template-columns' && node.value.includes('auto-fit')));
 });
 
 test('dialog styles are opt-in, namespaced, token-based, and expose the documented API', () => {

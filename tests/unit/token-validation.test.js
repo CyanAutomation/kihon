@@ -10,18 +10,30 @@ test('all committed token files validate against DTCG 2025.10 and typed value ru
 
 test('primary button hover colour is defined in both themes and exported by token generation', () => {
   const documents = loadTokenDocuments();
-  assert.equal(documents.lightTheme.color.accent.$value, '{colors.orange.700}');
-  assert.equal(documents.lightTheme.color['on-accent'].$value, '{colors.white}');
-  assert.equal(documents.lightTheme.color['button-primary-hover'].$value, '{colors.orange.800}');
+  assert.equal(documents.lightTheme.color.background.$value, '{colors.warm-gray.100}');
+  assert.equal(documents.lightTheme.color.surface.$value, '{colors.white}');
+  assert.equal(documents.lightTheme.color['text-primary'].$value, '{colors.warm-gray.900}');
+  assert.equal(documents.lightTheme.color['text-secondary'].$value, '{colors.warm-gray.700}');
+  assert.equal(documents.lightTheme.color['border-subtle'].$value, '{colors.warm-gray.300}');
+  assert.equal(documents.lightTheme.color['border-strong'].$value, '{colors.warm-gray.600}');
+  assert.equal(documents.lightTheme.color.accent.$value, '{colors.coral.500}');
+  assert.equal(documents.lightTheme.color['on-accent'].$value, '{colors.warm-gray.900}');
+  assert.equal(documents.lightTheme.color['accent-text'].$value, '{colors.coral.700}');
+  assert.equal(documents.lightTheme.color['button-primary-hover'].$value, '{colors.coral.600}');
+  assert.equal(documents.lightTheme.color['focus-ring'].$value, '{colors.coral.700}');
   assert.equal(documents.darkTheme.color.accent.$value, '{colors.orange.500}');
   assert.equal(documents.darkTheme.color['on-accent'].$value, '{colors.gray.900}');
   assert.equal(documents.darkTheme.color['button-primary-hover'].$value, '{colors.orange.400}');
+  assert.equal(documents.darkTheme.color['accent-text'].$value, '{colors.orange.500}');
   assert.equal(documents.lightTheme.color.success.$value, '{colors.green.800}');
   assert.equal(documents.darkTheme.color.success.$value, '{colors.green.300}');
 
   const errors = validateTokenDocuments(documents);
   assert.deepEqual(errors, []);
   assert.match(generateTokensCss(), /--kh-color-accent: #fb923c;/);
+  assert.match(generateTokensCss(), /--kh-color-accent: #f45738;/);
+  assert.match(generateTokensCss(), /--kh-color-on-accent: #171a17;/);
+  assert.match(generateTokensCss(), /--kh-color-accent-text: #bf3b2c;/);
   assert.match(generateTokensCss(), /--kh-color-success: #86efac;/);
 });
 

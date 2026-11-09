@@ -158,8 +158,10 @@ Test with **one desktop screen reader** (e.g., NVDA, JAWS, VoiceOver):
 - [ ] Test critical foreground/background pairs:
   - [ ] Text primary on background: **4.5:1 minimum**
   - [ ] Text primary on surface: **4.5:1 minimum**
-  - [ ] Text secondary on surface: **3:1 minimum** (large text)
-  - [ ] Text on accent: **4.5:1 minimum**
+  - [ ] Text secondary on background and surface: **4.5:1 minimum**
+  - [ ] Text on accent and primary hover fills: **4.5:1 minimum**
+  - [ ] Accent text on background and surface: **4.5:1 minimum**
+  - [ ] Accent fills and strong borders against adjacent surfaces: **3:1 minimum**
 
 ### Light Theme
 - [ ] All text is readable on light backgrounds

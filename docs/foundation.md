@@ -6,12 +6,12 @@
 | --- | --- |
 | Document | `docs/foundation.md` |
 | Specification | Kihon UI Foundation v1.0 (proposed) |
-| Document status | **Draft 0.1 — not yet ratified or implemented** |
-| Updated | 2026-11-06 |
+| Document status | **Draft 0.2 — implementation is provisional; specification not yet ratified** |
+| Updated | 2026-11-09 |
 | Applies to | CyanAutomation projects with a user-facing web interface |
 | Maintained by | [CyanAutomation/kihon](https://github.com/CyanAutomation/kihon) |
 
-This is the **normative design and implementation contract** for Kihon. It converts the goals in the [README](../README.md) into rules that can be implemented, reviewed and tested. The values, CSS interfaces and acceptance criteria below are **proposed v1.0 decisions**, not a claim that the corresponding files or package already exist. They may change before the first release.
+This is the **proposed design and implementation contract** for Kihon. It converts the goals in the [README](../README.md) into rules that can be implemented, reviewed and tested. Several components and tokens are already implemented, but the specification has not been ratified and its values and acceptance criteria remain provisional before the first release.
 
 Kihon draws on Apple Human Interface Guidelines for clarity, content hierarchy, adaptive layouts and desktop ergonomics, but it is a **web-native, independent design system**, not a SwiftUI implementation or an Apple UI replica.
 
@@ -85,20 +85,21 @@ The following **candidate defaults** establish a concrete starting palette; they
 
 | Public CSS token | Light | Dark | Meaning |
 | --- | --- | --- | --- |
-| `--kh-color-background` | `#f5f5f7` | `#141518` | Application canvas |
+| `--kh-color-background` | `#f3f4f0` | `#141518` | Application canvas |
 | `--kh-color-surface` | `#ffffff` | `#1f2024` | Cards, grouped sections and panels |
-| `--kh-color-text-primary` | `#141518` | `#f5f5f7` | Main content and headings |
-| `--kh-color-text-secondary` | `#475467` | `#c3c6ce` | Secondary readable content |
-| `--kh-color-accent` | `#c2410c` | `#fb923c` | Primary controls and emphasis |
-| `--kh-color-on-accent` | `#ffffff` | `#141518` | Text/icons on an accent fill |
+| `--kh-color-text-primary` | `#171a17` | `#f5f5f7` | Main content and headings |
+| `--kh-color-text-secondary` | `#4c554c` | `#a6acb1` | Secondary readable content |
+| `--kh-color-accent` | `#f45738` | `#fb923c` | Primary controls and emphasis |
+| `--kh-color-accent-text` | `#bf3b2c` | `#fb923c` | Readable accent for links and quiet actions |
+| `--kh-color-on-accent` | `#171a17` | `#141518` | Text/icons on an accent fill |
 | `--kh-color-danger` | `#b42318` | `#f97066` | Destructive actions and error text |
 | `--kh-color-success` | `#166534` | `#86efac` | Positive status text and indicators |
 | `--kh-color-success-background` | `#f0fdf4` | `#1b3a25` | Background for positive status labels |
-| `--kh-color-border-subtle` | `#d0d5dd` | `#525760` | Decorative separators only |
-| `--kh-color-border-strong` | `#667085` | `#969da8` | Boundaries essential to identifying controls |
-| `--kh-color-focus-ring` | `#c2410c` | `#fdba74` | Visible keyboard focus indicator |
+| `--kh-color-border-subtle` | `#d4d9d1` | `#475467` | Decorative separators only |
+| `--kh-color-border-strong` | `#687168` | `#667085` | Boundaries essential to identifying controls |
+| `--kh-color-focus-ring` | `#bf3b2c` | `#fdba74` | Visible keyboard focus indicator |
 
-Important: `border-subtle` is **not** suitable as the sole indicator of a control boundary where a 3:1 non-text contrast is required. Validate colours in their **actual combinations** (including fills, overlays and states), not as isolated swatches. Colour MUST NOT be the only way to convey error, success, required status or selection.
+Important: `border-subtle` is **not** suitable as the sole indicator of a control boundary where a 3:1 non-text contrast is required. Light mode separates the bright coral fill (`accent`) from the darker readable text accent (`accent-text`). Validate colours in their **actual combinations** (including fills, overlays and states), not as isolated swatches. Colour MUST NOT be the only way to convey error, success, required status or selection.
 
 ### 4.3 Typography
 
@@ -153,6 +154,7 @@ Illustrative output contract (generated CSS MAY differ in implementation):
   --kh-color-surface: #1f2024;
   --kh-color-text-primary: #f5f5f7;
   --kh-color-accent: #fb923c;
+  --kh-color-accent-text: #fb923c;
 }
 
 :root[data-kh-theme="dark"] {
@@ -166,19 +168,21 @@ Illustrative output contract (generated CSS MAY differ in implementation):
 @media (prefers-color-scheme: light) {
   :root[data-kh-theme="system"] {
     color-scheme: light;
-    --kh-color-background: #f5f5f7;
+    --kh-color-background: #f3f4f0;
     --kh-color-surface: #ffffff;
-    --kh-color-text-primary: #141518;
-    --kh-color-accent: #c2410c;
+    --kh-color-text-primary: #171a17;
+    --kh-color-accent: #f45738;
+    --kh-color-accent-text: #bf3b2c;
   }
 }
 
 :root[data-kh-theme="light"] {
   color-scheme: light;
-  --kh-color-background: #f5f5f7;
+  --kh-color-background: #f3f4f0;
   --kh-color-surface: #ffffff;
-  --kh-color-text-primary: #141518;
-  --kh-color-accent: #c2410c;
+  --kh-color-text-primary: #171a17;
+  --kh-color-accent: #f45738;
+  --kh-color-accent-text: #bf3b2c;
 }
 ```
 

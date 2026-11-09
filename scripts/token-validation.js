@@ -13,7 +13,7 @@ addFormats(ajv);
 const validateSchema = ajv.compile(schema);
 const REFERENCE = /^\{[^{}]+\}$/;
 const REQUIRED_THEME_COLORS = [
-  'background', 'surface', 'text-primary', 'text-secondary', 'accent',
+  'background', 'surface', 'text-primary', 'text-secondary', 'accent', 'accent-text',
   'on-accent', 'button-primary-hover', 'danger', 'success', 'success-background',
   'border-subtle', 'border-strong', 'focus-ring'
 ];

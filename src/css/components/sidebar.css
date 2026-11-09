@@ -86,9 +86,9 @@
 }
 
 .kh-sidebar__link[aria-current="page"] {
-  border-inline-start-color: var(--kh-color-accent);
+  border-inline-start-color: var(--kh-color-accent-text);
   background-color: var(--kh-color-background);
-  color: var(--kh-color-accent);
+  color: var(--kh-color-accent-text);
   font-weight: var(--kh-type-weight-medium);
 }
 
