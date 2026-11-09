@@ -41,6 +41,16 @@
       "$description": "Destructive actions and error states",
       "$value": "{colors.red.700}"
     },
+    "success": {
+      "$type": "color",
+      "$description": "Positive status text and indicators",
+      "$value": "{colors.green.800}"
+    },
+    "success-background": {
+      "$type": "color",
+      "$description": "Background for positive status labels",
+      "$value": "{colors.green.50}"
+    },
     "border-subtle": {
       "$type": "color",
       "$description": "Decorative separators and dividers",

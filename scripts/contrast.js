@@ -11,6 +11,7 @@ const APPROVED_PAIRS = [
   { foreground: 'on-accent', background: 'button-primary-hover', minimum: 4.5 },
   { foreground: 'danger', background: 'background', minimum: 4.5 },
   { foreground: 'danger', background: 'surface', minimum: 4.5 },
+  { foreground: 'success', background: 'success-background', minimum: 4.5 },
   { foreground: 'accent', background: 'background', minimum: 4.5 },
   { foreground: 'accent', background: 'surface', minimum: 4.5 },
   { foreground: 'focus-ring', background: 'background', minimum: 3 },

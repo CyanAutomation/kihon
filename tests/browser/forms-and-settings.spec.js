@@ -142,6 +142,7 @@ test('forms and settings reflow at narrow widths and with enlarged text', async 
 
 test('form styling follows light and dark semantic tokens and reduced motion', async ({ page }) => {
   const input = page.locator('#guide-text');
+  await page.locator('html').evaluate((element) => element.setAttribute('data-kh-theme', 'light'));
   const lightBackground = await input.evaluate((control) => getComputedStyle(control).backgroundColor);
 
   await page.locator('html').evaluate((element) => element.setAttribute('data-kh-theme', 'dark'));

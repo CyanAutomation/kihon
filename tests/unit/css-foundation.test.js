@@ -12,7 +12,8 @@ test('generated tokens, foundation, component, and guide styles parse as CSS', (
     'src/css/tokens.css', 'src/css/base.css', 'src/css/components/buttons.css',
     'src/css/components/forms.css', 'src/css/components/settings.css', 'src/css/components/app-shell.css',
     'src/css/components/dialogs.css', 'src/css/components/sidebar.css',
-    'src/css/components/page-header.css', 'src/css/components/toolbar.css', 'style-guide/styles.css'
+    'src/css/components/page-header.css', 'src/css/components/toolbar.css',
+    'src/css/components/cards.css', 'src/css/components/badges.css', 'style-guide/styles.css'
   ]) {
     assert.doesNotThrow(() => postcss.parse(read(file), { from: file }), `${file} should parse`);
   }
@@ -44,8 +45,42 @@ test('base.css imports tokens and components in a deterministic order', () => {
     "url('./components/forms.css')", "url('./components/settings.css')",
     "url('./components/dialogs.css')", "url('./components/app-shell.css')",
     "url('./components/sidebar.css')", "url('./components/page-header.css')",
-    "url('./components/toolbar.css')"
+    "url('./components/toolbar.css')", "url('./components/cards.css')", "url('./components/badges.css')"
   ]);
+});
+
+test('card and badge primitives are opt-in, semantic, token-based, and forced-colours aware', () => {
+  const components = [
+    {
+      file: 'src/css/components/cards.css',
+      classes: ['.kh-card', '.kh-card__header', '.kh-card__title', '.kh-card__description', '.kh-card__body', '.kh-card__footer']
+    },
+    {
+      file: 'src/css/components/badges.css',
+      classes: ['.kh-badge', '.kh-badge--neutral', '.kh-badge--accent', '.kh-badge--success']
+    }
+  ];
+
+  for (const component of components) {
+    const css = postcss.parse(read(component.file));
+    const selectors = [];
+    const declarations = [];
+    css.walkRules((rule) => selectors.push(...(rule.selectors || [])));
+    css.walkDecls((decl) => declarations.push(decl));
+
+    for (const selector of selectors) {
+      assert.match(selector, /^(?:\.kh-|span\.kh-)/, `selector must be public and namespaced: ${selector}`);
+      assert.doesNotMatch(selector, /\.kh-sg-/i, `component CSS must not depend on the guide: ${selector}`);
+    }
+    for (const decl of declarations) {
+      assert.doesNotMatch(decl.value, /#[\da-f]{3,8}\b|\b(?:rgb|hsl)a?\(/i, `hard-coded colour in ${component.file}`);
+    }
+    for (const className of component.classes) {
+      assert.ok(selectors.some((selector) => selector.includes(className)), `missing selector ${className}`);
+    }
+    assert.ok(declarations.some((decl) => decl.value.includes('var(--kh-color-')));
+    assert.ok(css.nodes.some((node) => node.type === 'atrule' && node.name === 'media' && node.params.includes('forced-colors')));
+  }
 });
 
 test('dialog styles are opt-in, namespaced, token-based, and expose the documented API', () => {

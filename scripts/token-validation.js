@@ -14,7 +14,8 @@ const validateSchema = ajv.compile(schema);
 const REFERENCE = /^\{[^{}]+\}$/;
 const REQUIRED_THEME_COLORS = [
   'background', 'surface', 'text-primary', 'text-secondary', 'accent',
-  'on-accent', 'button-primary-hover', 'danger', 'border-subtle', 'border-strong', 'focus-ring'
+  'on-accent', 'button-primary-hover', 'danger', 'success', 'success-background',
+  'border-subtle', 'border-strong', 'focus-ring'
 ];
 
 function loadTokenDocuments(tokensDir = path.join(ROOT, 'tokens')) {
