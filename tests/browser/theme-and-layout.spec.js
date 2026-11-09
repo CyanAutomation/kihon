@@ -1,19 +1,31 @@
 const { test, expect } = require('@playwright/test');
 
 test.beforeEach(async ({ page }) => {
-  await page.emulateMedia({ colorScheme: 'dark' });
+  await page.emulateMedia({ colorScheme: 'light' });
   await page.goto('/style-guide/');
 });
 
-test('System remains selected while dark mode follows the operating system', async ({ page }) => {
+test('dark is selected by default regardless of the operating system appearance', async ({ page }) => {
+  await expect(page.locator('html')).not.toHaveAttribute('data-kh-theme');
+  await expect(page.locator('[data-kh-theme-toggle="dark"]')).toHaveAttribute('aria-pressed', 'true');
+  await expect(page.locator('[data-kh-theme-toggle="system"]')).toHaveAttribute('aria-pressed', 'false');
+  await expect(page.locator('[data-kh-theme-status]')).toHaveText('Selected mode: dark. Current appearance: dark.');
+  await expect.poll(() => page.locator('[data-kh-theme-status]').evaluate((element) => getComputedStyle(element).color)).toBe('rgb(166, 172, 177)');
+  await expect.poll(() => page.locator('html').evaluate((element) => getComputedStyle(element).colorScheme)).toBe('dark');
+});
+
+test('System mode follows the operating system only when explicitly selected', async ({ page }) => {
   const system = page.locator('[data-kh-theme-toggle="system"]');
+  await expect(page.locator('[data-kh-theme-toggle="dark"]')).toHaveAttribute('aria-pressed', 'true');
+  await system.click();
+  await expect(page.locator('html')).toHaveAttribute('data-kh-theme', 'system');
   await expect(system).toHaveAttribute('aria-pressed', 'true');
-  await expect(page.locator('[data-kh-theme-toggle="dark"]')).toHaveAttribute('aria-pressed', 'false');
+  await expect(page.locator('[data-kh-theme-status]')).toHaveText('Selected mode: system. Current appearance: light.');
+  await expect.poll(() => page.locator('html').evaluate((element) => getComputedStyle(element).colorScheme)).toBe('light');
+
+  await page.emulateMedia({ colorScheme: 'dark' });
   await expect(page.locator('[data-kh-theme-status]')).toHaveText('Selected mode: system. Current appearance: dark.');
   await expect.poll(() => page.locator('html').evaluate((element) => getComputedStyle(element).colorScheme)).toBe('dark');
-
-  await page.emulateMedia({ colorScheme: 'light' });
-  await expect(page.locator('[data-kh-theme-status]')).toHaveText('Selected mode: system. Current appearance: light.');
   await expect(system).toHaveAttribute('aria-pressed', 'true');
 });
 
@@ -33,10 +45,13 @@ test('explicit theme choice is persisted and can return to System mode', async (
   await expect(page.locator('[data-kh-theme-toggle="dark"]')).toHaveAttribute('aria-pressed', 'true');
 
   await page.locator('[data-kh-theme-toggle="system"]').click();
-  await expect(page.locator('html')).not.toHaveAttribute('data-kh-theme');
+  await expect(page.locator('html')).toHaveAttribute('data-kh-theme', 'system');
   await expect(page.locator('[data-kh-theme-toggle="system"]')).toHaveAttribute('aria-pressed', 'true');
-  expect(await page.evaluate(() => localStorage.getItem('kihon-theme'))).toBeNull();
-  await expect.poll(() => page.locator('html').evaluate((element) => getComputedStyle(element).colorScheme)).toBe('dark');
+  expect(await page.evaluate(() => localStorage.getItem('kihon-theme'))).toBe('system');
+  await expect.poll(() => page.locator('html').evaluate((element) => getComputedStyle(element).colorScheme)).toBe('light');
+  await page.reload();
+  await expect(page.locator('html')).toHaveAttribute('data-kh-theme', 'system');
+  await expect(page.locator('[data-kh-theme-toggle="system"]')).toHaveAttribute('aria-pressed', 'true');
 });
 
 test('theme controls still work when browser storage is unavailable', async ({ page }) => {

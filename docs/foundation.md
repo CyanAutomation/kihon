@@ -87,14 +87,16 @@ The following **candidate defaults** establish a concrete starting palette; they
 | --- | --- | --- | --- |
 | `--kh-color-background` | `#f5f5f7` | `#141518` | Application canvas |
 | `--kh-color-surface` | `#ffffff` | `#1f2024` | Cards, grouped sections and panels |
-| `--kh-color-text-primary` | `#1d1d1f` | `#f5f5f7` | Main content and headings |
+| `--kh-color-text-primary` | `#141518` | `#f5f5f7` | Main content and headings |
 | `--kh-color-text-secondary` | `#475467` | `#c3c6ce` | Secondary readable content |
-| `--kh-color-accent` | `#175cd3` | `#85b4ff` | Primary controls and emphasis |
-| `--kh-color-on-accent` | `#ffffff` | `#101828` | Text/icons on an accent fill |
+| `--kh-color-accent` | `#c2410c` | `#fb923c` | Primary controls and emphasis |
+| `--kh-color-on-accent` | `#ffffff` | `#141518` | Text/icons on an accent fill |
 | `--kh-color-danger` | `#b42318` | `#f97066` | Destructive actions and error text |
+| `--kh-color-success` | `#166534` | `#86efac` | Positive status text and indicators |
+| `--kh-color-success-background` | `#f0fdf4` | `#1b3a25` | Background for positive status labels |
 | `--kh-color-border-subtle` | `#d0d5dd` | `#525760` | Decorative separators only |
 | `--kh-color-border-strong` | `#667085` | `#969da8` | Boundaries essential to identifying controls |
-| `--kh-color-focus-ring` | `#175cd3` | `#85b4ff` | Visible keyboard focus indicator |
+| `--kh-color-focus-ring` | `#c2410c` | `#fdba74` | Visible keyboard focus indicator |
 
 Important: `border-subtle` is **not** suitable as the sole indicator of a control boundary where a 3:1 non-text contrast is required. Validate colours in their **actual combinations** (including fills, overlays and states), not as isolated swatches. Colour MUST NOT be the only way to convey error, success, required status or selection.
 
@@ -133,34 +135,24 @@ The proposed corner-radius tokens are:
 
 ## 5. Themes and personalisation
 
-- Kihon MUST support light and dark appearances, defaulting to the user's `prefers-color-scheme` preference.
-- Apps MAY allow an explicit **system / light / dark** choice. If implemented, explicit selection MUST take precedence over system preference, and the app MUST manage any persistence.
-- The proposed override mechanism is `data-kh-theme="light"` or `data-kh-theme="dark"` on the document root; absence means system mode.
+- Kihon MUST support light and dark appearances, defaulting to **dark**.
+- Apps MAY allow an explicit **dark / light / system** choice. If implemented, explicit selection MUST take precedence over system preference, and the app MUST manage any persistence.
+- The override mechanism is `data-kh-theme="light"`, `data-kh-theme="dark"`, or `data-kh-theme="system"` on the document root. With no attribute, Kihon uses dark. System mode follows `prefers-color-scheme`.
 - Component styles MUST account for native controls using the CSS `color-scheme` property.
 - `forced-colors: active` and increased-contrast preferences MUST remain usable. Do not disable forced-colours adjustment globally.
-- Frosted/translucent surfaces MAY be used sparingly for navigation chrome but MUST have an opaque, readable fallback, including when `backdrop-filter` is unsupported.
+- Translucent surfaces MAY be used sparingly for navigation chrome but MUST have an opaque, readable fallback, including when `backdrop-filter` is unsupported.
 
 Illustrative output contract (generated CSS MAY differ in implementation):
 
 ```css
 :root {
-  color-scheme: light;
+  color-scheme: dark;
   font-family: system-ui, -apple-system, BlinkMacSystemFont,
     "Segoe UI", sans-serif;
-  --kh-color-background: #f5f5f7;
-  --kh-color-surface: #ffffff;
-  --kh-color-text-primary: #1d1d1f;
-  --kh-color-accent: #175cd3;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root:not([data-kh-theme]) {
-    color-scheme: dark;
-    --kh-color-background: #141518;
-    --kh-color-surface: #1f2024;
-    --kh-color-text-primary: #f5f5f7;
-    --kh-color-accent: #85b4ff;
-  }
+  --kh-color-background: #141518;
+  --kh-color-surface: #1f2024;
+  --kh-color-text-primary: #f5f5f7;
+  --kh-color-accent: #fb923c;
 }
 
 :root[data-kh-theme="dark"] {
@@ -168,15 +160,25 @@ Illustrative output contract (generated CSS MAY differ in implementation):
   --kh-color-background: #141518;
   --kh-color-surface: #1f2024;
   --kh-color-text-primary: #f5f5f7;
-  --kh-color-accent: #85b4ff;
+  --kh-color-accent: #fb923c;
+}
+
+@media (prefers-color-scheme: light) {
+  :root[data-kh-theme="system"] {
+    color-scheme: light;
+    --kh-color-background: #f5f5f7;
+    --kh-color-surface: #ffffff;
+    --kh-color-text-primary: #141518;
+    --kh-color-accent: #c2410c;
+  }
 }
 
 :root[data-kh-theme="light"] {
   color-scheme: light;
   --kh-color-background: #f5f5f7;
   --kh-color-surface: #ffffff;
-  --kh-color-text-primary: #1d1d1f;
-  --kh-color-accent: #175cd3;
+  --kh-color-text-primary: #141518;
+  --kh-color-accent: #c2410c;
 }
 ```
 
@@ -284,6 +286,19 @@ A minimal **illustrative** pattern:
 
 This is a **behaviour sketch**, not a released Kihon component. A real settings workflow MUST implement and test its own save/validation handling.
 
+### 7.7 Content cards
+
+- Cards SHOULD group related content and actions using a semantic surface, readable text, and a visible boundary.
+- A card MUST use the HTML element and heading level that match its content; CSS classes MUST NOT add roles or focusability.
+- Independent controls inside a card MUST remain independently operable. Do not make an entire card clickable around nested actions.
+- Cards MUST preserve readable content in light, dark, and forced-colours modes and MUST NOT depend on shadow or blur to communicate structure.
+
+### 7.8 Status badges
+
+- Badges MUST use concise text to convey a state or category; colour alone MUST NOT carry meaning.
+- Static badges MUST NOT be focusable or presented as buttons. Dynamic status changes SHOULD use a separate appropriate live region.
+- Semantic status foreground/background pairs MUST meet the applicable contrast requirements in both themes.
+
 ## 8. Accessibility requirements
 
 Kihon targets **WCAG 2.2 AA** for applicable UI. The design system can provide accessible defaults, but final conformance is assessed in a **complete application and its workflows**.
@@ -304,7 +319,7 @@ All component examples MUST support keyboard use and must not create an inaccess
 
 ## 9. Validation and release gates
 
-The initial style guide MUST expose examples for light/dark themes, buttons (all required states), forms (normal/error/disabled), sidebar expanded/collapsed, responsive toolbar and modal dialog. These examples SHOULD serve as test fixtures.
+The initial style guide MUST expose examples for light/dark themes, buttons (all required states), cards, status badges, forms (normal/error/disabled), sidebar expanded/collapsed, responsive toolbar and modal dialog. These examples SHOULD serve as test fixtures.
 
 **Automated checks** SHOULD include:
 
@@ -333,7 +348,7 @@ The minimum supported browser matrix SHOULD be the **current and immediately pre
 - [ ] All public semantic tokens exist and have a validated DTCG source.
 - [ ] CSS exports/classes are documented and prefixed with `kh-`.
 - [ ] Light/dark and forced-colours modes are demonstrably usable.
-- [ ] Buttons, forms, grouped settings, sidebar, toolbar and modal dialog have examples and contracts.
+- [ ] Buttons, forms, grouped settings, cards, badges, sidebar, toolbar and modal dialog have examples and contracts.
 - [ ] Required keyboard, accessibility and responsive checks pass, with evidence.
 - [ ] Static style guide builds and is usable without a frontend framework.
 - [ ] The intended package name, exports, versioning, licence and release process are documented.

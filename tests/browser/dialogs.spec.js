@@ -223,6 +223,7 @@ test('reopened destructive confirmation does not reuse the previous confirm resu
 test('dialogs follow themes and remain usable with long content at narrow widths', async ({ page }) => {
   const dialog = page.locator('#preferences-dialog');
   const body = dialog.locator('.kh-dialog__body');
+  await page.locator('html').evaluate((element) => element.setAttribute('data-kh-theme', 'light'));
   await page.getByRole('button', { name: 'Edit preferences' }).click();
   const lightSurface = await dialog.evaluate((element) => getComputedStyle(element).backgroundColor);
 

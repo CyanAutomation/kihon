@@ -172,6 +172,7 @@ test('main content and long code remain reachable without page-level horizontal 
 
 test('shell follows light and dark themes and remains visible in forced colours', async ({ page }) => {
   const navigation = page.locator('#app-shell-full .kh-app-shell__nav');
+  await page.locator('html').evaluate((element) => element.setAttribute('data-kh-theme', 'light'));
   const lightSurface = await navigation.evaluate((element) => getComputedStyle(element).backgroundColor);
   await page.locator('html').evaluate((element) => element.setAttribute('data-kh-theme', 'dark'));
   const darkSurface = await navigation.evaluate((element) => getComputedStyle(element).backgroundColor);

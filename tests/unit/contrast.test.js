@@ -12,12 +12,14 @@ test('checks approved text pairings independently in light and dark themes', () 
     light: {
       background: '#ffffff', surface: '#ffffff', 'text-primary': '#000000',
       'text-secondary': '#333333', accent: '#000000', 'on-accent': '#ffffff', 'button-primary-hover': '#000000',
-      'focus-ring': '#000000', danger: '#000000', 'border-strong': '#333333'
+      'focus-ring': '#000000', danger: '#000000', 'border-strong': '#333333',
+      success: '#000000', 'success-background': '#ffffff'
     },
     dark: {
       background: '#000000', surface: '#111111', 'text-primary': '#ffffff',
       'text-secondary': '#eeeeee', accent: '#ffffff', 'on-accent': '#000000', 'button-primary-hover': '#ffffff',
-      'focus-ring': '#ffffff', danger: '#ffffff', 'border-strong': '#eeeeee'
+      'focus-ring': '#ffffff', danger: '#ffffff', 'border-strong': '#eeeeee',
+      success: '#ffffff', 'success-background': '#000000'
     }
   };
 
@@ -30,6 +32,9 @@ test('checks approved text pairings independently in light and dark themes', () 
   themes.dark['text-secondary'] = '#eeeeee';
   themes.dark['button-primary-hover'] = '#333333';
   assert.ok(validateThemeContrast(themes).some((error) => error.includes('button-primary-hover')));
+  themes.dark['button-primary-hover'] = '#ffffff';
+  themes.dark.success = '#666666';
+  assert.ok(validateThemeContrast(themes).some((error) => error.includes('success on success-background')));
 });
 
 test('fails contrast validation for translucent theme colors', () => {
