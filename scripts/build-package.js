@@ -12,6 +12,11 @@ const DIST = path.join(ROOT, 'dist');
 const DECLARATION_CONFIG = path.join(ROOT, 'tsconfig.declarations.json');
 const TSC = path.join(ROOT, 'node_modules', 'typescript', 'bin', 'tsc');
 const CSS_ENTRY = path.join(ROOT, 'src', 'css', 'base.css');
+const JAVASCRIPT_FORMATS = {
+  esm: { directory: 'esm', extension: '.mjs', format: 'esm' },
+  cjs: { directory: 'cjs', extension: '.cjs', format: 'cjs' },
+  browser: { directory: 'browser', extension: '.global.js', format: 'iife' }
+};
 
 function relativeOutputPath(outputPath) {
   const relative = path.relative(DIST, outputPath);
@@ -23,23 +28,10 @@ function relativeOutputPath(outputPath) {
 
 async function buildJavaScriptOutput(runtime, format) {
   const entryPoint = path.join(ROOT, 'src', 'ts', `${runtime.name}.ts`);
-  const formatOptions = {
-    esm: {
-      directory: 'esm',
-      extension: '.mjs',
-      format: 'esm'
-    },
-    cjs: {
-      directory: 'cjs',
-      extension: '.cjs',
-      format: 'cjs'
-    },
-    browser: {
-      directory: 'browser',
-      extension: '.global.js',
-      format: 'iife'
-    }
-  }[format];
+  const formatOptions = Object.hasOwn(JAVASCRIPT_FORMATS, format) ? JAVASCRIPT_FORMATS[format] : null;
+  if (!formatOptions) {
+    throw new Error(`Unknown build format: ${format}. Expected one of: esm, cjs, browser.`);
+  }
 
   const outfile = path.join(DIST, formatOptions.directory, `${runtime.name}${formatOptions.extension}`);
   const result = await esbuild.build({
@@ -173,4 +165,4 @@ if (require.main === module) {
   });
 }
 
-module.exports = { buildPackage, getPackageOutputs, relativeOutputPath };
+module.exports = { buildJavaScriptOutput, buildPackage, getPackageOutputs, relativeOutputPath };
