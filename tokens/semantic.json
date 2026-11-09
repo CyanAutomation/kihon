@@ -26,6 +26,11 @@
       "$description": "Primary interactive emphasis",
       "$value": "{colors.blue.700}"
     },
+    "accent-text": {
+      "$type": "color",
+      "$description": "Readable accent color for links and low-emphasis actions",
+      "$value": "{colors.blue.700}"
+    },
     "on-accent": {
       "$type": "color",
       "$description": "Text and icons on accent fills",

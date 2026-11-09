@@ -57,6 +57,23 @@ test('variants use semantic theme colours and the default class remains primary'
   await expectTokenColor(page, primary, 'backgroundColor', '--kh-color-button-primary-hover');
 });
 
+test('light primary buttons use the coral primitive with a dark label while dark mode stays unchanged', async ({ page }) => {
+  const primary = page.locator('#primary-example');
+  const quiet = page.locator('#quiet-example');
+
+  await page.locator('[data-kh-theme-toggle="light"]').click();
+  await expectTokenColor(page, primary, 'backgroundColor', '--kh-color-accent');
+  await expectTokenColor(page, primary, 'color', '--kh-color-on-accent');
+  await expectTokenColor(page, quiet, 'color', '--kh-color-accent-text');
+  expect(await tokenColor(page, '--kh-color-accent')).toBe('rgb(244, 87, 56)');
+  expect(await tokenColor(page, '--kh-color-on-accent')).toBe('rgb(23, 26, 23)');
+
+  await page.locator('[data-kh-theme-toggle="dark"]').click();
+  expect(await tokenColor(page, '--kh-color-accent')).toBe('rgb(251, 146, 60)');
+  expect(await tokenColor(page, '--kh-color-on-accent')).toBe('rgb(20, 21, 24)');
+  await expectTokenColor(page, primary, 'color', '--kh-color-on-accent');
+});
+
 test('size modifiers establish compact, standard, and prominent control targets', async ({ page }) => {
   const sizes = await page.evaluate(() => ['small', 'medium', 'large'].map((name) => {
     const button = document.querySelector(`#size-${name}`);

@@ -59,7 +59,7 @@ button.kh-button--secondary:hover:not(:disabled) {
 
 button.kh-button--quiet {
   background-color: transparent;
-  color: var(--kh-color-accent);
+  color: var(--kh-color-accent-text);
   border-color: transparent;
 }
 
