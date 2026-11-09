@@ -1,13 +1,13 @@
 /**
  * Theme mode selector for the Kihon style guide.
- * data-kh-theme is set only for an explicit light or dark choice. With System
- * selected, CSS follows the operating system's prefers-color-scheme setting.
+ * Dark is the default. Explicit Light and System choices set data-kh-theme,
+ * with System following the operating system's prefers-color-scheme setting.
  */
 class KihonThemeSwitcher {
   constructor(options = {}) {
     this.storageKey = options.storageKey || 'kihon-theme';
     this.attributeName = 'data-kh-theme';
-    this.themeMode = 'system';
+    this.themeMode = 'dark';
     this.mediaQuery = window.matchMedia
       ? window.matchMedia('(prefers-color-scheme: dark)')
       : null;
@@ -16,7 +16,7 @@ class KihonThemeSwitcher {
 
   init() {
     const stored = this.getStoredTheme();
-    if (stored === 'light' || stored === 'dark') {
+    if (stored === 'system' || stored === 'light' || stored === 'dark') {
       this.themeMode = stored;
       document.documentElement.setAttribute(this.attributeName, stored);
     } else {
@@ -45,13 +45,8 @@ class KihonThemeSwitcher {
     if (!['system', 'light', 'dark'].includes(theme)) return;
 
     this.themeMode = theme;
-    if (theme === 'system') {
-      document.documentElement.removeAttribute(this.attributeName);
-      this.removeStoredTheme();
-    } else {
-      document.documentElement.setAttribute(this.attributeName, theme);
-      this.storeTheme(theme);
-    }
+    document.documentElement.setAttribute(this.attributeName, theme);
+    this.storeTheme(theme);
 
     this.updateButtons();
     this.updateAppearanceStatus();
@@ -59,7 +54,7 @@ class KihonThemeSwitcher {
 
   getEffectiveTheme() {
     if (this.themeMode !== 'system') return this.themeMode;
-    return this.mediaQuery && this.mediaQuery.matches ? 'dark' : 'light';
+    return !this.mediaQuery || this.mediaQuery.matches ? 'dark' : 'light';
   }
 
   getStoredTheme() {
@@ -75,14 +70,6 @@ class KihonThemeSwitcher {
       window.localStorage.setItem(this.storageKey, theme);
     } catch {
       // The theme remains active for this page even when browser storage is blocked.
-    }
-  }
-
-  removeStoredTheme() {
-    try {
-      window.localStorage.removeItem(this.storageKey);
-    } catch {
-      // System mode still applies for this page when browser storage is blocked.
     }
   }
 

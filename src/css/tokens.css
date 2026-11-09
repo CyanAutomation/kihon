@@ -4,19 +4,21 @@
  */
 
 :root {
-  color-scheme: light;
+  color-scheme: dark;
   font-family: var(--kh-type-font-stack, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif);
-  --kh-color-background: #f5f5f7;
-  --kh-color-surface: #ffffff;
-  --kh-color-text-primary: #141518;
-  --kh-color-text-secondary: #475467;
-  --kh-color-accent: #175cd3;
-  --kh-color-on-accent: #ffffff;
-  --kh-color-button-primary-hover: #1e40af;
-  --kh-color-danger: #b42318;
-  --kh-color-border-subtle: #d0d5dd;
+  --kh-color-background: #141518;
+  --kh-color-surface: #1f2024;
+  --kh-color-text-primary: #f5f5f7;
+  --kh-color-text-secondary: #a6acb1;
+  --kh-color-accent: #fb923c;
+  --kh-color-on-accent: #141518;
+  --kh-color-button-primary-hover: #fdba74;
+  --kh-color-danger: #f97066;
+  --kh-color-success: #86efac;
+  --kh-color-success-background: #1b3a25;
+  --kh-color-border-subtle: #475467;
   --kh-color-border-strong: #667085;
-  --kh-color-focus-ring: #175cd3;
+  --kh-color-focus-ring: #fdba74;
   --kh-space-0: 0px;
   --kh-space-1: 4px;
   --kh-space-2: 8px;
@@ -54,36 +56,23 @@
   --kh-motion-loading: 800ms;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root:not([data-kh-theme]) {
-    color-scheme: dark;
-    --kh-color-background: #141518;
-    --kh-color-surface: #1f2024;
-    --kh-color-text-primary: #f5f5f7;
-    --kh-color-text-secondary: #a6acb1;
-    --kh-color-accent: #85b4ff;
-    --kh-color-on-accent: #141518;
-    --kh-color-button-primary-hover: #a4cafe;
-    --kh-color-danger: #f97066;
-    --kh-color-border-subtle: #475467;
+@media (prefers-color-scheme: light) {
+  :root[data-kh-theme="system"] {
+    color-scheme: light;
+    --kh-color-background: #f5f5f7;
+    --kh-color-surface: #ffffff;
+    --kh-color-text-primary: #141518;
+    --kh-color-text-secondary: #475467;
+    --kh-color-accent: #c2410c;
+    --kh-color-on-accent: #ffffff;
+    --kh-color-button-primary-hover: #9a3412;
+    --kh-color-danger: #b42318;
+    --kh-color-success: #166534;
+    --kh-color-success-background: #f0fdf4;
+    --kh-color-border-subtle: #d0d5dd;
     --kh-color-border-strong: #667085;
-    --kh-color-focus-ring: #85b4ff;
+    --kh-color-focus-ring: #c2410c;
   }
-}
-
-:root[data-kh-theme="light"] {
-  color-scheme: light;
-  --kh-color-background: #f5f5f7;
-  --kh-color-surface: #ffffff;
-  --kh-color-text-primary: #141518;
-  --kh-color-text-secondary: #475467;
-  --kh-color-accent: #175cd3;
-  --kh-color-on-accent: #ffffff;
-  --kh-color-button-primary-hover: #1e40af;
-  --kh-color-danger: #b42318;
-  --kh-color-border-subtle: #d0d5dd;
-  --kh-color-border-strong: #667085;
-  --kh-color-focus-ring: #175cd3;
 }
 
 :root[data-kh-theme="dark"] {
@@ -92,11 +81,30 @@
   --kh-color-surface: #1f2024;
   --kh-color-text-primary: #f5f5f7;
   --kh-color-text-secondary: #a6acb1;
-  --kh-color-accent: #85b4ff;
+  --kh-color-accent: #fb923c;
   --kh-color-on-accent: #141518;
-  --kh-color-button-primary-hover: #a4cafe;
+  --kh-color-button-primary-hover: #fdba74;
   --kh-color-danger: #f97066;
+  --kh-color-success: #86efac;
+  --kh-color-success-background: #1b3a25;
   --kh-color-border-subtle: #475467;
   --kh-color-border-strong: #667085;
-  --kh-color-focus-ring: #85b4ff;
+  --kh-color-focus-ring: #fdba74;
+}
+
+:root[data-kh-theme="light"] {
+  color-scheme: light;
+  --kh-color-background: #f5f5f7;
+  --kh-color-surface: #ffffff;
+  --kh-color-text-primary: #141518;
+  --kh-color-text-secondary: #475467;
+  --kh-color-accent: #c2410c;
+  --kh-color-on-accent: #ffffff;
+  --kh-color-button-primary-hover: #9a3412;
+  --kh-color-danger: #b42318;
+  --kh-color-success: #166534;
+  --kh-color-success-background: #f0fdf4;
+  --kh-color-border-subtle: #d0d5dd;
+  --kh-color-border-strong: #667085;
+  --kh-color-focus-ring: #c2410c;
 }

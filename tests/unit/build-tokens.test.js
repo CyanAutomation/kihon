@@ -24,3 +24,15 @@ test('generates theme CSS from explicitly namespaced semantic references', () =>
     fs.rmSync(tokensDir, { recursive: true, force: true });
   }
 });
+
+test('uses dark as the default and reserves system-following behavior for an explicit mode', () => {
+  const css = generateTokensCss();
+
+  assert.match(css, /:root\s*\{\s*color-scheme: dark;/);
+  assert.match(css, /--kh-color-background: #141518;/);
+  assert.match(css, /--kh-color-accent: #fb923c;/);
+  assert.match(css, /:root\[data-kh-theme="light"\]\s*\{\s*color-scheme: light;/);
+  assert.match(css, /:root\[data-kh-theme="dark"\]\s*\{\s*color-scheme: dark;/);
+  assert.match(css, /@media \(prefers-color-scheme: light\)\s*\{\s*:root\[data-kh-theme="system"\]\s*\{\s*color-scheme: light;/);
+  assert.doesNotMatch(css, /:root:not\(\[data-kh-theme\]\)/);
+});
