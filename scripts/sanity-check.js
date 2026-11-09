@@ -35,8 +35,9 @@ async function runSanityChecks() {
   }
 
   for (const filePath of CSS_PATHS) {
+    const css = fs.readFileSync(filePath, 'utf8');
     try {
-      postcss.parse(fs.readFileSync(filePath, 'utf8'), { from: filePath });
+      postcss.parse(css, { from: filePath });
     } catch (error) {
       errors.push(`${path.relative(ROOT, filePath)}:${error.line}:${error.column} CSS parse error: ${error.reason}`);
     }
