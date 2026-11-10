@@ -264,7 +264,7 @@ test('dialog boundaries and focus remain visible in forced colours and reduced m
   expect(await dialog.evaluate((element) => getComputedStyle(element).animationName)).toBe('none');
 });
 
-test('Phase 2B accessible names and descriptions remain associated', async ({ page }) => {
+test('settings controls expose their accessible names and descriptions', async ({ page }) => {
   await expect(page.locator('#guide-managed-setting')).toHaveAccessibleName('Managed preference');
   await expect(page.locator('#guide-readonly')).toHaveAccessibleDescription('This value is read-only but remains focusable and copyable.');
   await expect(page.getByRole('textbox', { name: 'Focusable input' })).toHaveCount(1);

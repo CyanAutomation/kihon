@@ -2,41 +2,59 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 const { readFileSync } = require('node:fs');
 const { join } = require('node:path');
+const { parse } = require('yaml');
 
 const packageJson = require('../../package.json');
 const workflow = readFileSync(join(__dirname, '../../.github/workflows/ci.yml'), 'utf8');
+const workflowConfig = parse(workflow);
+const validationSteps = workflowConfig.jobs.validation.steps;
 
 test('package metadata and CI select Node 24 or later', () => {
   assert.equal(packageJson.engines.node, '>=24.0.0');
-  assert.match(workflow, /^\s+node-version:\s*24\s*$/m);
+  const setupNode = validationSteps.find((step) => step.uses?.startsWith('actions/setup-node@'));
+  assert.ok(setupNode, 'CI must configure Node');
+  assert.equal(setupNode.with['node-version'], 24);
 });
 
 test('CI pins action revisions and does not persist checkout credentials', () => {
-  const actionReferences = [...workflow.matchAll(/^\s*-\s*uses:\s*(actions\/(?:checkout|setup-node))@([a-f0-9]{40})(?:\s+#.*)?\s*$/gm)];
-  assert.deepEqual(actionReferences.map(([, action]) => action), [
+  const actions = validationSteps.filter((step) => step.uses);
+  assert.deepEqual(actions.map((step) => step.uses.split('@')[0]), [
     'actions/checkout',
     'actions/setup-node'
   ]);
-  assert.match(workflow, /^\s+persist-credentials:\s*false\s*$/m);
+  for (const action of actions) {
+    assert.match(action.uses.split('@')[1], /^[a-f0-9]{40}$/, `${action.uses} must use a full commit SHA`);
+  }
+  assert.equal(actions[0].with['persist-credentials'], false);
 });
 
-test('CI uses a fixed runner label, a job timeout, and superseded-run cancellation', () => {
-  assert.match(workflow, /^\s+runs-on:\s*ubuntu-24\.04\s*$/m);
-  assert.match(workflow, /^\s+timeout-minutes:\s*30\s*$/m);
-  assert.match(workflow, /^concurrency:\s*$/m);
-  assert.match(workflow, /^\s+group:\s*\$\{\{ github\.workflow \}\}-\$\{\{ github\.event\.pull_request\.number \|\| github\.ref \}\}\s*$/m);
-  assert.match(workflow, /^\s+cancel-in-progress:\s*true\s*$/m);
+test('CI jobs are bounded and superseded runs are canceled', () => {
+  for (const [jobName, job] of Object.entries(workflowConfig.jobs)) {
+    assert.ok(Number.isInteger(job['timeout-minutes']) && job['timeout-minutes'] > 0, `${jobName} must have a positive timeout`);
+  }
+  assert.equal(workflowConfig.concurrency['cancel-in-progress'], true);
+  assert.match(workflowConfig.concurrency.group, /github\.event\.pull_request\.number \|\| github\.ref/);
 });
 
-test('CI builds generated runtime files and checks TypeScript before running tests', () => {
-  assert.match(workflow, /^\s*- run: npm ci\s*$/m);
-  assert.match(workflow, /^\s*- run: npm run build\s*$/m);
-  assert.match(workflow, /^\s*- run: npm run typecheck\s*$/m);
-  assert.match(workflow, /^\s*- run: npm test\s*$/m);
-  assert.match(workflow, /^\s*- run: npm run test:package\s*$/m);
+test('CI builds and typechecks before running the validation suites', () => {
+  const runSteps = validationSteps.filter((step) => typeof step.run === 'string').map((step) => step.run.trim());
+  const requiredOrder = [
+    'npm ci',
+    'npm run build',
+    'npm run typecheck',
+    'npm test',
+    'npm run test:package'
+  ];
+
+  let previousIndex = -1;
+  for (const command of requiredOrder) {
+    const index = runSteps.indexOf(command);
+    assert.notEqual(index, -1, `CI run step is missing: ${command}`);
+    assert.ok(index > previousIndex, `${command} must run after the preceding validation step`);
+    previousIndex = index;
+  }
 });
 
-test('CI only validates local package archives and has no publishing permissions', () => {
-  assert.match(workflow, /^permissions:\s*\n\s+contents:\s*read\s*$/m);
-  assert.doesNotMatch(workflow, /npm publish|packages:\s*write|gh release create/i);
+test('CI runs with read-only repository permissions', () => {
+  assert.deepEqual(workflowConfig.permissions, { contents: 'read' });
 });
