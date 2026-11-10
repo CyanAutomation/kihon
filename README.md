@@ -108,7 +108,7 @@ Kihon will use a predictable `kh-` prefix for its CSS classes and public custom 
 
 ### Prerequisites
 
-- Node.js 24 or later
+- Node.js 26 or later
 - npm
 
 ### Building
