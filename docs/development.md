@@ -4,7 +4,7 @@ This document explains how Kihon's design tokens, CSS, reusable TypeScript behav
 
 Phases 2A–2C and 3A–3C are implemented as framework-free components. See [`components/buttons.md`](components/buttons.md), [`components/forms.md`](components/forms.md), [`components/grouped-settings.md`](components/grouped-settings.md), [`components/dialogs.md`](components/dialogs.md), [`components/app-shell.md`](components/app-shell.md), [`components/sidebar.md`](components/sidebar.md), [`components/page-header.md`](components/page-header.md), and [`components/toolbar.md`](components/toolbar.md) for their public contracts. Dialog and sidebar behaviors are optional and documented separately from their CSS APIs. Page headers and toolbars are CSS-only.
 
-Use Node.js 24 or later and npm. The minimum version covers the HTML validation and browser-test tools. Generated Kihon CSS and the compiled dialog and sidebar helpers have no npm runtime dependencies; TypeScript and esbuild are development-only.
+Use Node.js 26 or later and npm. The minimum version covers the HTML validation and browser-test tools. Generated Kihon CSS and the compiled dialog and sidebar helpers have no npm runtime dependencies; TypeScript and esbuild are development-only.
 
 ## Repository Structure
 
@@ -480,7 +480,7 @@ Colour-only overrides without testing WCAG requirements will break accessibility
 
 ## Continuous Integration
 
-The CI workflow runs `npm ci` with Node.js 24, builds the token and runtime
+The CI workflow runs `npm ci` with Node.js 26, builds the token and runtime
 outputs, runs strict type checking, installs Playwright Chromium, and runs
 `npm test`. The generated-file check compares expected output without rebuilding
 committed files first, so stale CSS, JavaScript, source maps, or declarations
