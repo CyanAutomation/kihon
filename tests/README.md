@@ -1,5 +1,7 @@
 # Kihon verification
 
+See [TRACEABILITY.md](TRACEABILITY.md) for the contract or repository requirement covered by each test suite.
+
 Run the automated checks with:
 
 ```bash
@@ -15,7 +17,7 @@ The suite runs:
 1. Node unit tests for alias resolution, typed token validation, contrast calculations, dialog-helper cleanup with synchronous and asynchronous close events, stale `returnValue` resets, sidebar-controller state, focus restoration, transactional initialization rollback and disposal, and parsed button, form, grouped-settings, dialog, app-shell, sidebar, page-header, and toolbar CSS contracts.
 2. Strict type-checking in CI for both TypeScript helpers and consumer fixtures that import their generated declarations.
 3. DTCG 2025.10 schema and value validation, including required theme tokens and approved contrast pairings.
-4. `html-validate` for the style-guide HTML and PostCSS parsing for committed stylesheets.
+4. `html-validate` for the style-guide HTML and PostCSS parsing for discovered committed stylesheets, including component styles added later.
 5. A generated CSS, JavaScript, source-map, and declaration consistency check for both helpers, plus reproducible package output checks against the ignored `dist/` build.
 6. Playwright checks in Chromium for theme behaviour, button variants and states, native form labels and interactions, validation relationships, settings rows, app-shell region geometry at 320, 480, 768, 1024, and 1280 CSS px, sidebar semantics and grouping, collapse/reveal, hidden-link focus, focus restoration, constrained-parent compact layouts, page-header and toolbar wrapping, native keyboard order, focus visibility, long labels at 200% text size, no-JavaScript layout, modal dialog naming and descriptions, native focus containment and restoration, cancellation, preference validation, destructive confirmation, and in-page links.
 7. `npm run test:package` runs `npm pack` locally, compares the actual archive contents with the public export map, installs the archive offline in an isolated temporary consumer, and checks ESM, CommonJS, strict NodeNext and bundler TypeScript, package path encapsulation, and a Chromium browser fixture using the packaged CSS and browser-global helpers.

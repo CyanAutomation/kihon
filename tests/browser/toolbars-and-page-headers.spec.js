@@ -6,6 +6,8 @@ test.beforeEach(async ({ page }) => {
 });
 
 test('page headers expose heading context, descriptions, and native page actions', async ({ page }) => {
+  await expect(page.getByRole('main')).toHaveCount(1);
+
   const contentOnlyShell = page.locator('#app-shell-content-only');
   await expect(contentOnlyShell.getByRole('heading', { name: 'Activity', level: 4 })).toBeVisible();
   await expect(contentOnlyShell.getByRole('searchbox', { name: 'Search activity' })).toBeVisible();
@@ -227,25 +229,22 @@ test('light, dark, forced-colours, reduced-motion, and visible focus states rema
   expect(transitionDuration.split(',').every((duration) => parseFloat(duration) <= 0.01)).toBe(true);
 });
 
-test('components remain presentational without JavaScript and existing sidebar and dialog behaviors still work', async ({ browser, baseURL, page }) => {
+test('page headers and toolbar controls remain available without JavaScript', async ({ browser, baseURL }) => {
   const context = await browser.newContext({ javaScriptEnabled: false, viewport: { width: 320, height: 800 } });
-  const noScriptPage = await context.newPage();
-  await noScriptPage.goto(`${baseURL}/style-guide/`);
-  await expect(noScriptPage.locator('#app-shell-page-title')).toBeVisible();
-  await expect(noScriptPage.locator('#app-shell-full').getByRole('searchbox', { name: 'Search projects' })).toBeVisible();
-  await expect(noScriptPage.getByRole('navigation', { name: 'Workspace navigation' })).toBeVisible();
-  expect(await noScriptPage.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(320);
-  await context.close();
+  try {
+    const noScriptPage = await context.newPage();
+    await noScriptPage.goto(`${baseURL}/style-guide/`);
 
-  const sidebarToggle = page.getByRole('button', { name: 'Toggle project navigation' });
-  const navigation = page.getByRole('navigation', { name: 'Primary project navigation' });
-  await sidebarToggle.click();
-  await expect(navigation).toBeHidden();
-  await sidebarToggle.click();
-  await expect(navigation).toBeVisible();
-
-  await page.getByRole('button', { name: 'About Kihon' }).click();
-  await expect(page.getByRole('dialog', { name: 'About this application' })).toBeVisible();
-  await page.locator('#about-dialog-close').click();
-  await expect(page.locator('#about-dialog')).toBeHidden();
+    const shell = noScriptPage.locator('#app-shell-full');
+    await expect(shell.getByRole('heading', { name: 'Overview', level: 4 })).toBeVisible();
+    await expect(shell.getByRole('group', { name: 'Overview page actions' })).toBeVisible();
+    await expect(shell.getByRole('button', { name: 'Create project' })).toBeEnabled();
+    await expect(shell.getByRole('searchbox', { name: 'Search projects' })).toBeVisible();
+    await expect(shell.getByRole('combobox', { name: 'Sort by' })).toBeVisible();
+    await expect(shell.locator('[role="toolbar"]')).toHaveCount(0);
+    await expect(noScriptPage.getByRole('main')).toHaveCount(1);
+    expect(await noScriptPage.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(320);
+  } finally {
+    await context.close();
+  }
 });

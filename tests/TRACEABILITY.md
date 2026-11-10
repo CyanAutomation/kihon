@@ -1,0 +1,25 @@
+# Test traceability
+
+Each mapping below applies to the named tests in that file. Use the linked public contract as the source of expected behavior. For a regression test that protects a behavior not covered by a durable contract, add the issue link to the test name or a nearby comment instead of inventing a spec ID.
+
+The Foundation document is still proposed and unratified. These links record the current implementation contract; they do not imply ratification.
+
+| Test file | Contract or source | Coverage |
+| --- | --- | --- |
+| `unit/token-validation.test.js`, `unit/build-tokens.test.js` | [Foundation: design tokens](../docs/foundation.md#4-design-tokens); [Development: token to CSS compilation](../docs/development.md#token-to-css-compilation) | Typed tokens, aliases, theme values, generated CSS |
+| `unit/token-resolver.test.js` | [Development: token aliases](../docs/development.md#token-aliases) | Alias resolution, cycles, errors, CSS value formatting |
+| `unit/contrast.test.js` | [Foundation: semantic colour roles](../docs/foundation.md#42-semantic-colour-roles); [Validation and release gates](../docs/foundation.md#9-validation-and-release-gates) | WCAG contrast calculations and approved theme pairings |
+| `unit/dialogs-helper.test.js`, `browser/dialogs.spec.js` | [Dialogs: focus and dismissal](../docs/components/dialogs.md#opening-initial-focus-and-focus-restoration); [Dialogs: results](../docs/components/dialogs.md#dismissal-cancellation-and-results) | Modal behavior, focus, cancellation, result reset, settings/destructive flows |
+| `unit/sidebar-helper.test.js`, `browser/sidebar.spec.js` | [Sidebar: semantic structure](../docs/components/sidebar.md#semantic-structure); [Sidebar: collapse and reveal](../docs/components/sidebar.md#collapse-and-reveal) | Native navigation, controller state, focus, fallback and disposal |
+| `unit/css-foundation.test.js` | [Buttons](../docs/components/buttons.md#public-classes); [Forms](../docs/components/forms.md#public-css-api); [App shell](../docs/components/app-shell.md#public-css-api); [Sidebar](../docs/components/sidebar.md#public-css-api); [Page header](../docs/components/page-header.md#public-css-api); [Toolbar](../docs/components/toolbar.md#public-css-api); [Cards](../docs/components/cards.md#public-classes); [Badges](../docs/components/badges.md#public-classes) | Public CSS classes, opt-in behavior, semantic tokens, responsive/forced-colours rules |
+| `unit/ci-workflow.test.js` | [Development: continuous integration](../docs/development.md#continuous-integration) | Repository validation workflow and least-privilege CI permissions; operational contract, not UI behavior |
+| `unit/sanity-check.test.js` | [Development: validation](../docs/development.md#validation); [Base CSS](../docs/development.md#base-css) | Stylesheet discovery, CSS parsing and base import graph |
+| `unit/build-package.test.js`, `package/test-package.js`, `types/*-consumer.ts` | [Distribution: public entry points](../docs/distribution.md#public-package-entry-points); [Distribution: local archive installation](../docs/distribution.md#build-and-local-archive-installation) | Build format validation, archive contents and consumer compatibility |
+| `browser/app-shell.spec.js` | [Application shell: structure and layout](../docs/components/app-shell.md#semantic-structure-and-document-order); [responsive behavior](../docs/components/app-shell.md#layout-and-responsive-behavior) | Regions, geometry, landmarks, keyboard order, narrow layouts |
+| `browser/buttons.spec.js` | [Buttons: interaction states](../docs/components/buttons.md#interaction-states); [semantics and accessibility](../docs/components/buttons.md#semantics-and-accessibility) | Variants, native actions, focus, disabled/loading states and themes |
+| `browser/components.spec.js` | [Cards](../docs/components/cards.md#public-classes); [Badges](../docs/components/badges.md#public-classes) | Token use and responsive card layout |
+| `browser/forms-and-settings.spec.js` | [Forms: native controls and validation](../docs/components/forms.md#native-controls-and-states); [Grouped settings: states and accessibility](../docs/components/grouped-settings.md#states-themes-and-accessibility) | Labels, validation, settings state, themes and reflow |
+| `browser/theme-and-layout.spec.js` | [Foundation: themes](../docs/foundation.md#5-themes-and-personalisation); [Development: style guide](../docs/development.md#style-guide) | Theme selection/persistence, responsive guide layout and fragment links |
+| `browser/toolbars-and-page-headers.spec.js` | [Page header](../docs/components/page-header.md#recommended-structure); [Toolbar: keyboard behavior and ARIA](../docs/components/toolbar.md#keyboard-behavior-and-aria); [responsive behavior](../docs/components/toolbar.md#responsive-behavior-and-action-placement) | Heading context, native controls, order, wrapping and no-JavaScript presentation |
+
+When adding a test, choose the narrowest contract link that states the behavior under test. Keep operational checks mapped to development or distribution documentation and do not present them as user-facing requirements.
