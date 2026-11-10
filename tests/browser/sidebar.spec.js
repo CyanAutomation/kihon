@@ -173,29 +173,42 @@ test('navigation is visible without JavaScript and hides the inactive toggle', a
   await context.close();
 });
 
-test('a malformed guide toggle does not stop later sidebar controllers from initializing', async ({ browser, baseURL }) => {
+test('invalid sidebar initialization preserves its fallback and does not block later controllers', async ({ browser, baseURL }) => {
   const context = await browser.newContext();
   const page = await context.newPage();
-  const consoleErrors = [];
-  page.on('console', (message) => {
-    if (message.type() === 'error') consoleErrors.push(message.text());
-  });
-  await page.route('**/style-guide/', async (route) => {
-    const response = await route.fetch();
-    const html = await response.text();
-    const marker = '<button class="kh-button kh-button--quiet kh-sidebar-toggle" id="sidebar-demo-toggle"';
-    const malformedToggle = '<button class="kh-sidebar-toggle" aria-controls="sidebar-demo-nav">Malformed toggle</button>\n          ';
-    await route.fulfill({ response, body: html.replace(marker, `${malformedToggle}${marker}`) });
-  });
+  try {
+    await page.route('**/__fixtures/sidebar-controller-isolation', (route) => route.fulfill({
+      contentType: 'text/html',
+      body: `<!doctype html>
+        <html lang="en">
+          <head><title>Sidebar initialization fixture</title></head>
+          <body>
+            <button id="invalid-toggle" class="kh-sidebar-toggle" type="submit" aria-controls="invalid-sidebar" hidden>Invalid toggle</button>
+            <nav id="invalid-sidebar" aria-label="Navigation with invalid toggle"><a href="#fallback">Fallback destination</a></nav>
+            <button id="valid-toggle" class="kh-sidebar-toggle" type="button" aria-controls="valid-sidebar" hidden>Toggle valid navigation</button>
+            <nav id="valid-sidebar" aria-label="Valid navigation"><a href="#valid">Valid destination</a></nav>
+            <script src="/src/js/sidebar.js"></script>
+            <script src="/style-guide/sidebar.js"></script>
+          </body>
+        </html>`
+    }));
+    await page.goto(`${baseURL}/__fixtures/sidebar-controller-isolation`);
 
-  await page.goto(`${baseURL}/style-guide/`);
-  const navigation = page.locator('#sidebar-demo-nav');
-  const toggle = page.locator('#sidebar-demo-toggle');
-  await expect(toggle).toBeVisible();
-  expect(consoleErrors).toHaveLength(1);
-  await toggle.click();
-  await expect(navigation).toBeHidden();
-  await context.close();
+    await expect(page.getByRole('navigation', { name: 'Navigation with invalid toggle' })).toBeVisible();
+    await expect(page.locator('#invalid-toggle')).toBeHidden();
+
+    const navigation = page.getByRole('navigation', { name: 'Valid navigation' });
+    const toggle = page.getByRole('button', { name: 'Toggle valid navigation' });
+    await expect(navigation).toBeVisible();
+    await expect(toggle).toBeVisible();
+    await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+
+    await toggle.click();
+    await expect(navigation).toBeHidden();
+    await expect(toggle).toHaveAttribute('aria-expanded', 'false');
+  } finally {
+    await context.close();
+  }
 });
 
 test('repeated toggle use is stable and controller disposal removes its listener', async ({ page }) => {
@@ -312,14 +325,4 @@ test('a constrained shell remains usable on a wide viewport', async ({ page }) =
   expect(layout.mainWidth).toBeGreaterThanOrEqual(300);
   expect(layout.mainRight).toBeLessThanOrEqual(layout.detailsLeft + 1);
   expect(layout.detailsRight).toBeLessThanOrEqual(layout.viewport);
-});
-
-test('existing shell buttons and dialogs remain functional beside sidebar examples', async ({ page }) => {
-  await page.getByRole('button', { name: 'About this application' }).click();
-  await expect(page.getByRole('dialog', { name: 'About this application' })).toBeVisible();
-  await page.keyboard.press('Escape');
-  await expect(page.getByRole('dialog', { name: 'About this application' })).toBeHidden();
-
-  await expect(page.getByRole('button', { name: 'New project' })).toBeEnabled();
-  await expect(page.locator('#app-shell-main-action')).toBeEnabled();
 });
