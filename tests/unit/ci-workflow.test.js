@@ -17,12 +17,12 @@ function readValidationSteps() {
   return steps;
 }
 
-test('package metadata and CI select Node 24 or later', () => {
-  assert.equal(packageJson.engines.node, '>=24.0.0');
+test('package metadata and CI select Node 26 or later', () => {
+  assert.equal(packageJson.engines.node, '>=26.0.0');
   const validationSteps = readValidationSteps();
   const setupNode = validationSteps.find((step) => step.uses?.startsWith('actions/setup-node@'));
   assert.ok(setupNode, 'CI must configure Node');
-  assert.equal(setupNode.with['node-version'], 24);
+  assert.equal(setupNode.with['node-version'], 26);
 });
 
 test('CI pins action revisions and does not persist checkout credentials', () => {

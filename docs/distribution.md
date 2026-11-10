@@ -59,7 +59,7 @@ The package also includes optional classic-script helpers that preserve `window.
 
 ## Build and local archive installation
 
-Use Node.js 24 or later and npm to reproduce the package:
+Use Node.js 26 or later and npm to reproduce the package:
 
 ```bash
 npm ci
@@ -84,7 +84,7 @@ Install that exact archive in the consumer and commit an explicit dependency pin
 npm install --save-exact /approved/internal/path/cyanautomation-kihon-1.0.0-draft.2.tgz
 ```
 
-Do not upload the archive to a public location. The local package contract is verified on Node.js 24 with native ESM and CommonJS, TypeScript NodeNext and bundler resolution, and Chromium. Browser compatibility certification across engines is not part of Phase 4A.
+Do not upload the archive to a public location. CI targets Node.js 26 for the local package contract, which covers native ESM and CommonJS, TypeScript NodeNext and bundler resolution, and Chromium. Browser compatibility certification across engines is not part of Phase 4A.
 
 ## Distribution options
 
