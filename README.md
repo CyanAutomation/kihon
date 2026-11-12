@@ -26,7 +26,7 @@ Kihon is **not** a full application framework, a page builder, an Apple UI clone
 1. **Web-native first.** Prefer semantic HTML and built-in browser behaviour before custom controls or JavaScript.
 2. **Foundation, not uniformity.** Share visual rules and behaviours; let each application retain its own identity and information architecture.
 3. **Accessibility by design.** Target WCAG 2.2 AA, with meaningful keyboard, focus, screen-reader and reduced-motion support.
-4. **Adaptive by default.** Support light and dark appearance, narrow screens, wide desktop windows and user preferences.
+4. **Adaptive by default.** Support light and dark appearance, narrow screens, wide desktop windows and user preferences. The current foundation defaults to dark; explicitly choose system mode with `data-kh-theme="system"`.
 5. **Progressive enhancement.** Core functionality must not depend on blur, animation, advanced CSS effects or an optional enhancement script.
 6. **Small and dependency-conscious.** Keep runtime code minimal, tree-shakeable where applicable, and easy to remove.
 7. **Platform-neutral decisions.** Express intent in semantic tokens and documentation, not in hard-coded platform-specific styling alone.
@@ -154,6 +154,20 @@ The style guide demonstrates:
 - **Foundations** — surfaces and application layouts
 - **Accessibility** — keyboard navigation, reduced motion, forced colours
 - **Theme switcher** — test light, dark and system preference modes
+- **Apple-platform experience references** — touch-first session capture, adaptive iPad browsing, and desktop training analytics, with system/light/dark appearance controls
+
+### Apple-platform experience specification
+
+Phase 5A records how Kihon can support platform-appropriate iPhone, iPad and Mac web app experiences without becoming a router or imitating proprietary operating-system UI. The specification distinguishes current public components from proposed patterns and keeps their implementation in consuming applications until later phases.
+
+- [Experience specification and implementation guide](docs/experience/README.md)
+- [Repository gap assessment](docs/experience/gap-assessment.md)
+- [Platform profiles](docs/experience/platform-profiles.md)
+- [Three live reference screens](style-guide/experience/)
+- [Validation matrix and native-feel rubric](docs/experience/validation.md)
+- [Phase 5B–5F roadmap](docs/experience/roadmap.md)
+
+These reference patterns are style-guide-only examples. They do not add public CSS classes, JavaScript exports, tokens, or package dependencies.
 
 ### Using Kihon in Your Application
 
@@ -182,7 +196,7 @@ For Kihon components, CyanAutomation applications consume the private package fr
    ```
    See [`docs/components/buttons.md`](docs/components/buttons.md) for variants, state handling, token customisation, and accessibility guidance.
 
-4. Let CSS follow the system appearance or set `data-kh-theme="light"` / `data-kh-theme="dark"` on `<html>`. The theme switcher in `style-guide/` is a demonstration, not a production component.
+4. The current foundation defaults to dark. Set `data-kh-theme="system"` to follow `prefers-color-scheme`, or set `data-kh-theme="light"` / `data-kh-theme="dark"` on `<html>` for an explicit override. The theme switcher in `style-guide/` is a demonstration, not a production component.
 
 No frontend framework is required. Kihon works with vanilla HTML, CSS and optional JavaScript. A browser's native stylesheet loader does not resolve a bare npm package specifier; serve the packaged `dist/styles.css` from an application-owned asset path when no build-tool resolver is available.
 
@@ -203,11 +217,9 @@ Kihon currently supports locally generated `.tgz` archives for internal consumer
 
 [Testacoda](https://github.com/CyanAutomation/testacoda) may eventually track Kihon adoption and UI-foundation evidence across repositories. Adoption reporting must distinguish **declared package use**, **automated test results** and **manual review**. A repository score cannot by itself certify visual quality or accessibility.
 
-## Future SwiftUI readiness
+## Platform-adaptive experience guidance
 
-Kihon is designed to preserve **design intent**, not to promise source-code portability. Tokens, information architecture, API contracts and documented interaction states can guide future SwiftUI implementations. HTML templates, CSS and TypeScript view behaviour will generally require native implementations.
-
-The planned `swiftui-mapping.md` will describe conceptual equivalents—for example grouped settings and native `Form`/`Section`, sidebars and `NavigationSplitView`, and web dialogs and native sheets or alerts—without pretending they are interchangeable.
+Kihon provides transferable design decisions, not a web API that directly generates SwiftUI views. The Phase 5A [experience specification](docs/experience/README.md) describes how native concepts can inform web patterns while retaining browser history, links, native semantics, and progressive enhancement. It explains which behavior remains the responsibility of a consuming application.
 
 ## Roadmap
 
@@ -221,7 +233,13 @@ The planned `swiftui-mapping.md` will describe conceptual equivalents—for exam
 - [x] Implement accessible desktop sidebar navigation (Phase 3B).
 - [x] Implement toolbar and page-header conventions (Phase 3C).
 - [x] Build a static, framework-free style-guide site with live examples.
-- [ ] Add automated validation and manual review checklists.
+- [x] Define the Phase 5A platform experience specification and three responsive reference screens.
+- [ ] Implement adaptive navigation from the Phase 5B contract.
+- [ ] Add optional presentation and interaction patterns (Phase 5C).
+- [ ] Document and validate installed-web-app integration (Phase 5D).
+- [ ] Review visual defaults and theme migration policy (Phase 5E).
+- [ ] Expand cross-platform and physical-device experience validation (Phase 5F).
+- [x] Add Phase 5A automated checks and a manual-review matrix.
 - [ ] Pilot adoption in one CyanAutomation web application.
 - [x] Define provisional internal package exports, prerelease versioning and local archive validation (Phase 4A).
 - [ ] Decide release versioning, private registry distribution and licensing before any v1.0 release.
