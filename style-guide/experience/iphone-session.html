@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en" data-kh-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#141518">
+  <title>Session capture | Kihon reference</title>
+  <link rel="stylesheet" href="../../src/css/base.css">
+  <link rel="stylesheet" href="experience.css">
+  <script src="../theme.js" defer></script>
+  <script src="experience.js" defer></script>
+</head>
+<body class="xp-screen xp-phone">
+  <a class="xp-skip-link" href="#main">Skip to content</a>
+  <div class="xp-phone-frame">
+    <header class="xp-screen-header">
+      <a class="xp-back-link" href="./" aria-label="Back to experience references">References</a>
+      <nav class="xp-theme-controls" aria-label="Appearance">
+        <button type="button" data-kh-theme-toggle="system" aria-pressed="false">System</button>
+        <button type="button" data-kh-theme-toggle="light" aria-pressed="false">Light</button>
+        <button type="button" data-kh-theme-toggle="dark" aria-pressed="true">Dark</button>
+      </nav>
+      <p class="xp-visually-hidden" data-kh-theme-status aria-live="polite"></p>
+    </header>
+    <main id="main" class="xp-phone-main">
+      <section id="session-capture" aria-labelledby="phone-title">
+        <div class="xp-page-heading">
+          <p class="xp-eyebrow">THURSDAY · 12 NOVEMBER</p>
+          <h1 id="phone-title">Log a session</h1>
+          <p>Capture the work while it is fresh.</p>
+        </div>
+        <form class="xp-capture-form" data-session-form>
+          <fieldset class="xp-fieldset">
+            <legend>Training details</legend>
+            <label for="session-type">Session focus</label>
+            <select id="session-type" name="session-type" required>
+              <option value="">Choose a focus</option>
+              <option>Technical practice</option>
+              <option>Randori</option>
+              <option>Conditioning</option>
+            </select>
+
+            <div class="xp-form-row">
+              <div>
+                <label for="session-duration">Duration</label>
+                <div class="xp-input-suffix">
+                  <input id="session-duration" name="session-duration" type="number" inputmode="numeric" min="1" max="300" value="75" required>
+                  <span aria-hidden="true">min</span>
+                </div>
+              </div>
+              <div>
+                <label for="session-effort">Effort</label>
+                <select id="session-effort" name="session-effort">
+                  <option>Steady</option>
+                  <option>Light</option>
+                  <option>Hard</option>
+                </select>
+              </div>
+            </div>
+          </fieldset>
+          <fieldset class="xp-fieldset">
+            <legend>What did you work on?</legend>
+            <label for="session-notes">Notes <span class="xp-label-optional">Optional</span></label>
+            <textarea id="session-notes" name="session-notes" rows="4" placeholder="Grip transitions, movement, or a technique to revisit"></textarea>
+            <p class="xp-field-hint">A short note is enough. You can add more later.</p>
+          </fieldset>
+          <button class="kh-button kh-button--primary kh-button--lg xp-save-button" type="submit">Save session</button>
+          <p class="xp-status" data-session-status role="status" aria-live="polite"></p>
+        </form>
+      </section>
+      <section id="sessions" class="xp-recent" aria-labelledby="recent-title">
+        <h2 id="recent-title">Recent sessions</h2>
+        <p><strong>Saturday</strong><span>Randori · 60 min</span></p>
+        <p><strong>Wednesday</strong><span>Technical practice · 75 min</span></p>
+      </section>
+      <section id="progress" class="xp-phone-progress" aria-labelledby="progress-title">
+        <h2 id="progress-title">This week</h2>
+        <p><strong>3 sessions</strong><span>2 h 45 min on the mat</span></p>
+      </section>
+    </main>
+    <nav class="xp-tab-bar" aria-label="Main navigation">
+      <a href="#sessions"><span aria-hidden="true">S</span>Sessions</a>
+      <a href="#progress"><span aria-hidden="true">P</span>Progress</a>
+      <a href="#session-capture" aria-current="page"><span aria-hidden="true">N</span>New session</a>
+    </nav>
+  </div>
+</body>
+</html>

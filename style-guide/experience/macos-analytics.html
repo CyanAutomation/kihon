@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en" data-kh-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#141518">
+  <title>Training analytics | Kihon reference</title>
+  <link rel="stylesheet" href="../../src/css/base.css">
+  <link rel="stylesheet" href="experience.css">
+  <script src="../theme.js" defer></script>
+  <script src="experience.js" defer></script>
+</head>
+<body class="xp-screen xp-desktop">
+  <a class="xp-skip-link" href="#main">Skip to content</a>
+  <header class="xp-screen-header">
+    <a class="xp-brand" href="./">Kihon <span>Training</span></a>
+    <nav class="xp-theme-controls" aria-label="Appearance">
+      <button type="button" data-kh-theme-toggle="system" aria-pressed="false">System</button>
+      <button type="button" data-kh-theme-toggle="light" aria-pressed="false">Light</button>
+      <button type="button" data-kh-theme-toggle="dark" aria-pressed="true">Dark</button>
+    </nav>
+    <p class="xp-visually-hidden" data-kh-theme-status aria-live="polite"></p>
+  </header>
+  <main id="main" class="xp-desktop-shell">
+    <nav class="xp-workspace-nav xp-desktop-nav" aria-label="Training workspace">
+      <p class="xp-workspace-name">NORTHSIDE JUDO</p>
+      <a href="#analytics">Overview</a>
+      <a href="#history" aria-current="page">Training history</a>
+      <a href="#techniques">Techniques</a>
+      <a href="#members">Members</a>
+      <p class="xp-workspace-foot">Season 2026–27</p>
+    </nav>
+    <section id="analytics" class="xp-analytics-main" aria-labelledby="analytics-title">
+      <div class="xp-page-heading xp-desktop-heading">
+        <p class="xp-eyebrow">TRAINING HISTORY</p>
+        <h1 id="analytics-title">A season in focus</h1>
+        <p>Review consistency and the work behind each week.</p>
+      </div>
+      <div class="xp-toolbar" role="group" aria-label="Report actions">
+        <label for="report-period">Date range</label>
+        <select id="report-period" data-report-period>
+          <option value="season">This season</option>
+          <option value="month">This month</option>
+          <option value="year">Past year</option>
+        </select>
+        <button class="kh-button kh-button--secondary" type="button" data-export-report>Export report</button>
+      </div>
+      <p class="xp-status xp-export-status" data-export-status role="status" aria-live="polite"></p>
+      <section class="xp-metric-grid" aria-label="Season summary">
+        <article class="xp-metric"><p>Sessions</p><strong>42</strong><span>Across 18 weeks</span></article>
+        <article class="xp-metric"><p>Time on the mat</p><strong>54 h</strong><span>Average 77 min per session</span></article>
+        <article class="xp-metric"><p>Consistency</p><strong>2.3 / wk</strong><span>Most active: October</span></article>
+      </section>
+      <section class="xp-chart-panel" aria-labelledby="chart-title">
+        <div class="xp-chart-heading"><div><h2 id="chart-title">Sessions by week</h2><p>Training volume across the last eight weeks</p></div><span class="xp-chart-key">Sessions</span></div>
+        <div class="xp-bar-chart" aria-hidden="true">
+          <div class="xp-chart-column"><span></span><small>W38</small></div>
+          <div class="xp-chart-column"><span></span><small>W39</small></div>
+          <div class="xp-chart-column"><span></span><small>W40</small></div>
+          <div class="xp-chart-column"><span></span><small>W41</small></div>
+          <div class="xp-chart-column"><span></span><small>W42</small></div>
+          <div class="xp-chart-column"><span></span><small>W43</small></div>
+          <div class="xp-chart-column"><span></span><small>W44</small></div>
+          <div class="xp-chart-column"><span></span><small>W45</small></div>
+        </div>
+        <table class="xp-data-table xp-chart-data">
+          <caption>Session count by training week</caption>
+          <thead><tr><th scope="col">Week</th><th scope="col">Sessions</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">Week 38</th><td>2</td></tr><tr><th scope="row">Week 39</th><td>3</td></tr>
+            <tr><th scope="row">Week 40</th><td>2</td></tr><tr><th scope="row">Week 41</th><td>4</td></tr>
+            <tr><th scope="row">Week 42</th><td>3</td></tr><tr><th scope="row">Week 43</th><td>5</td></tr>
+            <tr><th scope="row">Week 44</th><td>4</td></tr><tr><th scope="row">Week 45</th><td>6</td></tr>
+          </tbody>
+        </table>
+      </section>
+      <section id="history" class="xp-history-panel" aria-labelledby="history-title">
+        <div class="xp-section-heading"><div><h2 id="history-title">Recent sessions</h2><p>Selected from your training log</p></div><a href="ipad-library.html">Browse all</a></div>
+        <section class="xp-table-scroll" aria-label="Recent training sessions table" tabindex="0">
+        <table class="xp-data-table xp-history-table">
+          <caption>Recent training sessions</caption>
+          <thead><tr><th scope="col">Date</th><th scope="col">Session</th><th scope="col">Focus</th><th scope="col">Duration</th></tr></thead>
+          <tbody>
+            <tr><td>12 Nov</td><th scope="row">Grip and movement</th><td>Technical practice</td><td>75 min</td></tr>
+            <tr><td>10 Nov</td><th scope="row">Tuesday randori</th><td>Randori</td><td>60 min</td></tr>
+            <tr><td>7 Nov</td><th scope="row">Groundwork transitions</th><td>Newaza</td><td>55 min</td></tr>
+          </tbody>
+        </table>
+        </section>
+      </section>
+      <p id="techniques" class="xp-desktop-extra">Techniques and member comparisons stay in their own views so this report remains focused on training history.</p>
+      <span id="members" class="xp-anchor-target" tabindex="-1"></span>
+    </section>
+    <aside class="xp-inspector" aria-labelledby="inspector-title">
+      <p class="xp-eyebrow">SEASON DETAIL</p>
+      <h2 id="inspector-title">Patterns to revisit</h2>
+      <section class="xp-inspector-section"><h3>Most practiced</h3><p>Grip transitions</p><strong>12 sessions</strong></section>
+      <section class="xp-inspector-section"><h3>Training rhythm</h3><p>Tuesday and Thursday</p><strong>Steady over 9 weeks</strong></section>
+      <a class="kh-button kh-button--quiet" href="ipad-library.html">Open session list</a>
+    </aside>
+  </main>
+</body>
+</html>

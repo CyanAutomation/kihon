@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" data-kh-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>Apple-platform experience references | Kihon</title>
+  <link rel="stylesheet" href="../../src/css/base.css">
+  <link rel="stylesheet" href="experience.css">
+  <script src="../theme.js" defer></script>
+</head>
+<body class="xp-index">
+  <a class="xp-skip-link" href="#main">Skip to content</a>
+  <header class="xp-guide-header">
+    <a class="xp-brand" href="../">Kihon <span>Experience references</span></a>
+    <nav class="xp-theme-controls" aria-label="Appearance">
+      <button type="button" data-kh-theme-toggle="system" aria-pressed="false">System</button>
+      <button type="button" data-kh-theme-toggle="light" aria-pressed="false">Light</button>
+      <button type="button" data-kh-theme-toggle="dark" aria-pressed="true">Dark</button>
+    </nav>
+  </header>
+  <main id="main" class="xp-index-main">
+    <p class="xp-eyebrow">Phase 5A · Experimental reference patterns</p>
+    <h1>One product, three ways to work</h1>
+    <p class="xp-lede">These framework-free examples explore how a training log can adapt its navigation, content density, and controls to the space and input in front of it. They use Kihon foundations and original CSS; they are not public components or Apple interface replicas.</p>
+    <p class="xp-theme-status" data-kh-theme-status aria-live="polite">Selected mode: dark.</p>
+
+    <section class="xp-reference-grid" aria-label="Experience reference screens">
+      <article class="xp-reference-card">
+        <p class="xp-eyebrow">Compact touch · iPhone</p>
+        <h2>Capture a session</h2>
+        <p>One clear task, grouped training details, comfortable touch controls, a persistent set of peer destinations, and safe-area-aware edges.</p>
+        <a class="kh-button kh-button--primary" href="iphone-session.html">Open session capture</a>
+        <p class="xp-reference-meta">Try the form at a narrow viewport, then switch between light and dark.</p>
+      </article>
+      <article class="xp-reference-card">
+        <p class="xp-eyebrow">Adaptive touch · iPad</p>
+        <h2>Browse and inspect</h2>
+        <p>A session list and selected detail share space when there is room. At a compact width the same selection becomes a clear single-column return path.</p>
+        <a class="kh-button kh-button--primary" href="ipad-library.html">Open adaptive library</a>
+        <p class="xp-reference-meta">Search the list, choose a session, and resize to see the layout adapt.</p>
+      </article>
+      <article class="xp-reference-card">
+        <p class="xp-eyebrow">Desktop · macOS</p>
+        <h2>Review training history</h2>
+        <p>A restrained sidebar, contextual report controls, accessible metrics, and an information-dense history view with keyboard-accessible actions.</p>
+        <a class="kh-button kh-button--primary" href="macos-analytics.html">Open analytics</a>
+        <p class="xp-reference-meta">Use Tab to move through the sidebar, filters, export action, and data.</p>
+      </article>
+    </section>
+
+    <aside class="xp-note" aria-labelledby="xp-note-title">
+      <h2 id="xp-note-title">How to use these references</h2>
+      <p>The specification lives in docs/experience/. Each screen is built from semantic HTML, local CSS, and small demo-only JavaScript. The examples are excluded from the packaged consumer API.</p>
+    </aside>
+  </main>
+</body>
+</html>

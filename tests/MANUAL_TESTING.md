@@ -470,3 +470,5 @@ _[Add notes as needed]_
 
 **Phase 3B manual status:** Not yet performed. VoiceOver, NVDA, actual 200% text resizing and 400% browser zoom, mobile touch, and Firefox/WebKit focus and responsive checks remain outstanding; automated Chromium results are recorded separately.
 
+**Phase 5A reference screens:** Physical iPhone Safari, installed iPhone/iPad web apps, iPad Safari with the software keyboard, macOS Safari/Dock apps, VoiceOver, and actual reduced-transparency settings have not been tested. Run the [Phase 5A validation matrix](../docs/experience/validation.md) on supported devices before claiming those behaviors.
+

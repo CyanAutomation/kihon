@@ -4,6 +4,8 @@ This document explains how Kihon's design tokens, CSS, reusable TypeScript behav
 
 Phases 2A–2C and 3A–3C are implemented as framework-free components. See [`components/buttons.md`](components/buttons.md), [`components/forms.md`](components/forms.md), [`components/grouped-settings.md`](components/grouped-settings.md), [`components/dialogs.md`](components/dialogs.md), [`components/app-shell.md`](components/app-shell.md), [`components/sidebar.md`](components/sidebar.md), [`components/page-header.md`](components/page-header.md), and [`components/toolbar.md`](components/toolbar.md) for their public contracts. Dialog and sidebar behaviors are optional and documented separately from their CSS APIs. Page headers and toolbars are CSS-only.
 
+Phase 5A adds a proposed platform-adaptive experience specification and style-guide-only examples. See [`experience/README.md`](experience/README.md); the proposed patterns do not extend the public package API.
+
 Use Node.js 26 or later and npm. The minimum version covers the HTML validation and browser-test tools. Generated Kihon CSS and the compiled dialog and sidebar helpers have no npm runtime dependencies; TypeScript and esbuild are development-only.
 
 ## Repository Structure
@@ -42,6 +44,13 @@ kihon/
 ├── style-guide/                 # Static documentation site
 │   ├── index.html               # Main style guide page
 │   ├── styles.css               # Style guide-specific styles
+│   ├── experience/               # Experimental Phase 5A reference screens (not packaged)
+│   │   ├── index.html
+│   │   ├── iphone-session.html
+│   │   ├── ipad-library.html
+│   │   ├── macos-analytics.html
+│   │   ├── experience.css
+│   │   └── experience.js
 │   ├── theme.js                 # Style-guide theme switcher
 │   ├── sidebar.js               # Local sidebar navigation demo
 │   ├── buttons.js               # Style-guide button demonstrations
@@ -63,6 +72,7 @@ kihon/
 ├── docs/
 │   ├── foundation.md            # Normative specification
 │   ├── development.md           # This file
+│   ├── experience/               # Proposed platform experience contracts and roadmap
 │   └── components/              # Public component contracts
 │       ├── buttons.md
 │       ├── forms.md
@@ -392,7 +402,7 @@ Explicit preferences are stored under `kihon-theme` when browser storage is avai
 npm run test
 ```
 
-Runs unit, token schema/value, contrast, HTML/CSS parsing, generated-file consistency, and Chromium browser checks. CI also runs strict TypeScript checking. App-shell, sidebar, page-header, and toolbar checks measure region geometry at 320, 480, 768, 1024, and 1280 CSS px; they include constrained-parent compact layouts, wrapping, focus, no-script fallback, and sidebar collapse. The automation does not run the manual verification checklist.
+Runs unit, token schema/value, contrast, HTML/CSS parsing, generated-file consistency, and Chromium browser checks. CI also runs strict TypeScript checking. App-shell, sidebar, page-header, toolbar, and Phase 5A reference checks cover responsive geometry, local interactions, focus, themes, and no-script presentation. The automation does not run the manual verification checklist or establish installed Safari behavior.
 
 ### Manual Verification Checklist
 
