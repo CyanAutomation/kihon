@@ -14,6 +14,35 @@ test('dark is selected by default regardless of the operating system appearance'
   await expect.poll(() => page.locator('html').evaluate((element) => getComputedStyle(element).colorScheme)).toBe('dark');
 });
 
+test('inline links in prose stay visibly underlined in both themes', async ({ page }) => {
+  const link = page.locator('#inline-link-cue-test');
+  await page.evaluate(() => {
+    const paragraph = document.createElement('p');
+    paragraph.innerHTML = '<a id="inline-link-cue-test" href="#buttons">Read the button guidance</a>';
+    document.body.append(paragraph);
+  });
+
+  for (const theme of ['light', 'dark']) {
+    await page.locator('html').evaluate((element, mode) => element.setAttribute('data-kh-theme', mode), theme);
+    const styles = await link.evaluate((element) => {
+      const style = getComputedStyle(element);
+      return {
+        decoration: style.textDecorationLine,
+        offset: style.textUnderlineOffset,
+        thickness: style.textDecorationThickness,
+        opacity: style.opacity
+      };
+    });
+    expect(styles.decoration).toContain('underline');
+    expect(styles.offset).not.toBe('auto');
+    expect(styles.thickness).not.toBe('auto');
+    expect(styles.opacity).toBe('1');
+  }
+
+  await link.hover();
+  await expect(link).toHaveCSS('text-decoration-thickness', '2px');
+});
+
 test('System mode follows the operating system only when explicitly selected', async ({ page }) => {
   const system = page.locator('[data-kh-theme-toggle="system"]');
   await expect(page.locator('[data-kh-theme-toggle="dark"]')).toHaveAttribute('aria-pressed', 'true');

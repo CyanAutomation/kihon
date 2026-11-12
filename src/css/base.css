@@ -4,18 +4,21 @@
  */
 
 /* Import generated tokens */
-@import url('./tokens.css');
+@layer kh.tokens, kh.base, kh.components;
+@import url('./tokens.css') layer(kh.tokens);
 /* Preserve the existing base.css entry point while keeping component rules modular. */
-@import url('./components/buttons.css');
-@import url('./components/forms.css');
-@import url('./components/settings.css');
-@import url('./components/dialogs.css');
-@import url('./components/app-shell.css');
-@import url('./components/sidebar.css');
-@import url('./components/page-header.css');
-@import url('./components/toolbar.css');
-@import url('./components/cards.css');
-@import url('./components/badges.css');
+@import url('./components/buttons.css') layer(kh.components);
+@import url('./components/forms.css') layer(kh.components);
+@import url('./components/settings.css') layer(kh.components);
+@import url('./components/dialogs.css') layer(kh.components);
+@import url('./components/app-shell.css') layer(kh.components);
+@import url('./components/sidebar.css') layer(kh.components);
+@import url('./components/page-header.css') layer(kh.components);
+@import url('./components/toolbar.css') layer(kh.components);
+@import url('./components/cards.css') layer(kh.components);
+@import url('./components/badges.css') layer(kh.components);
+
+@layer kh.base {
 
 /* ============================================================================
    Root and global defaults
@@ -126,16 +129,14 @@ em, i {
 /* Links */
 a {
   color: var(--kh-color-accent-text);
-  text-decoration: none;
-  transition: opacity 120ms ease-in-out;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+  transition: text-decoration-thickness 120ms ease-in-out;
 }
 
 a:hover {
-  opacity: 0.8;
-}
-
-a:active {
-  opacity: 0.9;
+  text-decoration-thickness: 2px;
 }
 
 a:focus-visible {
@@ -210,9 +211,13 @@ dd {
    Media and images
    ========================================================================== */
 
-img, video, svg {
+img, video {
   display: block;
   height: auto;
+  max-width: 100%;
+}
+
+svg {
   max-width: 100%;
 }
 
@@ -346,4 +351,5 @@ html {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
 }

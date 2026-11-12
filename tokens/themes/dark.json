@@ -56,6 +56,15 @@
     "focus-ring": {
       "$type": "color",
       "$value": "{colors.orange.400}"
+    },
+    "scrim": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [0, 0, 0],
+        "alpha": 0.48,
+        "hex": "#000000"
+      }
     }
   },
   "$description": "Dark appearance theme for Kihon UI Foundation"

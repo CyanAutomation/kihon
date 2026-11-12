@@ -15,7 +15,7 @@ const REFERENCE = /^\{[^{}]+\}$/;
 const REQUIRED_THEME_COLORS = [
   'background', 'surface', 'text-primary', 'text-secondary', 'accent', 'accent-text',
   'on-accent', 'button-primary-hover', 'danger', 'success', 'success-background',
-  'border-subtle', 'border-strong', 'focus-ring'
+  'border-subtle', 'border-strong', 'focus-ring', 'scrim'
 ];
 
 function loadTokenDocuments(tokensDir = path.join(ROOT, 'tokens')) {

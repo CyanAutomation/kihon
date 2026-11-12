@@ -74,7 +74,7 @@
 .kh-input:hover:not(:disabled),
 .kh-textarea:hover:not(:disabled),
 .kh-select:hover:not(:disabled) {
-  border-color: var(--kh-color-focus-ring);
+  border-color: var(--kh-color-border-strong);
 }
 
 .kh-input:focus-visible,
@@ -111,6 +111,20 @@
 .kh-textarea[aria-invalid="true"]:focus-visible,
 .kh-select[aria-invalid="true"]:focus-visible {
   outline-color: var(--kh-color-focus-ring);
+}
+
+@supports selector(:user-invalid) {
+  .kh-input:user-invalid,
+  .kh-textarea:user-invalid,
+  .kh-select:user-invalid {
+    border-color: var(--kh-color-danger);
+  }
+
+  .kh-input:user-invalid:focus-visible,
+  .kh-textarea:user-invalid:focus-visible,
+  .kh-select:user-invalid:focus-visible {
+    outline-color: var(--kh-color-focus-ring);
+  }
 }
 
 .kh-textarea {

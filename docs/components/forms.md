@@ -80,6 +80,13 @@ showing error treatment before an application chooses to present an error.
 Focus-visible remains visible on normal and invalid controls. Disabled and
 read-only states are not communicated through color alone.
 
+Where the browser supports `:user-invalid`, Kihon styles controls after native
+constraint validation has marked them invalid. The selector is guarded by a
+feature query, and `aria-invalid="true"` remains available for application-
+managed validation and older browsers. A danger-colored border is only a visual
+supplement: show recovery-oriented error text and associate it through
+`aria-describedby`.
+
 ## Validation and errors
 
 Preserve native constraints such as `required`, `type="email"`, `min`, `max`,
