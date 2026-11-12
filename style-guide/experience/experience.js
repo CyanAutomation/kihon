@@ -28,7 +28,6 @@ if (captureForm) {
 
 const tabletShell = document.querySelector('.xp-tablet-shell');
 if (tabletShell) {
-  tabletShell.dataset.interactive = 'true';
   const sessionRows = Array.from(tabletShell.querySelectorAll('[data-session-title]'));
   const detailTitle = tabletShell.querySelector('[data-detail-title]');
   const detailDate = tabletShell.querySelector('[data-detail-date]');
@@ -38,45 +37,49 @@ if (tabletShell) {
   const emptyState = tabletShell.querySelector('[data-session-empty]');
   const backButton = tabletShell.querySelector('[data-session-back]');
 
-  const selectSession = (row, moveFocus, openDetail = true) => {
-    sessionRows.forEach((candidate) => candidate.setAttribute('aria-pressed', String(candidate === row)));
-    detailTitle.textContent = row.dataset.sessionTitle;
-    detailDate.textContent = row.dataset.sessionDate;
-    detailSummary.textContent = row.dataset.sessionSummary;
-    detailDuration.textContent = row.dataset.sessionDuration;
-    const isCompact = window.matchMedia
-      ? window.matchMedia('(max-width: 43rem)').matches
-      : window.innerWidth <= 688;
-    if (isCompact && openDetail) {
-      tabletShell.dataset.mobileView = 'detail';
-      if (moveFocus) detailTitle.focus();
-    }
-  };
+  if (detailTitle && detailDate && detailSummary && detailDuration) {
+    // Keep the static list/detail layout if required detail markup is incomplete.
+    tabletShell.dataset.interactive = 'true';
+    const selectSession = (row, moveFocus, openDetail = true) => {
+      sessionRows.forEach((candidate) => candidate.setAttribute('aria-pressed', String(candidate === row)));
+      detailTitle.textContent = row.dataset.sessionTitle;
+      detailDate.textContent = row.dataset.sessionDate;
+      detailSummary.textContent = row.dataset.sessionSummary;
+      detailDuration.textContent = row.dataset.sessionDuration;
+      const isCompact = window.matchMedia
+        ? window.matchMedia('(max-width: 43rem)').matches
+        : window.innerWidth <= 688;
+      if (isCompact && openDetail) {
+        tabletShell.dataset.mobileView = 'detail';
+        if (moveFocus) detailTitle.focus();
+      }
+    };
 
-  sessionRows.forEach((row) => {
-    row.addEventListener('click', () => selectSession(row, true));
-  });
+    sessionRows.forEach((row) => {
+      row.addEventListener('click', () => selectSession(row, true));
+    });
 
-  if (search) {
-    search.addEventListener('input', () => {
-      const term = search.value.trim().toLocaleLowerCase();
-      const visibleRows = sessionRows.filter((row) => {
-        const matches = row.textContent.toLocaleLowerCase().includes(term);
-        row.hidden = !matches;
-        return matches;
+    if (search) {
+      search.addEventListener('input', () => {
+        const term = search.value.trim().toLocaleLowerCase();
+        const visibleRows = sessionRows.filter((row) => {
+          const matches = row.textContent.toLocaleLowerCase().includes(term);
+          row.hidden = !matches;
+          return matches;
+        });
+        if (emptyState) emptyState.hidden = visibleRows.length > 0;
+        const selected = sessionRows.find((row) => row.getAttribute('aria-pressed') === 'true');
+        if (visibleRows.length && (!selected || selected.hidden)) selectSession(visibleRows[0], false, false);
       });
-      if (emptyState) emptyState.hidden = visibleRows.length > 0;
-      const selected = sessionRows.find((row) => row.getAttribute('aria-pressed') === 'true');
-      if (visibleRows.length && (!selected || selected.hidden)) selectSession(visibleRows[0], false, false);
-    });
-  }
+    }
 
-  if (backButton) {
-    backButton.addEventListener('click', () => {
-      tabletShell.dataset.mobileView = 'list';
-      const selected = sessionRows.find((row) => row.getAttribute('aria-pressed') === 'true');
-      if (selected) selected.focus();
-    });
+    if (backButton) {
+      backButton.addEventListener('click', () => {
+        tabletShell.dataset.mobileView = 'list';
+        const selected = sessionRows.find((row) => row.getAttribute('aria-pressed') === 'true');
+        if (selected) selected.focus();
+      });
+    }
   }
 }
 
@@ -97,8 +100,10 @@ if (exportButton) {
     const link = document.createElement('a');
     link.href = url;
     link.download = 'kihon-training-sample.csv';
+    document.body.append(link);
     link.click();
-    URL.revokeObjectURL(url);
+    link.remove();
+    window.setTimeout(() => URL.revokeObjectURL(url), 1000);
     const status = document.querySelector('[data-export-status]');
     if (status) status.textContent = 'Sample CSV downloaded. A production app owns report generation and export permissions.';
   });

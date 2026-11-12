@@ -25,6 +25,7 @@ test('iPhone session capture supports themes, touch targets, and a local form re
   const targetHeights = await page.locator('.xp-save-button, .xp-tab-bar a').evaluateAll((elements) =>
     elements.map((element) => Math.round(element.getBoundingClientRect().height))
   );
+  expect(targetHeights.length, 'expected touch-target elements to exist').toBeGreaterThan(0);
   expect(targetHeights.every((height) => height >= 44)).toBe(true);
 
   await page.locator('#session-type').selectOption({ label: 'Randori' });
@@ -79,7 +80,32 @@ test('iPad list and detail remain available without the demo behavior script', a
   await expect(page.locator('.xp-tablet-shell')).not.toHaveAttribute('data-interactive', 'true');
 });
 
+test('iPad library keeps its static layout if required detail markup is incomplete', async ({ page }) => {
+  const pageErrors = [];
+  page.on('pageerror', (error) => pageErrors.push(error.message));
+  await page.route('**/style-guide/experience/ipad-library.html', async (route) => {
+    const response = await route.fetch();
+    const html = (await response.text()).replace('data-detail-summary', 'data-missing-summary');
+    await route.fulfill({ response, body: html });
+  });
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/style-guide/experience/ipad-library.html');
+
+  const library = page.locator('.xp-tablet-shell');
+  await expect(library).not.toHaveAttribute('data-interactive', 'true');
+  await page.getByRole('button', { name: /Movement and foot sweeps/ }).click();
+  expect(pageErrors).toEqual([]);
+});
+
 test('macOS analytics keeps data readable at narrow widths and exports a sample', async ({ page }) => {
+  await page.addInitScript(() => {
+    window.__revokedObjectUrls = [];
+    const revoke = URL.revokeObjectURL.bind(URL);
+    URL.revokeObjectURL = (url) => {
+      window.__revokedObjectUrls.push(url);
+      revoke(url);
+    };
+  });
   await page.setViewportSize({ width: 1440, height: 1000 });
   await page.goto('/style-guide/experience/macos-analytics.html');
   await expect(page.getByRole('navigation', { name: 'Training workspace' }).getByRole('link', { name: 'Training history' })).toHaveAttribute('aria-current', 'page');
@@ -100,6 +126,8 @@ test('macOS analytics keeps data readable at narrow widths and exports a sample'
   await page.getByRole('button', { name: 'Export report' }).click();
   const download = await downloadPromise;
   expect(download.suggestedFilename()).toBe('kihon-training-sample.csv');
+  expect(await page.evaluate(() => window.__revokedObjectUrls.length)).toBe(0);
+  await expect.poll(() => page.evaluate(() => window.__revokedObjectUrls.length), { timeout: 3000 }).toBe(1);
 });
 
 test('each reference screen can switch between dark and light appearance', async ({ page }) => {
