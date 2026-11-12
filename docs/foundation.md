@@ -379,6 +379,10 @@ HTML, CSS and TypeScript UI code are **not directly reusable** as SwiftUI views.
 
 ## References
 
+### Platform-adaptive experience guidance
+
+The separate [Kihon platform experience specification](experience/README.md) extends the guidance for application-level workflows and installed web apps. It is a Phase 5A design and architecture proposal; it does not add to this foundation's public CSS or JavaScript API. Current behavior and proposed changes are distinguished in the [gap assessment](experience/gap-assessment.md).
+
 - [Apple Human Interface Guidelines](https://developer.apple.com/design/human-interface-guidelines/)
 - [Apple: Designing for macOS](https://developer.apple.com/design/human-interface-guidelines/designing-for-macos)
 - [WCAG 2.2 specification](https://www.w3.org/TR/WCAG22/)
