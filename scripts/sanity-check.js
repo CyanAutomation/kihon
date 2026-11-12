@@ -9,6 +9,7 @@ const ROOT = path.join(__dirname, '..');
 
 function collectCssPaths(root = ROOT) {
   const componentsDirectory = path.join(root, 'src', 'css', 'components');
+  const experienceStylesheet = path.join(root, 'style-guide', 'experience', 'experience.css');
   const componentPaths = fs.readdirSync(componentsDirectory, { withFileTypes: true })
     .filter((entry) => entry.isFile() && path.extname(entry.name) === '.css')
     .map((entry) => path.join(componentsDirectory, entry.name))
@@ -18,8 +19,24 @@ function collectCssPaths(root = ROOT) {
     path.join(root, 'src', 'css', 'tokens.css'),
     path.join(root, 'src', 'css', 'base.css'),
     ...componentPaths,
-    path.join(root, 'style-guide', 'styles.css')
+    path.join(root, 'style-guide', 'styles.css'),
+    ...(fs.existsSync(experienceStylesheet) ? [experienceStylesheet] : [])
   ];
+}
+
+function collectHtmlPaths(root = ROOT) {
+  const styleGuideDirectory = path.join(root, 'style-guide');
+  const htmlPaths = [];
+  const visit = (directory) => {
+    for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {
+      const entryPath = path.join(directory, entry.name);
+      if (entry.isDirectory()) visit(entryPath);
+      else if (entry.isFile() && path.extname(entry.name) === '.html') htmlPaths.push(entryPath);
+    }
+  };
+
+  visit(styleGuideDirectory);
+  return htmlPaths.sort((left, right) => left < right ? -1 : left > right ? 1 : 0);
 }
 
 function importedPath(params) {
@@ -63,17 +80,19 @@ function findComponentImportErrors(root, baseStylesheet, componentPaths) {
 
 async function runSanityChecks(root = ROOT) {
   const errors = [];
-  const htmlPath = path.join(root, 'style-guide', 'index.html');
+  const htmlPaths = collectHtmlPaths(root);
   const cssPaths = collectCssPaths(root);
   const validator = new HtmlValidate({
     extends: ['html-validate:recommended'],
     // The style guide uses inline declarations to show token values beside examples.
     rules: { 'no-inline-style': 'off' }
   });
-  const htmlResult = await validator.validateFile(htmlPath);
-  for (const result of htmlResult.results) {
-    for (const message of result.messages) {
-      errors.push(`${path.relative(root, result.filePath)}:${message.line}:${message.column} ${message.ruleId}: ${message.message}`);
+  for (const htmlPath of htmlPaths) {
+    const htmlResult = await validator.validateFile(htmlPath);
+    for (const result of htmlResult.results) {
+      for (const message of result.messages) {
+        errors.push(`${path.relative(root, result.filePath)}:${message.line}:${message.column} ${message.ruleId}: ${message.message}`);
+      }
     }
   }
 
@@ -108,8 +127,8 @@ async function main() {
     return;
   }
 
-  console.log('✓ Style guide HTML passes html-validate');
-  console.log('✓ Generated, base, all discovered component, and style guide CSS parse successfully');
+  console.log('✓ All style guide HTML pages pass html-validate');
+  console.log('✓ Generated, base, discovered component, and style guide CSS parse successfully');
 }
 
 if (require.main === module) main().catch((error) => {
@@ -117,4 +136,4 @@ if (require.main === module) main().catch((error) => {
   process.exitCode = 1;
 });
 
-module.exports = { collectCssPaths, findComponentImportErrors, runSanityChecks };
+module.exports = { collectCssPaths, collectHtmlPaths, findComponentImportErrors, runSanityChecks };

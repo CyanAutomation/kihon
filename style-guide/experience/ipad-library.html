@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en" data-kh-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#141518">
+  <title>Training library | Kihon reference</title>
+  <link rel="stylesheet" href="../../src/css/base.css">
+  <link rel="stylesheet" href="experience.css">
+  <script src="../theme.js" defer></script>
+  <script src="experience.js" defer></script>
+</head>
+<body class="xp-screen xp-tablet">
+  <a class="xp-skip-link" href="#main">Skip to content</a>
+  <header class="xp-screen-header">
+    <a class="xp-brand" href="./">Kihon <span>Training</span></a>
+    <nav class="xp-theme-controls" aria-label="Appearance">
+      <button type="button" data-kh-theme-toggle="system" aria-pressed="false">System</button>
+      <button type="button" data-kh-theme-toggle="light" aria-pressed="false">Light</button>
+      <button type="button" data-kh-theme-toggle="dark" aria-pressed="true">Dark</button>
+    </nav>
+    <p class="xp-visually-hidden" data-kh-theme-status aria-live="polite"></p>
+  </header>
+  <main id="main" class="xp-tablet-shell" data-mobile-view="list">
+    <nav class="xp-workspace-nav" aria-label="Training workspace">
+      <p class="xp-workspace-name">NORTHSIDE JUDO</p>
+      <a href="#sessions" aria-current="page">Sessions</a>
+      <a href="#insights">Insights</a>
+      <a href="#athletes">Athletes</a>
+      <a href="#settings">Settings</a>
+      <p class="xp-workspace-foot">Season 2026–27</p>
+    </nav>
+    <section id="sessions" class="xp-session-list" aria-labelledby="library-title">
+      <div class="xp-list-heading">
+        <p class="xp-eyebrow">TRAINING LOG</p>
+        <h1 id="library-title">Sessions</h1>
+        <label class="xp-visually-hidden" for="session-search">Search sessions</label>
+        <input id="session-search" class="kh-input" type="search" placeholder="Search sessions" data-session-search>
+      </div>
+      <ul class="xp-session-rows">
+        <li><button class="xp-session-row" type="button" aria-pressed="true" data-session-title="Randori and grip transitions" data-session-date="Saturday, 7 November" data-session-summary="Three rounds of standing randori. Worked on breaking sleeve grips and entering for seoi-nage." data-session-duration="60 min">
+          <span class="xp-row-date">SAT, 7 NOV</span><strong>Randori and grip transitions</strong><span>3 rounds · 60 min</span>
+        </button></li>
+        <li><button class="xp-session-row" type="button" aria-pressed="false" data-session-title="Movement and foot sweeps" data-session-date="Wednesday, 4 November" data-session-summary="Foot sweep timing from natural movement. Paired entries with kouchi-gari." data-session-duration="75 min">
+          <span class="xp-row-date">WED, 4 NOV</span><strong>Movement and foot sweeps</strong><span>Technique · 75 min</span>
+        </button></li>
+        <li><button class="xp-session-row" type="button" aria-pressed="false" data-session-title="Newaza transitions" data-session-date="Monday, 2 November" data-session-summary="Connected turnovers to hold-down entries. Finished with controlled positional rounds." data-session-duration="55 min">
+          <span class="xp-row-date">MON, 2 NOV</span><strong>Newaza transitions</strong><span>Groundwork · 55 min</span>
+        </button></li>
+        <li><button class="xp-session-row" type="button" aria-pressed="false" data-session-title="Technical practice" data-session-date="Saturday, 31 October" data-session-summary="Repeated entry practice with a focus on posture and balance." data-session-duration="80 min">
+          <span class="xp-row-date">SAT, 31 OCT</span><strong>Technical practice</strong><span>Technique · 80 min</span>
+        </button></li>
+      </ul>
+      <p class="xp-empty-state" data-session-empty hidden>No sessions match this search.</p>
+      <a class="kh-button kh-button--secondary xp-new-session" href="iphone-session.html">New session</a>
+    </section>
+    <article class="xp-session-detail" aria-labelledby="session-detail-title">
+      <button class="kh-button kh-button--quiet xp-mobile-back" type="button" data-session-back>Back to sessions</button>
+      <header class="xp-detail-heading">
+        <p class="xp-eyebrow">SELECTED SESSION</p>
+        <p data-detail-date>Saturday, 7 November</p>
+        <h2 id="session-detail-title" data-detail-title tabindex="-1">Randori and grip transitions</h2>
+        <p data-detail-duration>60 min</p>
+      </header>
+      <div class="xp-detail-content">
+        <section aria-labelledby="session-focus-title">
+          <h3 id="session-focus-title">Session notes</h3>
+          <p data-detail-summary>Three rounds of standing randori. Worked on breaking sleeve grips and entering for seoi-nage.</p>
+        </section>
+        <section id="insights" class="xp-detail-stat" aria-labelledby="week-focus-title">
+          <div><h3 id="week-focus-title">This week</h3><p>3 sessions recorded</p></div>
+          <strong>2 h 45 min</strong>
+        </section>
+        <section id="athletes" class="xp-detail-context" aria-labelledby="training-context-title">
+          <h3 id="training-context-title">Training context</h3>
+          <p>Northside Judo · Adult class</p>
+        </section>
+        <section id="settings" class="xp-detail-context" aria-labelledby="settings-context-title">
+          <h3 id="settings-context-title">Display options</h3>
+          <p>Session times use your local time zone.</p>
+        </section>
+      </div>
+    </article>
+  </main>
+</body>
+</html>

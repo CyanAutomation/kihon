@@ -3,7 +3,7 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs/promises');
 const os = require('node:os');
 const path = require('node:path');
-const { collectCssPaths, runSanityChecks } = require('../../scripts/sanity-check');
+const { collectCssPaths, collectHtmlPaths, runSanityChecks } = require('../../scripts/sanity-check');
 
 async function createFixture() {
   const root = await fs.mkdtemp(path.join(os.tmpdir(), 'kihon-css-inventory-'));
@@ -29,7 +29,28 @@ test('CSS validation discovers and parses every component stylesheet in stable o
 
   assert.deepEqual(discovered, diskComponents);
   assert.ok(discovered.includes('sidebar.css'));
+  assert.ok(paths.includes(path.resolve(__dirname, '../../style-guide/experience/experience.css')));
+  const htmlPaths = collectHtmlPaths();
+  assert.ok(htmlPaths.includes(path.resolve(__dirname, '../../style-guide/experience/iphone-session.html')));
+  assert.ok(htmlPaths.includes(path.resolve(__dirname, '../../style-guide/experience/ipad-library.html')));
+  assert.ok(htmlPaths.includes(path.resolve(__dirname, '../../style-guide/experience/macos-analytics.html')));
   assert.deepEqual(await runSanityChecks(), []);
+});
+
+test('nested style-guide HTML and CSS are included in validation', async () => {
+  const root = await createFixture();
+  try {
+    const experienceDirectory = path.join(root, 'style-guide', 'experience');
+    await fs.mkdir(experienceDirectory, { recursive: true });
+    await fs.writeFile(path.join(experienceDirectory, 'example.html'), '<!doctype html><html lang="en"><head><title>Example</title></head><body><img src="sample.png"></body></html>');
+    await fs.writeFile(path.join(experienceDirectory, 'experience.css'), '.broken {\n color: red;\n');
+
+    const errors = await runSanityChecks(root);
+    assert.ok(errors.some((error) => error.startsWith('style-guide/experience/example.html:')));
+    assert.ok(errors.some((error) => error.startsWith('style-guide/experience/experience.css:') && error.includes('CSS parse error')));
+  } finally {
+    await fs.rm(root, { recursive: true, force: true });
+  }
 });
 
 test('a new component stylesheet cannot escape validation or the base import graph', async () => {
