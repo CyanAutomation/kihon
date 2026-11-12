@@ -154,6 +154,25 @@ test('form styling follows light and dark semantic tokens and reduced motion', a
   expect(transition).toBe('none');
 });
 
+test('native user-invalid styling follows the danger treatment without replacing aria-invalid', async ({ page }) => {
+  const input = page.locator('#guide-text');
+  await input.fill('valid name');
+  await input.fill('');
+  await input.blur();
+  expect(await page.evaluate(() => CSS.supports('selector(:user-invalid)'))).toBe(true);
+  expect(await input.evaluate((control) => control.matches(':user-invalid'))).toBe(true);
+  const dangerColor = await page.evaluate(() => {
+    const probe = document.createElement('span');
+    probe.style.color = 'var(--kh-color-danger)';
+    document.body.append(probe);
+    const color = getComputedStyle(probe).color;
+    probe.remove();
+    return color;
+  });
+  await expect(input).toHaveCSS('border-top-color', dangerColor);
+  await expect(page.locator('#guide-invalid')).toHaveCSS('border-top-color', dangerColor);
+});
+
 test('invalid controls and grouped surfaces remain distinguishable in forced-colors mode', async ({ page }) => {
   await page.emulateMedia({ forcedColors: 'active' });
   await expect.poll(() => page.locator('#guide-invalid').evaluate((control) => getComputedStyle(control).borderTopStyle)).toBe('dashed');

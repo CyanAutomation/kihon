@@ -314,6 +314,51 @@ Run this before committing token changes.
 
 `base.css` imports generated `tokens.css`, followed by button, form, grouped-settings, dialog, app-shell, sidebar, page-header, toolbar, card, and badge components. Component rules stay in their own files, while `base.css` remains the public entry point. Styling is opt-in through documented classes; unclassed controls retain browser styling, selects retain native appearance, and the root font size remains the browser's default. Do not edit token values in `base.css`; regenerate CSS from the token source instead.
 
+The entry point orders `kh.tokens`, `kh.base`, and `kh.components` cascade
+layers. Kihon's global typography and prose margins sit in `kh.base`, while
+component rules sit in `kh.components`. Ordinary consumer CSS that is not in a
+layer takes precedence over all layered Kihon declarations, including when a
+selector has lower specificity. A consumer can therefore override a component
+with a simple class rule:
+
+```css
+.my-save-button {
+  border-radius: 0;
+}
+```
+
+Keep application-specific overrides after the Kihon import so their intent is
+clear. The base layer retains bare heading, paragraph, list, code, and media
+defaults for compatibility; consumers can opt out by overriding those
+properties in their unlayered styles. SVG remains inline by default so text
+icons keep their surrounding line flow.
+
+## Browser feature support policy
+
+Compatibility data below was checked against the current MDN Browser Compat
+Data on 2026-11-12. The listed versions are the first versions marked as
+supporting each feature; vendor-specific details and partial support are in
+the linked records. Kihon uses progressive enhancement and keeps the fallback
+in the same public stylesheet or component contract.
+
+| Feature | Chrome | Firefox | Safari | Kihon use and fallback |
+| --- | ---: | ---: | ---: | --- |
+| CSS cascade layers (`@layer`) | 99 | 97 | 15.4 | Layered rules are the default. `dist/styles.compat.css` is generated from the same bundle with layer wrappers removed for older engines; source order preserves Kihon's token, base, and component order. |
+| `light-dark()` | 123 | 120 | 17.5 | Not used. Generated themes keep explicit light, dark, and system declarations, so no color depends on this function. |
+| `:user-invalid` | 119 | 88 | 16.5 | Used inside `@supports selector(:user-invalid)`. Existing `[aria-invalid="true"]` styles remain the fallback and application-authored message text explains the error. |
+| Dialog `closedby` | 134 | 141 | 27.3 | Progressive enhancement only. A visible Close/Cancel action and native Escape cancellation remain available; the optional dialog helper continues to open and restore focus. |
+| Invoker commands (`commandfor`, `command`) | 135 | 144 | 26.2 | Progressive enhancement only. Use a normal button with application event handling and `showModal()` where invoker commands are unavailable. |
+| `@starting-style` | 117 | 129 | 17.5 | Only supplies an optional entry transition. Without support the dialog opens immediately with its final styles. Reduced-motion preferences disable the transition. |
+| Popover API | 114 | 125 | 17 | Not used in the package. Proposed popover patterns remain documentation-only and must include a static content or native disclosure fallback. MDN notes partial outside-tap behavior in iOS Safari 17; it is fixed in iOS 18.3. |
+
+Source records: [cascade layers](https://github.com/mdn/browser-compat-data/blob/main/css/at-rules/layer.json), [light-dark()](https://github.com/mdn/browser-compat-data/blob/main/css/types/color/light-dark.json), [:user-invalid](https://github.com/mdn/browser-compat-data/blob/main/css/selectors/user-invalid.json), [dialog closedby](https://github.com/mdn/browser-compat-data/blob/main/html/elements/dialog.json), [invoker commands](https://github.com/mdn/browser-compat-data/blob/main/html/elements/button.json), [@starting-style](https://github.com/mdn/browser-compat-data/blob/main/css/at-rules/starting-style.json), and [Popover API](https://github.com/mdn/browser-compat-data/blob/main/api/HTMLElement/showPopover.json).
+
+The normal package export is `@cyanautomation/kihon/styles.css`. Applications
+supporting browsers before cascade-layer support can load
+`@cyanautomation/kihon/styles.compat.css` instead. It is built from the same
+source and removes only layer statements and wrappers; it does not change
+component selectors, values, or browser-feature fallbacks.
+
 Button classes, tokens, markup, state responsibilities and accessibility guidance are documented in [`components/buttons.md`](components/buttons.md). Sidebar CSS and optional controller behavior are documented in [`components/sidebar.md`](components/sidebar.md). Page-header and toolbar CSS contracts are documented in [`components/page-header.md`](components/page-header.md) and [`components/toolbar.md`](components/toolbar.md). Consuming applications do not need style-guide CSS or JavaScript.
 
 ## Style Guide

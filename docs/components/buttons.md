@@ -6,7 +6,7 @@ Kihon buttons provide a shared visual treatment for native HTML actions. They us
 
 Load `src/css/base.css`. It imports generated `tokens.css` and the internal `src/css/components/buttons.css` in a fixed order. Existing applications that already load `base.css` keep their `.kh-button` styles without changing markup. Do not load the component file separately when using `base.css`.
 
-The stable public API is the documented `.kh-*` classes and semantic `--kh-*` tokens below. The component file's path and internal selectors are implementation details. Its rules target native `<button>` elements, so the same classes on an anchor do not turn navigation into a button-like control. No style-guide stylesheet or script is needed.
+The stable public API is the documented `.kh-*` classes and semantic `--kh-*` tokens below. The component file's path and internal selectors are implementation details. Apply `.kh-button` to a native `<button>` or an `<a href>`; anchors retain navigation semantics while sharing the visual variants and sizes. No style-guide stylesheet or script is needed.
 
 ```html
 <link rel="stylesheet" href="path/to/kihon/src/css/base.css">
@@ -55,7 +55,7 @@ Small controls are intended for dense desktop toolbars and secondary actions. Fo
 - **Active:** a momentary 1px press while `:active` applies. It is not a persistent toggle state.
 - **Keyboard focus:** `:focus-visible` shows a 2px semantic focus ring with an offset. Keep it clear of clipping and overlays in the consuming layout.
 - **Disabled:** use the native `disabled` attribute. Disabled controls cannot activate and may be skipped in keyboard navigation. When the reason matters, keep the action available and explain how to proceed.
-- **Loading:** change the label so it names the work in progress, add `.kh-button--loading`, and use `disabled` when duplicate activation must be prevented.
+- **Loading:** change the visible label so it names the work in progress, add `.kh-button--loading`, set `aria-busy="true"` while the control is processing, and use native `disabled` when duplicate activation must be prevented. Clear `aria-busy` when the operation ends.
 
 ```html
 <button type="button" class="kh-button kh-button--primary kh-button--loading" disabled>
@@ -64,7 +64,7 @@ Small controls are intended for dense desktop toolbars and secondary actions. Fo
 <p role="status" aria-live="polite">Saving changes…</p>
 ```
 
-The loading pseudo-element is decorative. Its cycle uses `--kh-motion-loading` and is hidden when reduced motion is requested; the text continues to communicate status. Do not put `aria-busy` on the button as a substitute for a meaningful announcement. The consuming application sets and clears the state and should announce completion or failure in an adjacent live status when useful. Use `min-inline-size` in the application when a loading label must not shift nearby layout.
+The loading pseudo-element is decorative. Its cycle uses `--kh-motion-loading`; under reduced motion it becomes a stationary partial ring. The visible label continues to name the busy state, and `aria-busy` exposes that state to assistive technology. The consuming application sets and clears the state and should announce completion or failure in an adjacent live status when useful. Use `min-inline-size` in the application when a loading label must not shift nearby layout.
 
 Kihon does not provide a loading controller, confirmation dialog, or persistent status state. Confirm destructive actions in the application when their consequences warrant it; dialog behavior is part of Phase 2C.
 
@@ -72,11 +72,13 @@ Kihon does not provide a loading controller, confirmation dialog, or persistent 
 
 ### Actions and navigation
 
-Use `<button>` for actions and `<a href="…">` for navigation. Kihon does not define button-like link styling in Phase 2A. Do not change a link's role to `button` to get an action appearance. Use `type="submit"` only for intentional form submission; otherwise use `type="button"` to avoid accidental form submits.
+Use `<button>` for actions and `<a href="…">` for navigation. `.kh-button` and its variants and sizes style either element without changing its native role. Do not change a link's role to `button` to get an action appearance. Use `type="submit"` only for intentional form submission; otherwise use `type="button"` to avoid accidental form submits.
 
 ### Keyboard and disabled behavior
 
 Native buttons work with Enter and Space, take part in form behavior, and retain browser focus handling. Use the native `disabled` attribute rather than `aria-disabled` or `pointer-events: none` for an unavailable ordinary action. Remember that native disabled buttons are removed from normal tab navigation.
+
+Anchors do not support native `disabled`. For an unavailable navigation destination that must remain exposed as a link, set `aria-disabled="true"` and prevent click activation in application code (including keyboard activation). Kihon removes hover and pressed feedback for that state and applies a disabled appearance, but CSS cannot cancel navigation. Keep or remove the link from the tab order according to the surrounding workflow. If no destination exists, do not leave a dead `href`; render explanatory text or another appropriate control instead.
 
 ### Toggle buttons
 

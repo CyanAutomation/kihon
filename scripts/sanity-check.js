@@ -41,7 +41,7 @@ function collectHtmlPaths(root = ROOT) {
 
 function importedPath(params) {
   const value = params.trim();
-  const urlMatch = /^url\(\s*(['"]?)(.*?)\1\s*\)$/i.exec(value);
+  const urlMatch = /^url\(\s*(['"]?)(.*?)\1\s*\)(?:\s+layer(?:\([^)]*\))?)?$/i.exec(value);
   if (urlMatch) return urlMatch[2];
   const quotedMatch = /^(['"])(.*?)\1$/.exec(value);
   if (quotedMatch) return quotedMatch[2];

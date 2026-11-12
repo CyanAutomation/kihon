@@ -20,6 +20,7 @@ const EXPECTED_FILES = [
   'dist/esm/dialogs.mjs',
   'dist/esm/sidebar.mjs',
   'dist/styles.css',
+  'dist/styles.compat.css',
   'dist/types/dialogs.d.cts',
   'dist/types/dialogs.d.mts',
   'dist/types/sidebar.d.cts',
@@ -79,6 +80,7 @@ assert.equal(typeof createSidebarController, 'function');
 assert.throws(() => openDialog({}), TypeError);
 assert.throws(() => createSidebarController(null), TypeError);
 assert.match(import.meta.resolve('${PACKAGE_NAME}/styles.css'), /\\/dist\\/styles\\.css$/);
+assert.match(import.meta.resolve('${PACKAGE_NAME}/styles.compat.css'), /\\/dist\\/styles\\.compat\\.css$/);
 assert.throws(() => import.meta.resolve('${PACKAGE_NAME}/src/ts/dialogs.ts'), { code: 'ERR_PACKAGE_PATH_NOT_EXPORTED' });
 assert.throws(() => import.meta.resolve('${PACKAGE_NAME}/dist/esm/dialogs.mjs'), { code: 'ERR_PACKAGE_PATH_NOT_EXPORTED' });
 await assert.rejects(import('${PACKAGE_NAME}'), { code: 'ERR_PACKAGE_PATH_NOT_EXPORTED' });
@@ -96,6 +98,7 @@ assert.equal(typeof createSidebarController, 'function');
 assert.throws(() => openDialog({}), TypeError);
 assert.throws(() => createSidebarController(null), TypeError);
 assert.match(require.resolve('${PACKAGE_NAME}/styles.css'), /\\/dist\\/styles\\.css$/);
+assert.match(require.resolve('${PACKAGE_NAME}/styles.compat.css'), /\\/dist\\/styles\\.compat\\.css$/);
 assert.throws(() => require.resolve('${PACKAGE_NAME}/src/ts/dialogs.ts'), { code: 'ERR_PACKAGE_PATH_NOT_EXPORTED' });
 assert.throws(() => require.resolve('${PACKAGE_NAME}/dist/cjs/dialogs.cjs'), { code: 'ERR_PACKAGE_PATH_NOT_EXPORTED' });
 assert.throws(() => require.resolve('${PACKAGE_NAME}'), { code: 'ERR_PACKAGE_PATH_NOT_EXPORTED' });

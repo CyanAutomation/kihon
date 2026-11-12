@@ -27,7 +27,10 @@ available. On narrow screens, footer actions wrap into full-width rows.
 All opinionated rules are opt-in. The component styles only a `.kh-dialog` when
 it is modal, and does not reset unclassed dialogs or supply a DOM backdrop.
 Semantic surface, text, border, radius, shadow, spacing, typography, and focus
-tokens adapt to system, light, and dark appearances.
+tokens adapt to system, light, and dark appearances. The backdrop uses the
+theme-resolved `--kh-color-scrim` token: an opaque-black tint at 38% in light
+mode and 48% in dark mode, so both appearances dim the content behind the
+dialog.
 
 ## Recommended structure
 
@@ -210,4 +213,11 @@ behavior are not interchangeable.
 
 ## Reference screenshots
 
-[Light theme dialog](screenshots/dialogs-light.png) · [Dark theme dialog](screenshots/dialogs-dark.png)
+The following captures use the same open-dialog fixture at a fixed 1280 × 900
+viewport. The “before” captures restore the previous text-colour scrim rule;
+the “after” captures use the theme-aware black scrim token.
+
+| Theme | Before | After |
+| --- | --- | --- |
+| Light | [dialog-scrim-before-light.png](screenshots/dialog-scrim-before-light.png) | [dialog-scrim-after-light.png](screenshots/dialog-scrim-after-light.png) |
+| Dark | [dialog-scrim-before-dark.png](screenshots/dialog-scrim-before-dark.png) | [dialog-scrim-after-dark.png](screenshots/dialog-scrim-after-dark.png) |

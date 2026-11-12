@@ -3,7 +3,7 @@
  * .kh-dialog--{sm,lg}. Styling is opt-in; native <dialog> owns modal behavior.
  */
 
-dialog.kh-dialog:modal {
+.kh-dialog:modal {
   --kh-dialog-inline-size: 36rem;
   display: grid;
   grid-template-rows: auto minmax(0, 1fr) auto;
@@ -21,16 +21,16 @@ dialog.kh-dialog:modal {
   box-shadow: var(--kh-shadow-md);
 }
 
-dialog.kh-dialog--sm:modal {
+.kh-dialog--sm:modal {
   --kh-dialog-inline-size: 26rem;
 }
 
-dialog.kh-dialog--lg:modal {
+.kh-dialog--lg:modal {
   --kh-dialog-inline-size: 52rem;
 }
 
-dialog.kh-dialog::backdrop {
-  background-color: color-mix(in srgb, var(--kh-color-text-primary) 38%, transparent);
+.kh-dialog::backdrop {
+  background-color: var(--kh-color-scrim);
 }
 
 .kh-dialog__header,
@@ -92,12 +92,12 @@ dialog.kh-dialog::backdrop {
 }
 
 @media (forced-colors: active) {
-  dialog.kh-dialog:modal {
+  .kh-dialog:modal {
     border: 2px solid CanvasText;
     box-shadow: none;
   }
 
-  dialog.kh-dialog::backdrop {
+  .kh-dialog::backdrop {
     background-color: Canvas;
     opacity: 0.75;
   }

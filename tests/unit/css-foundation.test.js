@@ -28,13 +28,20 @@ test('base.css imports tokens and components in a deterministic order', () => {
   const css = postcss.parse(read('src/css/base.css'));
   const imports = css.nodes.filter((node) => node.type === 'atrule' && node.name === 'import').map((node) => node.params);
 
+  assert.equal(css.nodes.find((node) => node.type === 'atrule' && node.name === 'layer')?.params,
+    'kh.tokens, kh.base, kh.components');
   assert.deepEqual(imports, [
-    "url('./tokens.css')", "url('./components/buttons.css')",
-    "url('./components/forms.css')", "url('./components/settings.css')",
-    "url('./components/dialogs.css')", "url('./components/app-shell.css')",
-    "url('./components/sidebar.css')", "url('./components/page-header.css')",
-    "url('./components/toolbar.css')", "url('./components/cards.css')", "url('./components/badges.css')"
+    "url('./tokens.css') layer(kh.tokens)", "url('./components/buttons.css') layer(kh.components)",
+    "url('./components/forms.css') layer(kh.components)", "url('./components/settings.css') layer(kh.components)",
+    "url('./components/dialogs.css') layer(kh.components)", "url('./components/app-shell.css') layer(kh.components)",
+    "url('./components/sidebar.css') layer(kh.components)", "url('./components/page-header.css') layer(kh.components)",
+    "url('./components/toolbar.css') layer(kh.components)", "url('./components/cards.css') layer(kh.components)", "url('./components/badges.css') layer(kh.components)"
   ]);
+
+  assert.ok(css.nodes.some((node) => node.type === 'atrule' && node.name === 'layer' && node.params === 'kh.base'),
+    'global foundation rules are grouped in the base layer');
+  assert.doesNotMatch(read('src/css/base.css'), /svg\s*\{[^}]*display:\s*block/is,
+    'inline SVG must retain its native inline formatting');
 });
 
 test('card and badge primitives are opt-in, semantic, token-based, and forced-colours aware', () => {
@@ -97,7 +104,7 @@ test('dialog styles are opt-in, namespaced, token-based, and expose the document
   for (const selector of [
     '.kh-dialog', '.kh-dialog__header', '.kh-dialog__title', '.kh-dialog__description',
     '.kh-dialog__body', '.kh-dialog__footer', '.kh-dialog--sm', '.kh-dialog--lg',
-    'dialog.kh-dialog::backdrop'
+    '.kh-dialog::backdrop'
   ]) {
     assert.ok(selectors.some((candidate) => candidate.includes(selector)), `missing selector ${selector}`);
   }
@@ -163,9 +170,9 @@ test('button component exposes namespaced variants, sizes, states, and token-bas
   }
 
   for (const selector of selectors) {
-    assert.match(selector, /^button\.kh-/i, `component selector must target a namespaced native button: ${selector}`);
+    assert.match(selector, /^\.kh-/i, `component selector must use a low-specificity public class: ${selector}`);
     assert.doesNotMatch(selector, /\.kh-sg-/i, `component selector must not depend on the style guide: ${selector}`);
-    assert.doesNotMatch(selector, /(^|[\s>+~,])button(?!\.kh-[\w-]+)/i, `unclassed button selector: ${selector}`);
+    assert.doesNotMatch(selector, /(^|[\s>+~,])(?:button|a)\.kh-/i, `element-qualified selector: ${selector}`);
   }
 
   const declarations = [];
@@ -175,6 +182,10 @@ test('button component exposes namespaced variants, sizes, states, and token-bas
   }
   assert.ok(declarations.some((decl) => decl.prop === 'background-color' && decl.value.includes('var(--kh-color-accent)')));
   assert.ok(declarations.some((decl) => decl.prop === 'outline' && decl.value.includes('var(--kh-color-focus-ring)')));
+  assert.match(read('src/css/components/buttons.css'), /aria-disabled="true"/,
+    'disabled link styling must be excluded from activation feedback');
+  assert.doesNotMatch(read('src/css/components/buttons.css'), /display:\s*none\s*;\s*animation:\s*none/s,
+    'reduced motion must leave a static loading indicator visible');
 });
 
 test('application-shell styles are opt-in, token-based, responsive, and independent of guide CSS', () => {
@@ -268,7 +279,7 @@ test('sidebar styles are opt-in, token-based, semantic, and independent of the g
     '.kh-sidebar__list', '.kh-sidebar__item', '.kh-sidebar__link',
     '.kh-sidebar__link[aria-current="page"]', '.kh-sidebar__icon', '.kh-sidebar__label',
     '.kh-sidebar__description', '.kh-sidebar__footer', '.kh-sidebar[hidden]',
-    'button.kh-sidebar-toggle:not([data-kh-sidebar-ready])'
+    '.kh-sidebar-toggle:not([data-kh-sidebar-ready])'
   ]) {
     assert.ok(selectors.some((candidate) => candidate.includes(selector)), `missing selector ${selector}`);
   }
