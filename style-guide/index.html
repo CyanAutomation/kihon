@@ -67,6 +67,7 @@
     <section id="typography" class="kh-sg-section">
       <h2>Typography</h2>
       <p>Kihon uses a system font stack for clarity and performance.</p>
+      <p>Inline links stay underlined for readers who cannot distinguish the accent colour: <a href="#buttons">review button examples</a>.</p>
 
       <h3>Heading Hierarchy</h3>
       <div class="kh-sg-type-scale">
@@ -271,7 +272,7 @@
     <!-- Buttons -->
     <section id="buttons" class="kh-sg-section">
       <h2>Buttons and Actions</h2>
-      <p>Use native buttons for actions and links for navigation. The unmodified <code>.kh-button</code> is a medium primary button.</p>
+      <p>Use native buttons for actions and links for navigation. Apply <code>.kh-button</code> to either element to keep its native meaning with a shared visual style.</p>
       <p>Default appearance: <button id="default-button-example" class="kh-button" type="button">Save</button></p>
 
       <h3>Action hierarchy</h3>
@@ -293,6 +294,12 @@
           <button id="destructive-example" class="kh-button kh-button--destructive" type="button">Delete item</button>
         </div>
       </div>
+      <div class="kh-sg-button-row" role="group" aria-label="Navigation links styled as buttons">
+        <a id="link-button-example" class="kh-button kh-button--primary" href="#forms">Open form examples</a>
+        <a class="kh-button kh-button--quiet kh-button--sm" href="#dialogs">View dialog examples</a>
+        <a id="link-button-disabled-example" class="kh-button kh-button--primary" href="#forms" aria-disabled="true" data-kh-demo-disabled-link>Unavailable destination</a>
+      </div>
+      <p>For unavailable links, keep <code>aria-disabled="true"</code> visible to assistive technology and prevent navigation in application code. Kihon removes hover and press feedback for that state.</p>
       <p>Destructive actions use clear wording as well as a danger colour. Confirm irreversible actions in the application when the consequences warrant it.</p>
 
       <h3>Sizes</h3>

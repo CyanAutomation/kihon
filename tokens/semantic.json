@@ -70,6 +70,11 @@
       "$type": "color",
       "$description": "Keyboard focus indicator",
       "$value": "{colors.blue.700}"
+    },
+    "scrim": {
+      "$type": "color",
+      "$description": "Translucent dark overlay behind modal content",
+      "$value": "{colors.black}"
     }
   },
   "space": {

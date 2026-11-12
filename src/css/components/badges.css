@@ -3,7 +3,7 @@
  * Badges are static labels; application code owns any changing status behavior.
  */
 
-span.kh-badge {
+.kh-badge {
   display: inline-flex;
   align-items: center;
   max-inline-size: 100%;
@@ -19,25 +19,25 @@ span.kh-badge {
   overflow-wrap: anywhere;
 }
 
-span.kh-badge--neutral {
+.kh-badge--neutral {
   background-color: var(--kh-color-surface);
   color: var(--kh-color-text-secondary);
 }
 
-span.kh-badge--accent {
+.kh-badge--accent {
   border-color: transparent;
   background-color: var(--kh-color-accent);
   color: var(--kh-color-on-accent);
 }
 
-span.kh-badge--success {
+.kh-badge--success {
   border-color: transparent;
   background-color: var(--kh-color-success-background);
   color: var(--kh-color-success);
 }
 
 @media (forced-colors: active) {
-  span.kh-badge {
+  .kh-badge {
     border-color: ButtonText;
     background-color: Canvas;
     color: CanvasText;

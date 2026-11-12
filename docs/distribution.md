@@ -20,6 +20,7 @@ The public API is intentionally limited to:
 | `@cyanautomation/kihon/dialogs` | `dist/esm/dialogs.mjs` | `dist/cjs/dialogs.cjs` | `dist/types/dialogs.d.mts` / `dist/types/dialogs.d.cts` |
 | `@cyanautomation/kihon/sidebar` | `dist/esm/sidebar.mjs` | `dist/cjs/sidebar.cjs` | `dist/types/sidebar.d.mts` / `dist/types/sidebar.d.cts` |
 | `@cyanautomation/kihon/styles.css` | `dist/styles.css` | `dist/styles.css` | — |
+| `@cyanautomation/kihon/styles.compat.css` | `dist/styles.compat.css` | `dist/styles.compat.css` | — |
 | `@cyanautomation/kihon/browser/dialogs.js` | `dist/browser/dialogs.global.js` | `dist/browser/dialogs.global.js` | — |
 | `@cyanautomation/kihon/browser/sidebar.js` | `dist/browser/sidebar.global.js` | `dist/browser/sidebar.global.js` | — |
 
@@ -47,13 +48,31 @@ ESM and CommonJS builds each hold their own module-local dialog and sidebar cont
 
 `dist/styles.css` is a self-contained stylesheet. esbuild resolves the import graph from `src/css/base.css`, preserving its order: generated tokens, buttons, forms, grouped settings, dialogs, application shell, sidebar, page header, and toolbar. It includes light, dark, and system token themes plus the existing forced-colours and reduced-motion rules. It is not minified and contains no imports from the repository source tree.
 
+`dist/styles.compat.css` is generated from the same bundled CSS for browsers
+that do not support cascade layers. The build removes only `@layer` statements
+and wrappers, retaining the declarations and source order. It does not add
+separate component implementations. Prefer `styles.css` for supported modern
+browsers; use the compatibility export only when the application supports an
+older engine without cascade layers.
+
 In a consumer build-tool stylesheet that resolves npm package exports:
 
 ```css
 @import "@cyanautomation/kihon/styles.css";
 ```
 
-This bare package specifier is for a bundler or CSS resolver. Native browser `<link>` and `@import` loaders do not resolve npm names. When a consumer does not use a resolver, serve `node_modules/@cyanautomation/kihon/dist/styles.css` from an application-owned asset URL. Kihon CSS works without JavaScript; applications still own their page markup, token overrides, and theme selector.
+For an older browser target, import the compatibility export instead:
+
+```css
+@import "@cyanautomation/kihon/styles.compat.css";
+```
+
+These bare package specifiers are for a bundler or CSS resolver. Native browser
+`<link>` and `@import` loaders do not resolve npm names. When a consumer does
+not use a resolver, serve the chosen stylesheet from
+`node_modules/@cyanautomation/kihon/dist/` at an application-owned asset URL.
+Kihon CSS works without JavaScript; applications still own their page markup,
+token overrides, and theme selector.
 
 The package also includes optional classic-script helpers that preserve `window.KihonDialogs` and `window.KihonSidebar`. Serve or copy the corresponding `dist/browser/*.global.js` file and load it as a normal script. These bundles are separate from the ESM outputs. They do not add JavaScript requirements to the stylesheet.
 

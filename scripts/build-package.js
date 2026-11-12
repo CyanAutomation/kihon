@@ -5,6 +5,7 @@ const os = require('node:os');
 const path = require('node:path');
 const { execFileSync } = require('node:child_process');
 const esbuild = require('esbuild');
+const postcss = require('postcss');
 const { RUNTIMES } = require('./build-runtime');
 
 const ROOT = path.join(__dirname, '..');
@@ -24,6 +25,19 @@ function relativeOutputPath(outputPath) {
     throw new Error(`Package output must be inside dist/: ${outputPath}`);
   }
   return relative;
+}
+
+function unwrapCascadeLayers(css) {
+  const root = postcss.parse(css, { from: undefined });
+  root.walkAtRules('layer', (rule) => {
+    if (!rule.nodes) {
+      rule.remove();
+      return;
+    }
+
+    rule.replaceWith(...rule.nodes);
+  });
+  return root.toString();
 }
 
 async function buildJavaScriptOutput(runtime, format) {
@@ -110,7 +124,12 @@ async function getPackageOutputs() {
   if (cssResult.outputFiles.length !== 1) {
     throw new Error(`Expected one bundled stylesheet, found ${cssResult.outputFiles.length}.`);
   }
-  outputs.push({ path: cssResult.outputFiles[0].path, contents: cssResult.outputFiles[0].contents });
+  const css = cssResult.outputFiles[0].contents;
+  outputs.push({ path: path.join(DIST, 'styles.css'), contents: css });
+  outputs.push({
+    path: path.join(DIST, 'styles.compat.css'),
+    contents: Buffer.from(unwrapCascadeLayers(Buffer.from(css).toString('utf8')))
+  });
   outputs.push(...await buildDeclarations());
 
   const seen = new Set();
@@ -165,4 +184,4 @@ if (require.main === module) {
   });
 }
 
-module.exports = { buildJavaScriptOutput, buildPackage, getPackageOutputs, relativeOutputPath };
+module.exports = { buildJavaScriptOutput, buildPackage, getPackageOutputs, relativeOutputPath, unwrapCascadeLayers };

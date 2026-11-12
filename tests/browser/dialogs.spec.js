@@ -251,6 +251,17 @@ test('dialogs follow themes and remain usable with long content at narrow widths
   await expect(page.locator('#preferences-save')).toBeVisible();
 });
 
+test('dialog backdrop uses a dark scrim in both light and dark themes', async ({ page }) => {
+  const dialog = page.locator('#about-dialog');
+  await page.getByRole('button', { name: 'About this application' }).click();
+
+  for (const [theme, alpha] of [['light', '0.38'], ['dark', '0.48']]) {
+    await page.locator('html').evaluate((element, mode) => element.setAttribute('data-kh-theme', mode), theme);
+    const backdrop = await dialog.evaluate((element) => getComputedStyle(element, '::backdrop').backgroundColor);
+    expect(backdrop).toBe(`rgba(0, 0, 0, ${alpha})`);
+  }
+});
+
 test('dialog boundaries and focus remain visible in forced colours and reduced motion', async ({ page }) => {
   await page.getByRole('button', { name: 'About this application' }).click();
   await page.emulateMedia({ forcedColors: 'active', reducedMotion: 'reduce' });

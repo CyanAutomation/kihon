@@ -129,7 +129,7 @@
 
 /* The toggle is revealed only after its controller is attached. Navigation itself
    remains visible if scripts are unavailable or fail during initialization. */
-button.kh-sidebar-toggle:not([data-kh-sidebar-ready]) {
+.kh-sidebar-toggle:not([data-kh-sidebar-ready]) {
   display: none;
 }
 

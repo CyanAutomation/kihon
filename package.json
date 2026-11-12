@@ -36,6 +36,7 @@
       }
     },
     "./styles.css": "./dist/styles.css",
+    "./styles.compat.css": "./dist/styles.compat.css",
     "./browser/dialogs.js": "./dist/browser/dialogs.global.js",
     "./browser/sidebar.js": "./dist/browser/sidebar.global.js"
   },

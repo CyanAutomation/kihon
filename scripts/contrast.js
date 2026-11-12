@@ -23,6 +23,7 @@ const APPROVED_PAIRS = [
   { foreground: 'border-strong', background: 'background', minimum: 3 },
   { foreground: 'border-strong', background: 'surface', minimum: 3 },
 ];
+const CONTRAST_COLOR_ROLES = new Set(APPROVED_PAIRS.flatMap(({ foreground, background }) => [foreground, background]));
 
 function contrastRatio(foreground, background) {
   return wcagContrast.hex(foreground, background);
@@ -34,6 +35,7 @@ function resolveThemeColors(theme, documents = {}) {
   const colors = {};
 
   for (const [name, token] of Object.entries(theme.color || {})) {
+    if (!CONTRAST_COLOR_ROLES.has(name)) continue;
     if (!token || !Object.hasOwn(token, '$value')) continue;
     const value = resolver.resolveValue(token.$value, context);
     if (typeof value !== 'string' && (value.alpha ?? 1) !== 1) {
@@ -79,4 +81,4 @@ function validateThemeDocuments(documents) {
   }
 }
 
-module.exports = { APPROVED_PAIRS, contrastRatio, resolveThemeColors, validateThemeContrast, validateThemeDocuments };
+module.exports = { APPROVED_PAIRS, CONTRAST_COLOR_ROLES, contrastRatio, resolveThemeColors, validateThemeContrast, validateThemeDocuments };
