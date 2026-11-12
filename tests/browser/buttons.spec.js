@@ -46,12 +46,17 @@ test('variants use semantic theme colours and the default class remains primary'
     link.href = '#buttons';
     document.body.append(link);
     const style = getComputedStyle(link);
-    const result = { display: style.display, backgroundColor: style.backgroundColor };
+    const result = {
+      display: style.display,
+      backgroundColor: style.backgroundColor,
+      textDecoration: style.textDecorationLine
+    };
     link.remove();
     return result;
   });
-  expect(linkStyle.display).toBe('inline');
-  expect(linkStyle.backgroundColor).toBe('rgba(0, 0, 0, 0)');
+  expect(linkStyle.display).toBe('inline-flex');
+  expect(linkStyle.backgroundColor).toBe(await tokenColor(page, '--kh-color-accent'));
+  expect(linkStyle.textDecoration).toBe('none');
 
   await primary.hover();
   await expectTokenColor(page, primary, 'backgroundColor', '--kh-color-button-primary-hover');
@@ -72,6 +77,27 @@ test('light primary buttons use the coral primitive with a dark label while dark
   expect(await tokenColor(page, '--kh-color-accent')).toBe('rgb(251, 146, 60)');
   expect(await tokenColor(page, '--kh-color-on-accent')).toBe('rgb(20, 21, 24)');
   await expectTokenColor(page, primary, 'color', '--kh-color-on-accent');
+});
+
+test('button-styled links inherit variants and disabled links have no activation feedback', async ({ page }) => {
+  const primaryLink = page.locator('#link-button-example');
+  const disabledLink = page.locator('#link-button-disabled-example');
+
+  await expect(primaryLink).toHaveRole('link');
+  await expect(primaryLink).toHaveAttribute('href', '#forms');
+  await expectTokenColor(page, primaryLink, 'backgroundColor', '--kh-color-accent');
+  await primaryLink.hover();
+  await expectTokenColor(page, primaryLink, 'backgroundColor', '--kh-color-button-primary-hover');
+
+  await expect(disabledLink).toHaveAttribute('aria-disabled', 'true');
+  await disabledLink.hover();
+  await expectTokenColor(page, disabledLink, 'backgroundColor', '--kh-color-accent');
+  expect(await disabledLink.evaluate((element) => getComputedStyle(element).opacity)).toBe('0.5');
+  expect(await disabledLink.evaluate((element) => {
+    const event = new MouseEvent('click', { bubbles: true, cancelable: true });
+    element.dispatchEvent(event);
+    return event.defaultPrevented;
+  })).toBe(true);
 });
 
 test('size modifiers establish compact, standard, and prominent control targets', async ({ page }) => {
@@ -162,11 +188,17 @@ test('light and dark themes update all variants and loading respects reduced mot
   await page.emulateMedia({ reducedMotion: 'reduce' });
   const spinnerStyles = await loadingDemo.evaluate((element) => {
     const spinner = getComputedStyle(element, '::before');
-    return { content: spinner.content, display: spinner.display, animation: spinner.animationName };
+    return {
+      content: spinner.content,
+      display: spinner.display,
+      animation: spinner.animationName,
+      borderEndColor: spinner.borderInlineEndColor
+    };
   });
   expect(spinnerStyles.content).not.toBe('none');
-  expect(spinnerStyles.display).toBe('none');
+  expect(spinnerStyles.display).not.toBe('none');
   expect(spinnerStyles.animation).toBe('none');
+  expect(spinnerStyles.borderEndColor).toBe('rgba(0, 0, 0, 0)');
 });
 
 test('icon-only names, long labels, and compact layouts remain usable at narrow widths', async ({ page }) => {

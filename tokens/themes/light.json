@@ -56,6 +56,15 @@
     "focus-ring": {
       "$type": "color",
       "$value": "{colors.coral.700}"
+    },
+    "scrim": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [0, 0, 0],
+        "alpha": 0.38,
+        "hex": "#000000"
+      }
     }
   },
   "$description": "Light appearance theme for Kihon UI Foundation"

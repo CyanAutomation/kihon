@@ -11,8 +11,8 @@ async function createFixture() {
   await fs.mkdir(path.join(root, 'style-guide'), { recursive: true });
   await fs.writeFile(path.join(root, 'src', 'css', 'tokens.css'), ':root { --kh-color-background: white; }\n');
   await fs.writeFile(path.join(root, 'src', 'css', 'base.css'), [
-    "@import url('./tokens.css');",
-    "@import url('./components/sidebar.css');",
+    "@import url('./tokens.css') layer(kh.tokens);",
+    "@import url('./components/sidebar.css') layer(kh.components);",
     ''
   ].join('\n'));
   await fs.writeFile(path.join(root, 'src', 'css', 'components', 'sidebar.css'), '.kh-sidebar { display: block; }\n');
@@ -69,7 +69,7 @@ test('missing imported CSS is reported as a build-graph error', async () => {
   const root = await createFixture();
   try {
     const basePath = path.join(root, 'src', 'css', 'base.css');
-    await fs.appendFile(basePath, "@import url('./components/missing.css');\n");
+    await fs.appendFile(basePath, "@import url('./components/missing.css') layer(kh.components);\n");
     const errors = await runSanityChecks(root);
     assert.ok(errors.some((error) => error.includes('base.css:3 referenced stylesheet does not exist: ./components/missing.css')));
     assert.ok(errors.every((error) => !error.includes('CSS parse error')));

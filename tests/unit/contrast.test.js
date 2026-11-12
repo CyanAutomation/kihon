@@ -59,6 +59,19 @@ test('fails contrast validation for translucent theme colors', () => {
   assert.ok(errors.some((error) => error.includes('background') && error.includes('must be opaque')));
 });
 
+test('ignores translucent non-text roles such as the dialog scrim during contrast resolution', () => {
+  const documents = loadTokenDocuments();
+  documents.lightTheme.color.scrim = {
+    $type: 'color',
+    $value: { colorSpace: 'srgb', components: [0, 0, 0], alpha: 0.48, hex: '#000000' }
+  };
+  documents.darkTheme.color.scrim = structuredClone(documents.lightTheme.color.scrim);
+
+  const colors = resolveThemeColors(documents.lightTheme, documents);
+  assert.equal(Object.hasOwn(colors, 'scrim'), false);
+  assert.deepEqual(validateThemeDocuments(documents), []);
+});
+
 test('checks contrast after resolving a theme reference into the semantic document', () => {
   const documents = loadTokenDocuments();
   documents.semantic.color['text-primary'].$value = '{colors.gray.100}';

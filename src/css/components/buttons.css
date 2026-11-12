@@ -1,11 +1,11 @@
 /* Kihon Buttons and Actions
  * Public classes: .kh-button, .kh-button--{primary,secondary,quiet,destructive},
  * .kh-button--{sm,md,lg}, .kh-button--icon, and .kh-button--loading.
- * Rules target native buttons; anchors keep their navigation styling.
+ * Native buttons and navigation anchors share the same visual API.
  * Import through base.css, which provides tokens and foundation conventions.
  */
 
-button.kh-button {
+.kh-button {
   appearance: none;
   display: inline-flex;
   align-items: center;
@@ -36,64 +36,65 @@ button.kh-button {
 }
 
 /* The unmodified .kh-button remains the primary, medium-size button. */
-button.kh-button--primary {
+.kh-button--primary {
   background-color: var(--kh-color-accent);
   color: var(--kh-color-on-accent);
   border-color: var(--kh-color-accent);
 }
 
-button.kh-button:not(:where(.kh-button--secondary, .kh-button--quiet, .kh-button--destructive)):hover:not(:disabled) {
+.kh-button:not(:where(.kh-button--secondary, .kh-button--quiet, .kh-button--destructive)):hover:not(:disabled):not([aria-disabled="true"]) {
   background-color: var(--kh-color-button-primary-hover);
   border-color: var(--kh-color-button-primary-hover);
 }
 
-button.kh-button--secondary {
+.kh-button--secondary {
   background-color: var(--kh-color-surface);
   color: var(--kh-color-text-primary);
   border-color: var(--kh-color-border-strong);
 }
 
-button.kh-button--secondary:hover:not(:disabled) {
+.kh-button--secondary:hover:not(:disabled):not([aria-disabled="true"]) {
   background-color: var(--kh-color-background);
 }
 
-button.kh-button--quiet {
+.kh-button--quiet {
   background-color: transparent;
   color: var(--kh-color-accent-text);
   border-color: transparent;
 }
 
-button.kh-button--quiet:hover:not(:disabled) {
+.kh-button--quiet:hover:not(:disabled):not([aria-disabled="true"]) {
   background-color: var(--kh-color-surface);
   border-color: var(--kh-color-border-subtle);
 }
 
-button.kh-button--destructive {
+.kh-button--destructive {
   background-color: transparent;
   color: var(--kh-color-danger);
   border-color: transparent;
 }
 
-button.kh-button--destructive:hover:not(:disabled) {
+.kh-button--destructive:hover:not(:disabled):not([aria-disabled="true"]) {
   background-color: var(--kh-color-surface);
   border-color: var(--kh-color-danger);
 }
 
-button.kh-button:active:not(:disabled) {
+.kh-button:active:not(:disabled):not([aria-disabled="true"]) {
   transform: translateY(1px);
 }
 
-button.kh-button:focus-visible {
+.kh-button:focus-visible {
   outline: 2px solid var(--kh-color-focus-ring);
   outline-offset: 2px;
 }
 
-button.kh-button:disabled {
+.kh-button:disabled,
+.kh-button[aria-disabled="true"] {
   opacity: 0.5;
   cursor: not-allowed;
 }
 
-button.kh-button--sm {
+.kh-button--sm {
   min-inline-size: calc(var(--kh-space-8) + var(--kh-space-2));
   min-block-size: calc(var(--kh-space-8) + var(--kh-space-2));
   padding-block: var(--kh-space-1);
@@ -101,7 +102,7 @@ button.kh-button--sm {
   font-size: var(--kh-type-size-xs);
 }
 
-button.kh-button--md {
+.kh-button--md {
   min-inline-size: var(--kh-space-12);
   min-block-size: var(--kh-space-12);
   padding-block: var(--kh-space-2);
@@ -109,7 +110,7 @@ button.kh-button--md {
   font-size: var(--kh-type-size-base);
 }
 
-button.kh-button--lg {
+.kh-button--lg {
   min-inline-size: calc(var(--kh-space-12) + var(--kh-space-2));
   min-block-size: calc(var(--kh-space-12) + var(--kh-space-2));
   padding-block: var(--kh-space-3);
@@ -117,19 +118,19 @@ button.kh-button--lg {
   font-size: var(--kh-type-size-lg);
 }
 
-button.kh-button--icon {
+.kh-button--icon {
   min-inline-size: var(--kh-space-12);
   min-block-size: var(--kh-space-12);
   padding-inline: var(--kh-space-2);
 }
 
-button.kh-button > svg {
+.kh-button > svg {
   flex: none;
   inline-size: 1em;
   block-size: 1em;
 }
 
-button.kh-button--loading::before {
+.kh-button--loading::before {
   content: "";
   flex: none;
   inline-size: 1em;
@@ -147,26 +148,25 @@ button.kh-button--loading::before {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  button.kh-button {
+  .kh-button {
     transition: none;
   }
 
-  button.kh-button:active:not(:disabled) {
+  .kh-button:active:not(:disabled):not([aria-disabled="true"]) {
     transform: none;
   }
 
-  button.kh-button--loading::before {
-    display: none;
+  .kh-button--loading::before {
     animation: none;
   }
 }
 
 @media (forced-colors: active) {
-  button.kh-button {
+  .kh-button {
     border-color: ButtonBorder;
   }
 
-  button.kh-button:focus-visible {
+  .kh-button:focus-visible {
     outline-color: Highlight;
   }
 }
