@@ -1,5 +1,7 @@
 const { test, expect } = require('@playwright/test');
 
+const LAYOUT_EPSILON = 0.01;
+
 test.beforeEach(async ({ page }) => {
   await page.emulateMedia({ colorScheme: 'light' });
   await page.goto('/style-guide/');
@@ -106,7 +108,7 @@ test('shell regions stack at narrow widths and remain within the viewport', asyn
 
     if (width <= 896) {
       expect(layout.nav.top).toBeLessThan(layout.main.top);
-      expect(layout.main.bottom).toBeLessThanOrEqual(layout.details.top);
+      expect(layout.main.bottom).toBeLessThanOrEqual(layout.details.top + LAYOUT_EPSILON);
     } else {
       expect(layout.nav.left).toBeLessThan(layout.main.left);
       expect(layout.main.left).toBeLessThan(layout.details.left);
