@@ -88,7 +88,7 @@ Sections and rows use semantic background, text, and border tokens and adapt to
 system, light, and dark themes. Reduced-motion preferences are respected by the
 foundation stylesheet. Forced-colors mode keeps group boundaries visible.
 Check reflow at 320 CSS px and at increased text size in the consuming
-application; the included Chromium suite checks for horizontal overflow at
+application; the included Chromium, Firefox, and WebKit suite checks for horizontal overflow at
 320px, while manual review is still needed at 200% text resize and 400% zoom.
 
 Consumers may customize documented semantic tokens and can add application

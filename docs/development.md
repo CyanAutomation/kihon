@@ -378,7 +378,7 @@ The static style guide lives in `style-guide/` and demonstrates:
 
 ### Preview the Style Guide
 
-Run `npm run dev` to build and serve the guide at `http://127.0.0.1:4173/style-guide/`. Button examples include style-guide-only action and loading demonstrations; their script is not a production API. Automated browser coverage currently runs Chromium only. It does not replace the manual browser, assistive-technology, zoom, or forced-colors review in `tests/MANUAL_TESTING.md`.
+Run `npm run dev` to build and serve the guide at `http://127.0.0.1:4173/style-guide/`. Button examples include style-guide-only action and loading demonstrations; their script is not a production API. Automated browser coverage runs Chromium, Firefox, and Playwright WebKit. It does not replace the manual browser, assistive-technology, zoom, or forced-colors review in `tests/MANUAL_TESTING.md`.
 
 The style guide includes:
 
@@ -447,7 +447,7 @@ Explicit preferences are stored under `kihon-theme` when browser storage is avai
 npm run test
 ```
 
-Runs unit, token schema/value, contrast, HTML/CSS parsing, generated-file consistency, and Chromium browser checks. CI also runs strict TypeScript checking. App-shell, sidebar, page-header, toolbar, and Phase 5A reference checks cover responsive geometry, local interactions, focus, themes, and no-script presentation. The automation does not run the manual verification checklist or establish installed Safari behavior.
+Runs unit, token schema/value, contrast, HTML/CSS parsing, generated-file consistency, and Chromium, Firefox, and Playwright WebKit browser checks. CI also runs strict TypeScript checking. App-shell, sidebar, page-header, toolbar, and Phase 5A reference checks cover responsive geometry, local interactions, focus, themes, and no-script presentation. The automation does not run the manual verification checklist or establish installed Safari behavior.
 
 ### Manual Verification Checklist
 
@@ -536,10 +536,16 @@ Colour-only overrides without testing WCAG requirements will break accessibility
 ## Continuous Integration
 
 The CI workflow runs `npm ci` with Node.js 26, builds the token and runtime
-outputs, runs strict type checking, installs Playwright Chromium, and runs
-`npm test`. The generated-file check compares expected output without rebuilding
-committed files first, so stale CSS, JavaScript, source maps, or declarations
-fail CI.
+outputs, and checks that building did not change committed generated CSS,
+JavaScript, source maps, or declarations. It then runs strict type checking,
+installs Chromium, Firefox, and WebKit, and runs `npm test` and
+`npm run test:package`. The generated-file check verifies package outputs in
+the ignored `dist/` directory after the build. Failed browser runs upload the
+Playwright HTML report and traces for seven days.
+
+Pull requests also run the dependency review action. The workflow-audit job
+runs actionlint and zizmor with read-only repository permissions. Dependabot
+checks npm dependencies and GitHub Actions weekly.
 
 ## Troubleshooting
 

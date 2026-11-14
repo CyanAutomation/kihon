@@ -4,7 +4,7 @@
 
 Kihon defines a lightweight, framework-free design system for CyanAutomation web applications: shared design decisions, accessible interface conventions, reusable CSS and small, optional TypeScript enhancements. It draws inspiration from Apple's Human Interface Guidelines—particularly the clarity and ergonomics of macOS and iOS—while remaining a web-native system rather than an imitation of SwiftUI.
 
-> **Status: provisional foundation; Phases 2A–2C, 3A–3C and internal packaging Phase 4A are implemented.** The `@cyanautomation/kihon` package remains private, `UNLICENSED`, unpublished and prerelease. Automated checks cover DTCG token validation, selected WCAG contrast pairings, generated-file consistency, strict TypeScript checking, HTML/CSS parsing, and Chromium interactions. These checks do not certify WCAG conformance. See [`docs/distribution.md`](docs/distribution.md) for internal package use and [`docs/development.md`](docs/development.md) for build and contribution information.
+> **Status: provisional foundation; Phases 2A–2C, 3A–3C and internal packaging Phase 4A are implemented.** The `@cyanautomation/kihon` package remains private, `UNLICENSED`, unpublished and prerelease. Automated checks cover DTCG token validation, selected WCAG contrast pairings, generated-file consistency, strict TypeScript checking, HTML/CSS parsing, and Chromium, Firefox, and WebKit interactions. These checks do not certify WCAG conformance. See [`docs/distribution.md`](docs/distribution.md) for internal package use and [`docs/development.md`](docs/development.md) for build and contribution information.
 
 ## Why Kihon?
 
@@ -123,7 +123,7 @@ npm run build
 # Validate tokens and generated output
 npm run validate
 
-# Run unit, token, contrast, HTML/CSS, generated-file, and Chromium checks
+# Run unit, token, contrast, HTML/CSS, generated-file, and browser checks
 npm test
 
 # Pack and install the private archive in isolated JavaScript, TypeScript, and browser consumers

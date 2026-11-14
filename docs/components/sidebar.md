@@ -246,11 +246,11 @@ focus. Sidebar links have a 48 CSS px minimum block target, wrap long labels,
 and retain native keyboard behavior. Check actual text and boundary contrast
 after any application token overrides.
 
-Automated Chromium tests cover naming, keyboard focus, hidden-state behavior,
+Automated Playwright tests in Chromium, Firefox, and WebKit cover naming, keyboard focus, hidden-state behavior,
 two- and three-column shell tracks, 320 CSS px reflow, larger text, themes,
 forced colours, reduced motion, and controller cleanup. They do not establish
 screen-reader support or full WCAG conformance. VoiceOver, NVDA, actual touch,
-browser zoom, and other browser engines still need the manual checks in
+browser zoom, and installed Safari/Edge behavior still need the manual checks in
 [`tests/MANUAL_TESTING.md`](../../tests/MANUAL_TESTING.md).
 
 ## Common mistakes and limitations
