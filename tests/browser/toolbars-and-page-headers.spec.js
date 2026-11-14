@@ -1,5 +1,7 @@
 const { test, expect } = require('@playwright/test');
 
+const LAYOUT_EPSILON = 0.01;
+
 test.beforeEach(async ({ page }) => {
   await page.emulateMedia({ colorScheme: 'light' });
   await page.goto('/style-guide/');
@@ -179,7 +181,7 @@ test('shell region combinations support compact embedded layouts and sidebar col
   });
   expect(stacked.tracks).toBe(1);
   expect(stacked.navTop).toBeLessThan(stacked.mainTop);
-  expect(stacked.mainBottom).toBeLessThanOrEqual(stacked.detailsTop);
+  expect(stacked.mainBottom).toBeLessThanOrEqual(stacked.detailsTop + LAYOUT_EPSILON);
   expect(await twoRegion.evaluate((shell) => getComputedStyle(shell).gridTemplateColumns.trim().split(/\s+/).length)).toBe(1);
 
   const nav = page.getByRole('navigation', { name: 'Primary project navigation' });

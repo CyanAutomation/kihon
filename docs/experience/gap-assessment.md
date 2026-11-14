@@ -7,7 +7,7 @@ This assessment reflects the repository after pulling the current main branch. I
 - Native HTML, CSS custom properties, semantic theme tokens, and small optional TypeScript helpers remain the foundation.
 - The current component set covers application shell, sidebar links, page header, wrapping toolbar, grouped settings, cards, buttons, forms, and native modal dialogs.
 - Light and dark themes, visible focus, forced-colors rules on core components, reduced-motion rules on existing sidebar behavior, and a system appearance option already exist.
-- The responsive shell, sidebar collapse controller, forms, and dialogs have documented contracts and Chromium browser coverage.
+- The responsive shell, sidebar collapse controller, forms, and dialogs have documented contracts and Chromium, Firefox, and Playwright WebKit browser coverage.
 - Existing package exports, class names, generated helper paths, and token values are public compatibility surfaces for this task.
 
 ## Refine
@@ -40,4 +40,4 @@ Kihon specifies semantic markup, presentation and interaction expectations, adap
 - style-guide/index.html and local demonstration scripts.
 - tests/browser/*, tests/unit/*, tests/MANUAL_TESTING.md, tests/README.md, tests/TRACEABILITY.md, and playwright.config.js.
 
-The automated browser configuration currently runs Chromium. Its existing responsive tests do not represent Safari installation, iOS browser chrome, the iPad software keyboard, VoiceOver, or macOS window behavior.
+The automated browser configuration runs Chromium, Firefox, and Playwright WebKit. Its responsive tests do not represent installed Safari, iOS browser chrome, the iPad software keyboard, VoiceOver, or macOS window behavior.
