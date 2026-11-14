@@ -464,11 +464,11 @@ _[Add notes as needed]_
 
 **Last updated:** 2026-11-08. This checklist is not executed by `npm test`; record manual results above when those checks are performed.
 
-**Phase 2C manual status:** Not yet performed. VoiceOver, NVDA, actual browser zoom, mobile touch, and cross-browser forced-colours checks remain outstanding; automated Chromium results are recorded separately.
+**Phase 2C manual status:** Not yet performed. VoiceOver, NVDA, actual browser zoom, mobile touch, and cross-browser forced-colours checks remain outstanding; automated Chromium, Firefox, and WebKit results are recorded separately.
 
-**Phase 3A manual status:** Not yet performed. VoiceOver, NVDA, actual 200% text resizing and 400% browser zoom, mobile viewport behavior, and Firefox/WebKit layout checks remain outstanding; automated Chromium results are recorded separately.
+**Phase 3A manual status:** Not yet performed. VoiceOver, NVDA, actual 200% text resizing and 400% browser zoom, mobile viewport behavior, and physical-device browser checks remain outstanding; automated Chromium, Firefox, and WebKit results are recorded separately.
 
-**Phase 3B manual status:** Not yet performed. VoiceOver, NVDA, actual 200% text resizing and 400% browser zoom, mobile touch, and Firefox/WebKit focus and responsive checks remain outstanding; automated Chromium results are recorded separately.
+**Phase 3B manual status:** Not yet performed. VoiceOver, NVDA, actual 200% text resizing and 400% browser zoom, mobile touch, and physical-device focus and responsive checks remain outstanding; automated Chromium, Firefox, and WebKit results are recorded separately.
 
 **Phase 5A reference screens:** Physical iPhone Safari, installed iPhone/iPad web apps, iPad Safari with the software keyboard, macOS Safari/Dock apps, VoiceOver, and actual reduced-transparency settings have not been tested. Run the [Phase 5A validation matrix](../docs/experience/validation.md) on supported devices before claiming those behaviors.
 
