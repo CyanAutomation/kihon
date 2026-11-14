@@ -115,6 +115,7 @@ test('CI runs dependency review and workflow security linting with read-only per
 test('CI installs every configured browser and uploads diagnostics only after failure', () => {
   const validationSteps = readValidationSteps();
   const browserInstall = validationSteps.find((step) => step.run?.startsWith('npx playwright install'));
+  assert.ok(browserInstall, 'CI must have an npx playwright install step');
   assert.equal(browserInstall.run, 'npx playwright install --with-deps chromium firefox webkit');
 
   const artifactUpload = validationSteps.find((step) => step.uses?.startsWith('actions/upload-artifact@'));
