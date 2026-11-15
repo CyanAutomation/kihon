@@ -49,23 +49,24 @@ kihon/
 │   │   ├── iphone-session.html
 │   │   ├── ipad-library.html
 │   │   ├── macos-analytics.html
-│   │   ├── experience.css
-│   │   └── experience.js
-│   ├── theme.js                 # Style-guide theme switcher
-│   ├── sidebar.js               # Local sidebar navigation demo
-│   ├── buttons.js               # Style-guide button demonstrations
-│   ├── forms.js                 # Local form and validation demonstrations
-│   ├── settings.js              # Local grouped-settings demonstration
-│   └── dialogs.js               # Local dialog demonstrations
+│   │   └── experience.css
+│   ├── theme.ts                 # Style-guide theme switcher
+│   ├── sidebar.ts               # Local sidebar navigation demo
+│   ├── buttons.ts               # Style-guide button demonstrations
+│   ├── forms.ts                 # Local form and validation demonstrations
+│   ├── settings.ts              # Local grouped-settings demonstration
+│   ├── dialogs.ts               # Local dialog demonstrations
+│   └── generated/               # Ignored browser JavaScript built from TypeScript
 ├── scripts/
-│   ├── build-tokens.js          # Generates tokens.css from source
-│   ├── build-runtime.js         # Generates runtime bundles and declarations
-│   ├── token-resolver.js        # Resolves aliases and formats typed values
-│   ├── token-validation.js     # DTCG schema and value validation
-│   ├── contrast.js              # WCAG contrast calculations
-│   ├── check-generated.js       # Detects stale committed CSS
-│   ├── sanity-check.js          # Parses HTML and CSS
-│   └── serve.js                 # Local style-guide preview server
+│   ├── build-tokens.ts          # Generates tokens.css from source
+│   ├── build-runtime.ts         # Generates runtime bundles and declarations
+│   ├── build-style-guide.ts     # Generates ignored style-guide browser scripts
+│   ├── token-resolver.ts        # Resolves aliases and formats typed values
+│   ├── token-validation.ts      # DTCG schema and value validation
+│   ├── contrast.ts              # WCAG contrast calculations
+│   ├── check-generated.ts       # Detects stale committed outputs
+│   ├── sanity-check.ts          # Parses HTML and CSS
+│   └── serve.ts                 # Local style-guide preview server
 ├── schemas/                     # Vendored DTCG JSON Schema
 ├── .github/workflows/ci.yml     # Pull request and main-branch checks
 ├── tests/                       # Test fixtures and checks
@@ -87,7 +88,7 @@ kihon/
 
 ## Reusable TypeScript behavior
 
-TypeScript is the preferred source language for new reusable Kihon runtime behavior. CSS remains responsible for presentation, HTML for structure and native semantics, and generated JavaScript for browser and Node consumers. Applications do not need TypeScript or a runtime framework.
+TypeScript is the source language for maintained runtime behavior, token/build tooling, style-guide demonstrations, and tests. CSS remains responsible for presentation, HTML for structure and native semantics, and generated JavaScript for browser and Node consumers. Applications do not need TypeScript or a runtime framework.
 
 Reusable TypeScript helpers have one source file per component:
 
@@ -100,17 +101,20 @@ Each JavaScript output has a generated `.js.map` source map beside it.
 
 | Build command | Purpose |
 | --- | --- |
-| `npm run build` | Build tokens, legacy runtime outputs, and package outputs in `dist/`. |
+| `npm run build` | Build tokens, runtime compatibility files, the style-guide scripts, and package outputs in `dist/`. |
 | `npm run build:runtime` | Build the existing browser-global/CommonJS compatibility outputs and declarations in `src/js/`. |
+| `npm run build:style-guide` | Compile style-guide TypeScript into ignored browser scripts in `style-guide/generated/`. |
 | `npm run build:package` | Build ESM, CommonJS, browser-global, declaration, and bundled CSS package artifacts in `dist/`. |
 | `npm run test:package` | Pack and install the archive in isolated JavaScript, TypeScript, and browser consumers. |
-| `npm run typecheck` | Strict type check without emitting. |
+| `npm run typecheck` | Strictly check runtime, tooling, style-guide source, and consumer fixtures; separately type-check Playwright specs. |
 
 The generated helpers in `src/js/` remain usable as classic browser scripts exposing `window.KihonDialogs` and `window.KihonSidebar`, and through Node `require()` at their existing paths. Each bundle is built from its TypeScript source; there is no second handwritten implementation. TypeScript and esbuild are development dependencies only. The existing compatibility JavaScript, source maps, and declarations are committed; `npm run check:generated` detects stale output without rewriting it. These compatibility bundles are not browser ES modules.
 
+The style guide's maintained scripts also use TypeScript. `npm run build:style-guide` bundles them as browser IIFEs under the ignored `style-guide/generated/` directory, and the HTML pages load those generated files. Playwright starts this build before its preview server. Browser specs have their own TypeScript profile because their DOM queries intentionally operate on page fixtures; the runtime, scripts, and package consumer fixtures remain under strict checking.
+
 The internal package generates separate native ESM (`.mjs`), CommonJS (`.cjs`), module-specific declaration (`.d.mts`/`.d.cts`), browser-global, and CSS artifacts under `dist/`. `dist/` is ignored by Git. `npm pack` runs the `prepack` build automatically, and package tests verify that this archive contains every export and only the consumer files. The package contract is described in [`distribution.md`](distribution.md).
 
-When adding reusable behavior, place source in `src/ts/`, export a small typed API, add generated output through `scripts/build-runtime.js`, and cover both the compiled Node path and browser path where applicable. New CSS-only components do not need JavaScript. Existing style-guide scripts, token/build scripts, and tests remain JavaScript for now; consider migrating them incrementally when shared runtime behavior or stronger type guarantees make that useful. Phase 3C page headers and toolbars use native semantics and CSS only.
+When adding reusable behavior, place source in `src/ts/`, export a small typed API, add generated output through `scripts/build-runtime.ts`, and cover both the compiled Node path and browser path where applicable. New CSS-only components do not need JavaScript. Keep generated compatibility files in `src/js/` aligned with their TypeScript sources. Phase 3C page headers and toolbars use native semantics and CSS only.
 
 ## Design Tokens
 
@@ -224,7 +228,7 @@ semantic token and a theme token with the same path.
 npm run build-tokens
 ```
 
-This runs `scripts/build-tokens.js`, which:
+This runs `scripts/build-tokens.ts`, which:
 
 1. Loads `tokens/primitives.json`, `tokens/semantic.json` and theme files
 2. Resolves all token aliases recursively
@@ -290,7 +294,7 @@ This prefix ensures tokens don't collide with application-specific variables.
 npm run validate
 ```
 
-This runs `scripts/validate-tokens.js`, which checks:
+This runs `scripts/validate-tokens.ts`, which checks:
 
 - DTCG 2025.10 JSON Schema and typed dimensions, durations, colors, and shadows
 - Required semantic colors in both themes
