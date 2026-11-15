@@ -29,6 +29,6 @@ export default defineConfig({
     command: 'npm run build:style-guide && npm run serve',
     url: 'http://127.0.0.1:4173/style-guide/',
     reuseExistingServer: !process.env.CI,
-    timeout: 10_000
+    timeout: 60_000
   }
 });

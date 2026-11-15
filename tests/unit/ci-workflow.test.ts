@@ -39,7 +39,7 @@ interface DependabotConfig {
 }
 
 interface PlaywrightConfigShape {
-  webServer?: { command: string } | Array<{ command: string }>;
+  webServer?: { command: string; timeout?: number } | Array<{ command: string; timeout?: number }>;
   projects?: Array<{ use?: { browserName?: string } }>;
   use?: { trace?: string };
   reporter?: unknown[];
@@ -77,6 +77,7 @@ test('the style-guide TypeScript build runs before its preview server', () => {
   const webServer = typedPlaywrightConfig.webServer;
   assert.ok(webServer && !Array.isArray(webServer));
   assert.match(webServer.command, /npm run build:style-guide/);
+  assert.ok((webServer.timeout ?? 0) >= 60_000, 'Playwright server startup must allow the style-guide build to finish');
 });
 
 test('CI pins action revisions and does not persist checkout credentials', () => {
