@@ -38,6 +38,6 @@ Kihon specifies semantic markup, presentation and interaction expectations, adap
 - README.md, docs/foundation.md, docs/development.md, docs/distribution.md, and docs/components/*.
 - src/css/base.css, src/css/components/*, src/ts/dialogs.ts, src/ts/sidebar.ts, generated CSS, tokens/*, and package.json.
 - style-guide/index.html and local demonstration scripts.
-- tests/browser/*, tests/unit/*, tests/MANUAL_TESTING.md, tests/README.md, tests/TRACEABILITY.md, and playwright.config.js.
+- tests/browser/*, tests/unit/*, tests/MANUAL_TESTING.md, tests/README.md, tests/TRACEABILITY.md, and playwright.config.ts.
 
 The automated browser configuration runs Chromium, Firefox, and Playwright WebKit. Its responsive tests do not represent installed Safari, iOS browser chrome, the iPad software keyboard, VoiceOver, or macOS window behavior.
