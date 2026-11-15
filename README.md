@@ -117,7 +117,7 @@ Kihon will use a predictable `kh-` prefix for its CSS classes and public custom 
 # Install the locked development dependencies
 npm ci
 
-# Generate tokens and all generated runtime/package outputs
+# Generate tokens, browser scripts, and package outputs
 npm run build
 
 # Validate tokens and generated output
@@ -135,7 +135,9 @@ npm run dev
 
 ### Viewing the Style Guide
 
-`npm run dev` builds the generated tokens and serves the guide at `http://127.0.0.1:4173/style-guide/`.
+`npm run dev` builds generated tokens and browser scripts, then serves the guide at `http://127.0.0.1:4173/style-guide/`.
+
+Maintained tooling, style-guide scripts, and tests are written in TypeScript. The style-guide browser bundles are generated into the ignored `style-guide/generated/` directory as part of the build; `src/js/` contains the committed compatibility outputs used by existing consumers.
 
 The style guide demonstrates:
 

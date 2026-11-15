@@ -11,7 +11,9 @@
     "noUncheckedIndexedAccess": true,
     "exactOptionalPropertyTypes": true,
     "noEmit": true,
+    "esModuleInterop": true,
     "skipLibCheck": true,
+    "types": [],
     "forceConsistentCasingInFileNames": true
   },
   "include": ["src/ts/**/*.ts", "tests/types/**/*.ts"]
