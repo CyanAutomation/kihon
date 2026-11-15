@@ -1,0 +1,19 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "allowImportingTsExtensions": true,
+    "types": ["node"],
+    "esModuleInterop": true,
+    "resolveJsonModule": true
+  },
+  "include": [
+    "src/ts/**/*.ts",
+    "scripts/**/*.ts",
+    "tests/unit/**/*.ts",
+    "tests/package/**/*.ts",
+    "playwright.config.ts"
+  ]
+}
