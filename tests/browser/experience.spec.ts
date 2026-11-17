@@ -5,22 +5,27 @@ test.beforeEach(async ({ page }) => {
 });
 
 test('experience index links to all three reference screens', async ({ page }) => {
-  await page.goto('/style-guide/experience/');
-  await expect(page.getByRole('heading', { name: 'One product, three ways to work' })).toBeVisible();
-  await expect(page.getByRole('link', { name: 'Open session capture' })).toHaveAttribute('href', 'iphone-session.html');
-  await expect(page.getByRole('link', { name: 'Open adaptive library' })).toHaveAttribute('href', 'ipad-library.html');
-  await expect(page.getByRole('link', { name: 'Open analytics' })).toHaveAttribute('href', 'macos-analytics.html');
+  const destinations = [
+    { name: 'Open session capture', href: 'iphone-session.html', heading: 'Log a session' },
+    { name: 'Open adaptive library', href: 'ipad-library.html', heading: 'Sessions' },
+    { name: 'Open analytics', href: 'macos-analytics.html', heading: 'A season in focus' }
+  ];
+
+  for (const destination of destinations) {
+    await page.goto('/style-guide/experience/');
+    await expect(page.getByRole('heading', { name: 'One product, three ways to work' })).toBeVisible();
+    const link = page.getByRole('link', { name: destination.name });
+    await expect(link).toHaveAttribute('href', destination.href);
+    const expectedUrl = new URL(destination.href, page.url()).toString();
+    await link.click();
+    await expect(page).toHaveURL(expectedUrl);
+    await expect(page.getByRole('heading', { name: destination.heading, exact: true })).toBeVisible();
+  }
 });
 
-test('iPhone session capture supports themes, touch targets, and a local form response', async ({ page }) => {
+test('session capture controls meet touch-target and narrow-layout requirements', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/style-guide/experience/iphone-session.html');
-
-  const pageBackground = async () => page.locator('body').evaluate((element) => getComputedStyle(element).backgroundColor);
-  const darkBackground = await pageBackground();
-  await page.getByRole('button', { name: 'Light', exact: true }).click();
-  await expect.poll(pageBackground).not.toBe(darkBackground);
-  await expect(page.locator('[data-kh-theme-toggle="light"]')).toHaveAttribute('aria-pressed', 'true');
 
   const targetHeights = await page.locator('.xp-save-button, .xp-tab-bar a').evaluateAll((elements) =>
     elements.map((element) => Math.round(element.getBoundingClientRect().height))
@@ -28,16 +33,33 @@ test('iPhone session capture supports themes, touch targets, and a local form re
   expect(targetHeights.length, 'expected touch-target elements to exist').toBeGreaterThan(0);
   expect(targetHeights.every((height) => height >= 44)).toBe(true);
 
-  await page.locator('#session-type').selectOption({ label: 'Randori' });
-  await page.locator('#session-notes').fill('Grip transitions');
-  await page.getByRole('button', { name: 'Save session' }).click();
-  await expect(page.getByRole('status')).toContainText('No data was sent or stored');
-
   for (const width of [320, 390, 768]) {
     await page.setViewportSize({ width, height: 844 });
     const documentWidth = await page.evaluate(() => document.documentElement.scrollWidth);
     expect(documentWidth, 'unexpected horizontal overflow at ' + width + 'px').toBeLessThanOrEqual(width);
   }
+});
+
+test('session capture reports local completion without sending or storing form data', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/style-guide/experience/iphone-session.html');
+
+  const submissionRequests: Array<{ method: string; url: string }> = [];
+  page.on('request', (request) => {
+    submissionRequests.push({ method: request.method(), url: request.url() });
+  });
+  const readStorage = () => page.evaluate(() => {
+    const entries = (storage: Storage) => Object.keys(storage).sort().map((key) => [key, storage.getItem(key)]);
+    return { local: entries(localStorage), session: entries(sessionStorage) };
+  });
+  const storageBeforeSubmission = await readStorage();
+
+  await page.locator('#session-type').selectOption({ label: 'Randori' });
+  await page.locator('#session-notes').fill('Grip transitions');
+  await page.getByRole('button', { name: 'Save session' }).click();
+  await expect(page.getByRole('status')).toHaveText('Session captured in this local demonstration. No data was sent or stored.');
+  expect(submissionRequests).toEqual([]);
+  expect(await readStorage()).toEqual(storageBeforeSubmission);
 });
 
 test('iPad library adapts list and detail and preserves an accessible return path', async ({ page }) => {
@@ -93,7 +115,12 @@ test('iPad library keeps its static layout if required detail markup is incomple
 
   const library = page.locator('.xp-tablet-shell');
   await expect(library).not.toHaveAttribute('data-interactive', 'true');
+  await expect(library.locator('.xp-session-list')).toBeVisible();
+  await expect(library.locator('.xp-session-detail')).toBeVisible();
+  await expect(library.getByRole('heading', { name: 'Randori and grip transitions' })).toBeVisible();
   await page.getByRole('button', { name: /Movement and foot sweeps/ }).click();
+  await expect(library.locator('.xp-session-list')).toBeVisible();
+  await expect(library.getByRole('heading', { name: 'Randori and grip transitions' })).toBeVisible();
   expect(pageErrors).toEqual([]);
 });
 
