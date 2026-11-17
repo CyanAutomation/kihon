@@ -41,24 +41,26 @@ test('session capture controls meet touch-target and narrow-layout requirements'
 });
 
 test('session capture reports local completion without sending or storing form data', async ({ page }) => {
+  const requests: Array<{ method: string; url: string }> = [];
+  page.on('request', (request) => {
+    requests.push({ method: request.method(), url: request.url() });
+  });
+
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/style-guide/experience/iphone-session.html');
 
-  const submissionRequests: Array<{ method: string; url: string }> = [];
-  page.on('request', (request) => {
-    submissionRequests.push({ method: request.method(), url: request.url() });
-  });
   const readStorage = () => page.evaluate(() => {
     const entries = (storage: Storage) => Object.keys(storage).sort().map((key) => [key, storage.getItem(key)]);
     return { local: entries(localStorage), session: entries(sessionStorage) };
   });
   const storageBeforeSubmission = await readStorage();
+  const requestCountBeforeSubmission = requests.length;
 
   await page.locator('#session-type').selectOption({ label: 'Randori' });
   await page.locator('#session-notes').fill('Grip transitions');
   await page.getByRole('button', { name: 'Save session' }).click();
   await expect(page.getByRole('status')).toHaveText('Session captured in this local demonstration. No data was sent or stored.');
-  expect(submissionRequests).toEqual([]);
+  expect(requests.slice(requestCountBeforeSubmission)).toEqual([]);
   expect(await readStorage()).toEqual(storageBeforeSubmission);
 });
 
