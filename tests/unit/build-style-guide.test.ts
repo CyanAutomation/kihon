@@ -33,7 +33,7 @@ test('style-guide TypeScript sources compile to browser JavaScript with their di
   }
 });
 
-test('style-guide build replaces its destination from a same-filesystem staging directory', async () => {
+test('style-guide build replaces stale output with the generated browser scripts', async () => {
   const temporaryRoot = await mkdtemp(path.join(os.tmpdir(), 'kihon-style-guide-build-test-'));
   const outputDirectory = path.join(temporaryRoot, 'generated');
   await mkdir(outputDirectory);
@@ -52,7 +52,7 @@ test('style-guide build replaces its destination from a same-filesystem staging 
       'theme.js'
     ]);
     assert.deepEqual(await readdir(path.join(outputDirectory, 'experience')), ['experience.js']);
-    assert.equal((await readFile(path.join(outputDirectory, 'dialogs.js'), 'utf8')).includes('KihonDialogs'), true);
+    assert.match(await readFile(path.join(outputDirectory, 'dialogs.js'), 'utf8'), /KihonDialogs/);
   } finally {
     await rm(temporaryRoot, { recursive: true, force: true });
   }
