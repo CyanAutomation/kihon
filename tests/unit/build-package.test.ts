@@ -1,6 +1,19 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import postcss from 'postcss';
 import { buildJavaScriptOutput, getPackageOutputs } from '../../scripts/build-package.ts';
+
+function removeCascadeLayerWrappers(css: string): string {
+  const root = postcss.parse(css);
+  root.walkAtRules('layer', (layer) => {
+    if (!layer.nodes) {
+      layer.remove();
+      return;
+    }
+    layer.replaceWith(...layer.nodes);
+  });
+  return root.toString();
+}
 
 test('unsupported JavaScript package formats fail with a clear build error', async () => {
   for (const format of ['umd', 'toString', '__proto__']) {
@@ -24,13 +37,15 @@ test('bundled stylesheet preserves the declared cascade layers', async () => {
   assert.doesNotMatch(css, /@import\s/);
 });
 
-test('legacy compatibility stylesheet unwraps layers while preserving component rules', async () => {
+test('legacy compatibility stylesheet preserves bundled rules and declarations without layers', async () => {
   const outputs = await getPackageOutputs();
-  const stylesheet = outputs.find((output) => output.path.endsWith('styles.compat.css'));
-  assert.ok(stylesheet, 'package build produces an unlayered compatibility stylesheet');
+  const layeredStylesheet = outputs.find((output) => output.path.endsWith('styles.css'));
+  const compatibilityStylesheet = outputs.find((output) => output.path.endsWith('styles.compat.css'));
+  assert.ok(layeredStylesheet, 'package build produces the layered stylesheet');
+  assert.ok(compatibilityStylesheet, 'package build produces an unlayered compatibility stylesheet');
 
-  const css = Buffer.from(stylesheet.contents).toString('utf8');
-  assert.doesNotMatch(css, /@layer\s/);
-  assert.match(css, /\.kh-button--primary/);
-  assert.match(css, /--kh-color-accent/);
+  const layeredCss = Buffer.from(layeredStylesheet.contents).toString('utf8');
+  const compatibilityCss = Buffer.from(compatibilityStylesheet.contents).toString('utf8');
+  assert.equal(compatibilityCss, removeCascadeLayerWrappers(layeredCss));
+  assert.doesNotMatch(compatibilityCss, /@layer\s/);
 });

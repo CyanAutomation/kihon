@@ -20,6 +20,8 @@
 
 **Reference:** [iPad training library](../../style-guide/experience/ipad-library.html) demonstrates list/detail selection in a local mock screen.
 
+The reference screen enables its list/detail interactions only when all required detail targets are present. If the markup is incomplete, its static list and detail content remain visible as a fallback.
+
 **Acceptance:** Keyboard, pointer, and touch can select a row; a compact user can return to the list; resize does not lose selection; a direct URL reproduces selection when the consumer treats detail as a route.
 
 ## Search
