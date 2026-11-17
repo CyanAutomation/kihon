@@ -175,8 +175,17 @@ const result = await session.prompt(
 	{ responseConstraint: schema },
 );
 
-const data = JSON.parse(result);
-console.log(data.rating); // 5
+function handleStructuredResult(result, outputEl) {
+	let data;
+	try {
+		data = JSON.parse(result);
+	} catch {
+		// outputEl is a live region, such as an element with aria-live="polite".
+		outputEl.textContent = 'Could not parse model response. Please try again.';
+		return;
+	}
+	console.log(data.rating); // 5
+}
 ```
 
 ### Constraints and Prefixes
