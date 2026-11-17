@@ -94,7 +94,8 @@ export async function safeSetHTML(el, html) {
       // Match the native Sanitizer: strip aria-*/data-* and disallowed element content
       ALLOW_ARIA_ATTR: false,
       ALLOW_DATA_ATTR: false,
-      KEEP_CONTENT: false
+      KEEP_CONTENT: false,
+      RETURN_TRUSTED_TYPE: true
     });
   }
 }
