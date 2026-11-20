@@ -66,7 +66,7 @@
     "ajv-formats": "^3.0.1",
     "esbuild": "^0.28.2",
     "html-validate": "~11.21.0",
-    "postcss": "^8.5.32",
+    "postcss": "^8.5.33",
     "tsx": "^4.23.15",
     "typescript": "^7.0.2",
     "wcag-contrast": "^3.0.0",
