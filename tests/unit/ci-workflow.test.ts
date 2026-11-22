@@ -160,6 +160,7 @@ test('CI runs dependency review and workflow security linting with least-privile
   const zizmor = workflowAudit.steps.find((step) => step.uses?.startsWith('zizmorcore/zizmor-action@'));
   assert.ok(zizmor, 'CI must scan workflows with zizmor');
   assert.equal(zizmor.with?.['advanced-security'], true);
+  assert.equal(zizmor.with?.version, '1.32.0', 'CI must pin the validated zizmor release');
   assert.deepEqual(workflowAudit.permissions, {
     actions: 'read',
     contents: 'read',
