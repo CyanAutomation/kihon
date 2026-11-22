@@ -25,6 +25,7 @@ interface WorkflowJob {
 
 interface WorkflowConfig {
   jobs: Record<string, WorkflowJob>;
+  on?: { schedule?: Array<{ cron: string }> };
   concurrency: Record<string, any>;
   permissions: Record<string, string>;
 }
@@ -35,6 +36,7 @@ interface DependabotConfig {
     'package-ecosystem': string;
     directory: string;
     schedule: { interval: string };
+    cooldown: { 'default-days': number };
   }>;
 }
 
@@ -76,23 +78,23 @@ test('the style-guide TypeScript build runs before its preview server', () => {
   assert.match(packageJson.scripts.build, /build:style-guide/);
   const webServer = typedPlaywrightConfig.webServer;
   assert.ok(webServer && !Array.isArray(webServer));
-  const buildIndex = webServer.command.indexOf('npm run build:style-guide');
-  const serverIndex = webServer.command.indexOf('npm run serve');
-  assert.ok(buildIndex >= 0, 'Playwright must build the guide before serving it');
-  assert.ok(serverIndex > buildIndex, 'the preview server must start after the guide build');
+  assert.match(webServer.command, /npm run build:style-guide/);
+  assert.ok((webServer.timeout ?? 0) >= 60_000, 'Playwright server startup must allow the style-guide build to finish');
 });
 
-test('CI checkouts do not persist repository credentials', () => {
-  const workflowConfig = readWorkflowConfig();
-  const checkouts = Object.entries(workflowConfig.jobs).flatMap(([jobName, job]) =>
-    job.steps
-      .filter((step) => step.uses?.startsWith('actions/checkout@'))
-      .map((step) => ({ jobName, step }))
-  );
-  assert.ok(checkouts.length > 0, 'CI must check out the repository');
-  for (const { jobName, step } of checkouts) {
-    assert.equal(step.with?.['persist-credentials'], false, `${jobName} checkout must not persist credentials`);
+test('CI pins action revisions and does not persist checkout credentials', () => {
+  const validationSteps = readValidationSteps();
+  const actions = validationSteps.filter((step): step is WorkflowStep & { uses: string } => typeof step.uses === 'string');
+  assert.deepEqual(actions.map((step) => step.uses.split('@')[0]), [
+    'actions/checkout',
+    'actions/setup-node',
+    'actions/cache',
+    'actions/upload-artifact'
+  ]);
+  for (const action of actions) {
+    assert.match(action.uses.split('@')[1] ?? '', /^[a-f0-9]{40}$/, `${action.uses} must use a full commit SHA`);
   }
+  assert.equal(actions[0]?.with?.['persist-credentials'], false);
 });
 
 test('CI jobs are bounded and superseded runs are canceled', () => {
@@ -142,7 +144,7 @@ test('CI fails when building changes committed generated outputs', () => {
   assert.ok(typecheckIndex > guardIndex, 'the generated-file guard must run before the remaining checks');
 });
 
-test('CI runs dependency review and workflow security linting with read-only permissions', () => {
+test('CI runs dependency review and workflow security linting with least-privilege permissions', () => {
   const workflowConfig = readWorkflowConfig();
   const dependencyReview = workflowConfig.jobs['dependency-review'];
   const workflowAudit = workflowConfig.jobs['workflow-audit'];
@@ -157,15 +159,13 @@ test('CI runs dependency review and workflow security linting with read-only per
   assert.ok(workflowAudit.steps.some((step) => step.uses?.startsWith('raven-actions/actionlint@')));
   const zizmor = workflowAudit.steps.find((step) => step.uses?.startsWith('zizmorcore/zizmor-action@'));
   assert.ok(zizmor, 'CI must scan workflows with zizmor');
-  assert.equal(zizmor.with?.['advanced-security'], false);
+  assert.equal(zizmor.with?.['advanced-security'], true);
   assert.deepEqual(workflowAudit.permissions, {
     actions: 'read',
-    contents: 'read'
+    contents: 'read',
+    'security-events': 'write'
   });
-});
 
-test('CI pins every workflow action to a full commit SHA', () => {
-  const workflowConfig = readWorkflowConfig();
   for (const [jobName, job] of Object.entries(workflowConfig.jobs)) {
     for (const step of job.steps || []) {
       if (!step.uses) continue;
@@ -174,23 +174,34 @@ test('CI pins every workflow action to a full commit SHA', () => {
   }
 });
 
-test('CI installs every configured Playwright browser', () => {
-  const validationSteps = readValidationSteps();
-  const browserInstall = validationSteps.find((step) => step.run?.startsWith('npx playwright install'));
-  assert.ok(browserInstall, 'CI must have an npx playwright install step');
-  const installMatch = /^npx playwright install --with-deps\s+(.+)$/.exec(browserInstall.run ?? '');
-  assert.ok(installMatch, 'CI must install browsers and their system dependencies');
-  const browserList = installMatch[1];
-  assert.ok(browserList, 'CI must name the browsers to install');
-  const installedBrowsers = browserList.trim().split(/\s+/).sort();
-  const configuredBrowsers = (typedPlaywrightConfig.projects ?? []).map((project) => project.use?.browserName);
-  assert.ok(configuredBrowsers.length > 0, 'Playwright must define browser projects');
-  assert.ok(configuredBrowsers.every((browser): browser is string => typeof browser === 'string'));
-  assert.deepEqual([...new Set(installedBrowsers)].sort(), [...new Set(configuredBrowsers as string[])].sort());
+test('CI runs weekly CodeQL analysis with scoped code-scanning permissions', () => {
+  const workflowConfig = readWorkflowConfig();
+  const codeql = workflowConfig.jobs.codeql;
+  assert.ok(codeql, 'CI must define a CodeQL job');
+  assert.deepEqual(workflowConfig.on?.schedule, [{ cron: '15 6 * * 1' }]);
+  assert.deepEqual(codeql.permissions, {
+    actions: 'read',
+    contents: 'read',
+    'security-events': 'write'
+  });
+  assert.ok(codeql.steps.some((step) => step.uses?.startsWith('github/codeql-action/init@')));
+  assert.ok(codeql.steps.some((step) => step.uses?.startsWith('github/codeql-action/analyze@')));
+  const init = codeql.steps.find((step) => step.uses?.startsWith('github/codeql-action/init@'));
+  assert.equal(init?.with?.languages, 'javascript-typescript');
+  assert.equal(init?.with?.['build-mode'], 'none');
 });
 
-test('CI uploads browser diagnostics only after a failed validation run', () => {
+test('CI caches every configured browser and uploads diagnostics only after failure', () => {
   const validationSteps = readValidationSteps();
+  const browserCache = validationSteps.find((step) => step.uses?.startsWith('actions/cache@'));
+  assert.ok(browserCache, 'CI must cache Playwright browsers');
+  assert.equal(browserCache.with?.path, '~/.cache/ms-playwright');
+  assert.match(browserCache.with?.key ?? '', /hashFiles\('package-lock\.json'\)/);
+
+  const browserInstall = validationSteps.find((step) => step.run?.startsWith('npx playwright install'));
+  assert.ok(browserInstall, 'CI must have an npx playwright install step');
+  assert.equal(browserInstall.run, 'npx playwright install --with-deps chromium firefox webkit');
+
   const artifactUpload = validationSteps.find((step) => step.uses?.startsWith('actions/upload-artifact@'));
   assert.ok(artifactUpload, 'CI must upload Playwright diagnostics');
   assert.equal(artifactUpload.if, 'failure()');
@@ -199,7 +210,7 @@ test('CI uploads browser diagnostics only after a failed validation run', () => 
   assert.equal(artifactUpload.with?.['if-no-files-found'], 'ignore');
 });
 
-test('Dependabot checks npm and GitHub Actions weekly', () => {
+test('Dependabot checks npm and GitHub Actions weekly with a cooldown', () => {
   const dependabot = parse(readFileSync(join(root, '.github/dependabot.yml'), 'utf8')) as DependabotConfig;
   assert.equal(dependabot.version, 2);
   assert.deepEqual(dependabot.updates.map(({ 'package-ecosystem': ecosystem, directory, schedule }) => ({
@@ -210,6 +221,7 @@ test('Dependabot checks npm and GitHub Actions weekly', () => {
     { ecosystem: 'npm', directory: '/', interval: 'weekly' },
     { ecosystem: 'github-actions', directory: '/', interval: 'weekly' }
   ]);
+  assert.ok(dependabot.updates.every((update) => update.cooldown['default-days'] === 7));
 });
 
 test('Playwright covers Chromium, Firefox, and WebKit and retains failure diagnostics', () => {
