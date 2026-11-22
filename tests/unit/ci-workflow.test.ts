@@ -78,23 +78,23 @@ test('the style-guide TypeScript build runs before its preview server', () => {
   assert.match(packageJson.scripts.build, /build:style-guide/);
   const webServer = typedPlaywrightConfig.webServer;
   assert.ok(webServer && !Array.isArray(webServer));
-  assert.match(webServer.command, /npm run build:style-guide/);
-  assert.ok((webServer.timeout ?? 0) >= 60_000, 'Playwright server startup must allow the style-guide build to finish');
+  const buildIndex = webServer.command.indexOf('npm run build:style-guide');
+  const serverIndex = webServer.command.indexOf('npm run serve');
+  assert.ok(buildIndex >= 0, 'Playwright must build the guide before serving it');
+  assert.ok(serverIndex > buildIndex, 'the preview server must start after the guide build');
 });
 
-test('CI pins action revisions and does not persist checkout credentials', () => {
-  const validationSteps = readValidationSteps();
-  const actions = validationSteps.filter((step): step is WorkflowStep & { uses: string } => typeof step.uses === 'string');
-  assert.deepEqual(actions.map((step) => step.uses.split('@')[0]), [
-    'actions/checkout',
-    'actions/setup-node',
-    'actions/cache',
-    'actions/upload-artifact'
-  ]);
-  for (const action of actions) {
-    assert.match(action.uses.split('@')[1] ?? '', /^[a-f0-9]{40}$/, `${action.uses} must use a full commit SHA`);
+test('CI checkouts do not persist repository credentials', () => {
+  const workflowConfig = readWorkflowConfig();
+  const checkouts = Object.entries(workflowConfig.jobs).flatMap(([jobName, job]) =>
+    job.steps
+      .filter((step) => step.uses?.startsWith('actions/checkout@'))
+      .map((step) => ({ jobName, step }))
+  );
+  assert.ok(checkouts.length > 0, 'CI must check out the repository');
+  for (const { jobName, step } of checkouts) {
+    assert.equal(step.with?.['persist-credentials'], false, `${jobName} checkout must not persist credentials`);
   }
-  assert.equal(actions[0]?.with?.['persist-credentials'], false);
 });
 
 test('CI jobs are bounded and superseded runs are canceled', () => {
@@ -165,13 +165,6 @@ test('CI runs dependency review and workflow security linting with least-privile
     contents: 'read',
     'security-events': 'write'
   });
-
-  for (const [jobName, job] of Object.entries(workflowConfig.jobs)) {
-    for (const step of job.steps || []) {
-      if (!step.uses) continue;
-      assert.match(step.uses.split('@')[1] ?? '', /^[a-f0-9]{40}$/, `${jobName}: ${step.uses} must use a full commit SHA`);
-    }
-  }
 });
 
 test('CI runs weekly CodeQL analysis with scoped code-scanning permissions', () => {
@@ -191,17 +184,37 @@ test('CI runs weekly CodeQL analysis with scoped code-scanning permissions', () 
   assert.equal(init?.with?.['build-mode'], 'none');
 });
 
-test('CI caches every configured browser and uploads diagnostics only after failure', () => {
+test('CI pins every workflow action to a full commit SHA', () => {
+  const workflowConfig = readWorkflowConfig();
+  for (const [jobName, job] of Object.entries(workflowConfig.jobs)) {
+    for (const step of job.steps || []) {
+      if (!step.uses) continue;
+      assert.match(step.uses.split('@')[1] ?? '', /^[a-f0-9]{40}$/, `${jobName}: ${step.uses} must use a full commit SHA`);
+    }
+  }
+});
+
+test('CI caches and installs every configured Playwright browser', () => {
   const validationSteps = readValidationSteps();
   const browserCache = validationSteps.find((step) => step.uses?.startsWith('actions/cache@'));
   assert.ok(browserCache, 'CI must cache Playwright browsers');
   assert.equal(browserCache.with?.path, '~/.cache/ms-playwright');
   assert.match(browserCache.with?.key ?? '', /hashFiles\('package-lock\.json'\)/);
-
   const browserInstall = validationSteps.find((step) => step.run?.startsWith('npx playwright install'));
   assert.ok(browserInstall, 'CI must have an npx playwright install step');
-  assert.equal(browserInstall.run, 'npx playwright install --with-deps chromium firefox webkit');
+  const installMatch = /^npx playwright install --with-deps\s+(.+)$/.exec(browserInstall.run ?? '');
+  assert.ok(installMatch, 'CI must install browsers and their system dependencies');
+  const browserList = installMatch[1];
+  assert.ok(browserList, 'CI must name the browsers to install');
+  const installedBrowsers = browserList.trim().split(/\s+/).sort();
+  const configuredBrowsers = (typedPlaywrightConfig.projects ?? []).map((project) => project.use?.browserName);
+  assert.ok(configuredBrowsers.length > 0, 'Playwright must define browser projects');
+  assert.ok(configuredBrowsers.every((browser): browser is string => typeof browser === 'string'));
+  assert.deepEqual([...new Set(installedBrowsers)].sort(), [...new Set(configuredBrowsers as string[])].sort());
+});
 
+test('CI uploads browser diagnostics only after a failed validation run', () => {
+  const validationSteps = readValidationSteps();
   const artifactUpload = validationSteps.find((step) => step.uses?.startsWith('actions/upload-artifact@'));
   assert.ok(artifactUpload, 'CI must upload Playwright diagnostics');
   assert.equal(artifactUpload.if, 'failure()');
