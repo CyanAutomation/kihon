@@ -1,0 +1,31 @@
+{
+  "$schema": "https://raw.githubusercontent.com/fallow-rs/fallow/main/schema.json",
+  "minimumVersion": "3.47.0",
+  "entry": [
+    "src/ts/**/*.ts",
+    "style-guide/**/*.ts",
+    "src/css/base.css",
+    "style-guide/**/*.css"
+  ],
+  "supportEntry": [
+    "tests/**/*.ts",
+    "playwright.config.ts"
+  ],
+  "duplicates": {
+    "ignore": ["src/js/**"]
+  },
+  "health": {
+    "coverage": "coverage/v8",
+    "ignore": ["src/js/**"]
+  },
+  "typeAware": {
+    "enabled": true,
+    "projects": [
+      "tsconfig.json",
+      "tsconfig.node.json",
+      "tsconfig.browser.json",
+      "tsconfig.playwright.json"
+    ],
+    "require": "best-effort"
+  }
+}

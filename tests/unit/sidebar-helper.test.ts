@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { createSidebarController, type SidebarController } from '../../src/js/sidebar.js';
+import { createSidebarController, type SidebarController } from '../../src/ts/sidebar.ts';
 
 interface FakeSidebarOptions {
   sidebar: FakeElement;
@@ -258,6 +258,55 @@ test('failed initialization rolls back state and listeners, then allows a retry'
   toggleButton.dispatch('click');
   assert.equal(sidebar.hidden, true);
   retry.dispose();
+});
+
+test('rejects broken sidebar labelling before exposing the toggle', () => {
+  const { sidebar, toggleButton } = createFixture({ initialize: false });
+  sidebar.removeAttribute('aria-label');
+  sidebar.setAttribute('aria-labelledby', 'missing-heading');
+
+  assert.throws(() => createController({ sidebar, toggleButton }), /accessible name/);
+  assert.equal(toggleButton.listeners.get('click')?.size ?? 0, 0);
+  assert.equal(toggleButton.getAttribute('hidden'), null);
+});
+
+test('rejects invalid shell and initial visibility options before changing the DOM', () => {
+  const { document, sidebar, toggleButton } = createFixture({ initialize: false });
+  const unrelated = new FakeElement(document, 'div', 'unrelated');
+
+  assert.throws(
+    () => createSidebarController({
+      sidebar: sidebar as unknown as HTMLElement,
+      toggleButton: toggleButton as unknown as HTMLButtonElement,
+      shell: unrelated as unknown as HTMLElement
+    }),
+    /shell must be a containing element/
+  );
+  assert.throws(
+    () => createSidebarController({
+      sidebar: sidebar as unknown as HTMLElement,
+      toggleButton: toggleButton as unknown as HTMLButtonElement,
+      initialExpanded: 'yes' as unknown as boolean
+    }),
+    /initialExpanded must be a boolean/
+  );
+  assert.equal(toggleButton.listeners.get('click')?.size ?? 0, 0);
+});
+
+test('rejects duplicate navigation ids and mismatched toggle controls', () => {
+  const duplicate = createFixture({ initialize: false });
+  new FakeElement(duplicate.document, 'nav', duplicate.sidebar.id);
+  assert.throws(
+    () => createController({ sidebar: duplicate.sidebar, toggleButton: duplicate.toggleButton }),
+    /unique id/
+  );
+
+  const mismatched = createFixture({ initialize: false });
+  mismatched.toggleButton.setAttribute('aria-controls', 'another-sidebar');
+  assert.throws(
+    () => createController({ sidebar: mismatched.sidebar, toggleButton: mismatched.toggleButton }),
+    /aria-controls/
+  );
 });
 
 test('an initial sidebar state failure restores the visible fallback and permits retry', () => {

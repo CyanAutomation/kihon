@@ -8,13 +8,14 @@ Run the automated checks with:
 npm ci
 npm run build
 npm run typecheck
+npm run test:unit:coverage
 npm test
 npm run test:package
 ```
 
 The suite runs:
 
-1. Node unit tests for alias resolution, typed token validation, contrast calculations, dialog-helper cleanup with synchronous and asynchronous close events, stale `returnValue` resets, sidebar-controller state, focus restoration, transactional initialization rollback and disposal, parsed button, form, grouped-settings, dialog, app-shell, sidebar, page-header, and toolbar CSS contracts, plus the repository skill index and local skill-link targets.
+1. Node unit tests for alias resolution, typed token validation, contrast calculations, dialog-helper cleanup with synchronous and asynchronous close events, stale `returnValue` resets, sidebar-controller state, focus restoration, transactional initialization rollback and disposal, generated-output checks, parsed button, form, grouped-settings, dialog, app-shell, sidebar, page-header, and toolbar CSS contracts, plus the repository skill index and local skill-link targets. `npm test` runs these through `npm run test:unit:coverage`, which emits raw V8 data under ignored `coverage/v8/` for Fallow health reports.
 2. Type-checking in CI: strict checks for runtime, build tooling, style-guide source, and consumer fixtures that import generated declarations; a separate DOM-aware profile covers the Playwright specs.
 3. DTCG 2025.10 schema and value validation, including required theme tokens and approved contrast pairings.
 4. `html-validate` for the style-guide HTML and PostCSS parsing for discovered committed stylesheets, including component styles added later.

@@ -2,7 +2,8 @@
 
 import * as fs from 'node:fs';
 import * as path from 'node:path';
-import { TokenResolver, formatValue } from './token-resolver.ts';
+import { TokenResolver } from './token-resolver.ts';
+import { formatValue } from './token-format.ts';
 import { loadTokenDocuments, validateTokenDocuments } from './token-validation.ts';
 import { createTokenContext } from './token-context.ts';
 import type { CompleteTokenDocuments, TokenMap } from './token-types.ts';

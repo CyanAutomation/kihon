@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { TokenResolver, formatValue } from '../../scripts/token-resolver.ts';
+import { TokenResolver } from '../../scripts/token-resolver.ts';
+import { formatValue } from '../../scripts/token-format.ts';
 
 test('resolves transitive aliases without losing the active reference chain', () => {
   const tokens = {
