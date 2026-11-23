@@ -74,7 +74,7 @@
     "fallow": "3.47.0",
     "fallow-type-aware": "3.47.0",
     "html-validate": "~11.21.1",
-    "postcss": "^8.5.32",
+    "postcss": "^8.5.33",
     "tsx": "^4.23.15",
     "typescript": "^7.0.2",
     "wcag-contrast": "^3.0.0",
