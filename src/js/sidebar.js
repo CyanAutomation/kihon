@@ -23,9 +23,8 @@ var KihonSidebar = (() => {
   __export(sidebar_exports, {
     createSidebarController: () => createSidebarController
   });
-  var controllers = /* @__PURE__ */ new WeakMap();
-  var COLLAPSED_CLASS = "kh-app-shell--nav-collapsed";
-  var READY_ATTRIBUTE = "data-kh-sidebar-ready";
+
+  // src/ts/sidebar-options.ts
   function isDomElement(value) {
     return value !== null && typeof value === "object" && Reflect.get(value, "nodeType") === 1 && typeof Reflect.get(value, "getAttribute") === "function" && typeof Reflect.get(value, "setAttribute") === "function" && typeof Reflect.get(value, "contains") === "function" && typeof Reflect.get(value, "focus") === "function";
   }
@@ -102,7 +101,7 @@ var KihonSidebar = (() => {
     }
     return typeof initialExpanded === "boolean" ? initialExpanded : !Boolean(sidebar.hidden);
   }
-  function resolveOptions(options) {
+  function resolveSidebarOptions(options) {
     const rawOptions = requireOptionsObject(options);
     const sidebar = requireSidebar(rawOptions.sidebar);
     const toggleButton = requireToggleButton(rawOptions.toggleButton);
@@ -116,8 +115,13 @@ var KihonSidebar = (() => {
       initialExpanded: resolveInitialExpanded(rawOptions, sidebar)
     };
   }
+
+  // src/ts/sidebar.ts
+  var controllers = /* @__PURE__ */ new WeakMap();
+  var COLLAPSED_CLASS = "kh-app-shell--nav-collapsed";
+  var READY_ATTRIBUTE = "data-kh-sidebar-ready";
   function createSidebarController(options) {
-    const resolved = resolveOptions(options);
+    const resolved = resolveSidebarOptions(options);
     const { sidebar, toggleButton, shell, initialExpanded } = resolved;
     if (controllers.has(sidebar)) {
       throw new Error("A sidebar controller is already active for this navigation.");

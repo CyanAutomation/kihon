@@ -84,6 +84,13 @@ test('the style-guide TypeScript build runs before its preview server', () => {
   assert.ok(serverIndex > buildIndex, 'the preview server must start after the guide build');
 });
 
+test('the package consumer check preserves Node V8 coverage for package health analysis', () => {
+  assert.equal(packageJson.scripts['test:package'], 'tsx scripts/run-package-coverage.ts');
+  const runner = readFileSync(join(root, 'scripts/run-package-coverage.ts'), 'utf8');
+  assert.match(runner, /NODE_V8_COVERAGE/);
+  assert.match(runner, /tests', 'package', 'test-package\.ts/);
+});
+
 test('CI checkouts do not persist repository credentials', () => {
   const workflowConfig = readWorkflowConfig();
   const checkouts = Object.entries(workflowConfig.jobs).flatMap(([jobName, job]) =>

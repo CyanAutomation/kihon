@@ -95,6 +95,27 @@ test('iPad library adapts list and detail and preserves an accessible return pat
   }
 });
 
+test('iPad search shows an empty state and restores sessions when cleared', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/style-guide/experience/ipad-library.html');
+
+  const search = page.getByRole('searchbox', { name: 'Search sessions' });
+  const rows = page.locator('[data-session-title]');
+  const rowItems = rows.locator('xpath=..');
+  const emptyState = page.locator('[data-session-empty]');
+
+  await search.fill('no matching session');
+  await expect(rows).toHaveCount(4);
+  await expect(rows.filter({ visible: true })).toHaveCount(0);
+  await expect(rowItems.filter({ visible: true })).toHaveCount(0);
+  await expect(emptyState).toBeVisible();
+
+  await search.clear();
+  await expect(rows.filter({ visible: true })).toHaveCount(4);
+  await expect(rowItems.filter({ visible: true })).toHaveCount(4);
+  await expect(emptyState).toBeHidden();
+});
+
 test('iPad list and detail remain available without the demo behavior script', async ({ page }) => {
   await page.route('**/generated/experience/experience.js', (route) => route.abort());
   await page.setViewportSize({ width: 390, height: 844 });

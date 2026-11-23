@@ -65,6 +65,8 @@ if (tabletShell) {
         const visibleRows = sessionRows.filter((row) => {
           const matches = row.textContent.toLocaleLowerCase().includes(term);
           row.hidden = !matches;
+          const listItem = row.closest('li');
+          if (listItem) listItem.hidden = !matches;
           return matches;
         });
         if (emptyState) emptyState.hidden = visibleRows.length > 0;

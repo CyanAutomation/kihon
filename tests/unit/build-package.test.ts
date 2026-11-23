@@ -1,7 +1,10 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import * as fs from 'node:fs/promises';
+import * as os from 'node:os';
+import * as path from 'node:path';
 import postcss from 'postcss';
-import { buildJavaScriptOutput, getPackageOutputs } from '../../scripts/build-package.ts';
+import { buildJavaScriptOutput, getPackageOutputs, replaceDistribution } from '../../scripts/build-package.ts';
 
 function removeCascadeLayerWrappers(css: string): string {
   const root = postcss.parse(css);
@@ -48,4 +51,24 @@ test('legacy compatibility stylesheet preserves bundled rules and declarations w
   const compatibilityCss = Buffer.from(compatibilityStylesheet.contents).toString('utf8');
   assert.equal(compatibilityCss, removeCascadeLayerWrappers(layeredCss));
   assert.doesNotMatch(compatibilityCss, /@layer\s/);
+});
+
+test('package distribution replacement atomically replaces old files and cleans its temporary directory', async () => {
+  const temporaryRoot = await fs.mkdtemp(path.join(os.tmpdir(), 'kihon-package-replacement-test-'));
+  const distribution = path.join(temporaryRoot, 'dist');
+  await fs.mkdir(distribution);
+  await fs.writeFile(path.join(distribution, 'stale.txt'), 'old');
+
+  try {
+    await replaceDistribution([
+      { path: path.join(distribution, 'esm', 'dialogs.mjs'), contents: Buffer.from('export {};') },
+      { path: path.join(distribution, 'styles.css'), contents: Buffer.from('body {}') }
+    ], distribution, temporaryRoot);
+
+    assert.deepEqual((await fs.readdir(distribution)).sort(), ['esm', 'styles.css']);
+    assert.equal(await fs.readFile(path.join(distribution, 'esm', 'dialogs.mjs'), 'utf8'), 'export {};');
+    assert.deepEqual(await fs.readdir(temporaryRoot), ['dist']);
+  } finally {
+    await fs.rm(temporaryRoot, { recursive: true, force: true });
+  }
 });
