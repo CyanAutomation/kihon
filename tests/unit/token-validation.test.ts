@@ -1,7 +1,9 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { loadTokenDocuments, validateTokenDocuments } from '../../scripts/token-validation.ts';
-import { isTokenReference, validateTokenValue } from '../../scripts/token-value-validation.ts';
+import { isTokenReference } from '../../scripts/token-value-reference.ts';
+import { validateTokenValue } from '../../scripts/token-value-validation.ts';
+import { validateDocumentReferences } from '../../scripts/token-reference-validation.ts';
 import { generateTokensCss } from '../../scripts/build-tokens.ts';
 
 test('all committed token files validate against DTCG 2025.10 and typed value rules', () => {
@@ -143,4 +145,43 @@ test('resolves explicitly namespaced references to the semantic document', () =>
   documents.lightTheme.color.background.$value = '{semantic.color.background}';
 
   assert.deepEqual(validateTokenDocuments(documents), []);
+});
+
+test('reports missing inherited types and required theme colors with their paths', () => {
+  const documents = loadTokenDocuments();
+  documents.primitives.extension = { $value: 1 };
+  delete documents.darkTheme.color.accent;
+
+  const errors = validateTokenDocuments(documents);
+  assert.ok(errors.some((error) => error.includes('primitives.extension is missing a token type ($type)')));
+  assert.ok(errors.some((error) => error.includes('darkTheme is missing required color token color.accent')));
+});
+
+test('reference validation safely skips non-group values while walking token documents', () => {
+  const documents = loadTokenDocuments();
+  Object.assign(documents.primitives, {
+    emptyGroup: null,
+    scalarMetadata: 1,
+    arrayMetadata: []
+  });
+  const errors: string[] = [];
+
+  validateDocumentReferences(documents, errors);
+
+  assert.deepEqual(errors, []);
+});
+
+test('validates shadow arrays and reports the first malformed shadow entry', () => {
+  const malformedShadow = validateTokenValue('shadow', [null]);
+  assert.match(malformedShadow ?? '', /shadow 0: expected a typed shadow object/);
+
+  const malformedInset = validateTokenValue('shadow', {
+    offsetX: { value: 0, unit: 'px' },
+    offsetY: { value: 1, unit: 'px' },
+    blur: { value: 2, unit: 'px' },
+    spread: { value: 0, unit: 'px' },
+    color: { colorSpace: 'srgb', components: [0, 0, 0] },
+    inset: 'yes'
+  });
+  assert.match(malformedInset ?? '', /inset must be a boolean/);
 });

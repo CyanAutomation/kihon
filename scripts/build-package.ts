@@ -20,8 +20,8 @@ const JAVASCRIPT_FORMATS = {
 } as const;
 type JavaScriptFormat = keyof typeof JAVASCRIPT_FORMATS;
 
-function relativeOutputPath(outputPath: string): string {
-  const relative = path.relative(DIST, outputPath);
+function relativeOutputPath(outputPath: string, distribution = DIST): string {
+  const relative = path.relative(distribution, outputPath);
   if (relative.startsWith('..') || path.isAbsolute(relative)) {
     throw new Error(`Package output must be inside dist/: ${outputPath}`);
   }
@@ -148,29 +148,29 @@ async function getPackageOutputs(): Promise<BuildOutput[]> {
   return outputs;
 }
 
-async function replaceDistribution(outputs: BuildOutput[]): Promise<void> {
-  const temporaryRoot = await fs.mkdtemp(path.join(ROOT, '.kihon-dist-build-'));
+async function replaceDistribution(outputs: BuildOutput[], distribution = DIST, root = ROOT): Promise<void> {
+  const temporaryRoot = await fs.mkdtemp(path.join(root, '.kihon-dist-build-'));
   const temporaryDist = path.join(temporaryRoot, 'dist');
   const backupDist = path.join(temporaryRoot, 'previous-dist');
   let backedUp = false;
   try {
     for (const output of outputs) {
-      const destination = path.join(temporaryDist, relativeOutputPath(output.path));
+      const destination = path.join(temporaryDist, relativeOutputPath(output.path, distribution));
       await fs.mkdir(path.dirname(destination), { recursive: true });
       await fs.writeFile(destination, output.contents);
     }
 
     try {
-      await fs.rename(DIST, backupDist);
+      await fs.rename(distribution, backupDist);
       backedUp = true;
     } catch (error) {
       if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error;
     }
 
     try {
-      await fs.rename(temporaryDist, DIST);
+      await fs.rename(temporaryDist, distribution);
     } catch (error) {
-      if (backedUp) await fs.rename(backupDist, DIST);
+      if (backedUp) await fs.rename(backupDist, distribution);
       throw error;
     }
   } finally {
@@ -191,4 +191,4 @@ if (require.main === module) {
   });
 }
 
-export { buildJavaScriptOutput, buildPackage, getPackageOutputs, relativeOutputPath, unwrapCascadeLayers };
+export { buildJavaScriptOutput, buildPackage, getPackageOutputs, relativeOutputPath, replaceDistribution, unwrapCascadeLayers };

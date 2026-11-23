@@ -24,6 +24,7 @@ export async function getStyleGuideOutputs(outputDirectory = GENERATED): Promise
     outbase: STYLE_GUIDE,
     bundle: true,
     format: 'iife',
+    sourcemap: 'linked',
     target: 'es2022',
     write: false,
     logLevel: 'silent'
@@ -41,10 +42,12 @@ export async function buildStyleGuide(outputDirectory = GENERATED): Promise<void
   let backedUp = false;
 
   try {
-    const outputs = await getStyleGuideOutputs(temporaryOutput);
+    const outputs = await getStyleGuideOutputs(outputDirectory);
     for (const output of outputs) {
-      await fs.mkdir(path.dirname(output.path), { recursive: true });
-      await fs.writeFile(output.path, output.contents);
+      const relativePath = path.relative(outputDirectory, output.path);
+      const temporaryPath = path.join(temporaryOutput, relativePath);
+      await fs.mkdir(path.dirname(temporaryPath), { recursive: true });
+      await fs.writeFile(temporaryPath, output.contents);
     }
 
     try {

@@ -29,6 +29,16 @@ test('native links navigate to local destinations and update the current-page st
   await expect(page.locator('[data-kh-sidebar-status]')).toHaveText('Current demonstration destination: Projects.');
 });
 
+test('an unknown hash falls back to the first navigation link', async ({ page }) => {
+  await page.evaluate(() => { window.location.hash = '#sidebar-demo-unknown'; });
+
+  const navigation = page.getByRole('navigation', { name: 'Workspace navigation' });
+  await expect(navigation.locator('[aria-current="page"]')).toHaveText(/Overview/);
+  await expect(navigation.locator('[aria-current="page"]')).toHaveCount(1);
+  await expect(page.locator('[data-kh-sidebar-status]'))
+    .toHaveText('Current demonstration destination: Overview.');
+});
+
 test('controller keeps its labelled toggle and hidden state in sync', async ({ page }) => {
   const shell = page.locator('#sidebar-demo');
   const navigation = page.getByRole('navigation', { name: 'Workspace navigation' });

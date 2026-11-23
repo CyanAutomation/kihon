@@ -51,7 +51,7 @@
     "validate": "tsx scripts/validate-tokens.ts",
     "sanity": "tsx scripts/sanity-check.ts",
     "check:generated": "tsx scripts/check-generated.ts",
-    "test:package": "tsx tests/package/test-package.ts",
+    "test:package": "tsx scripts/run-package-coverage.ts",
     "test:unit": "tsx --test tests/unit/*.test.ts",
     "test:unit:coverage": "tsx scripts/run-unit-coverage.ts",
     "test:browser": "playwright test",

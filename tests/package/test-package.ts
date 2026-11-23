@@ -347,6 +347,13 @@ async function verifyBrowserConsumer(consumerRoot: string): Promise<void> {
   if (!address || typeof address === 'string') throw new Error('The package consumer server did not bind to a TCP port.');
   const consumerUrl = `http://127.0.0.1:${address.port}/index.html`;
   try {
+    const missingFile = await fetch(new URL('/missing-consumer-file', consumerUrl));
+    assert.equal(missingFile.status, 404, 'missing consumer files should return 404');
+    const traversal = await fetch(new URL('/%2e%2e%2foutside-consumer-root', consumerUrl));
+    assert.equal(traversal.status, 403, 'paths outside the consumer fixture should be rejected');
+    const unknownExtension = await fetch(new URL('/consumer.cjs', consumerUrl));
+    assert.equal(unknownExtension.headers.get('content-type'), 'application/octet-stream');
+
     const page = await browser.newPage({ viewport: { width: 1024, height: 768 } });
     const pageErrors: string[] = [];
     page.on('pageerror', (error) => pageErrors.push(error.message));
