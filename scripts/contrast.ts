@@ -1,5 +1,6 @@
 import wcagContrast from 'wcag-contrast';
-import { TokenResolver, formatColor } from './token-resolver.ts';
+import { TokenResolver } from './token-resolver.ts';
+import { formatColor } from './token-format.ts';
 import { createTokenContext } from './token-context.ts';
 import type { CompleteTokenDocuments, TokenData, TokenDocuments } from './token-types.ts';
 
@@ -83,4 +84,4 @@ function validateThemeDocuments(documents: CompleteTokenDocuments): string[] {
   }
 }
 
-export { APPROVED_PAIRS, CONTRAST_COLOR_ROLES, contrastRatio, resolveThemeColors, validateThemeContrast, validateThemeDocuments };
+export { contrastRatio, resolveThemeColors, validateThemeContrast, validateThemeDocuments };

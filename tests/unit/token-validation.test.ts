@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { loadTokenDocuments, validateTokenDocuments } from '../../scripts/token-validation.ts';
+import { isTokenReference, validateTokenValue } from '../../scripts/token-value-validation.ts';
 import { generateTokensCss } from '../../scripts/build-tokens.ts';
 
 test('all committed token files validate against DTCG 2025.10 and typed value rules', () => {
@@ -84,6 +85,46 @@ test('requires a usable sRGB fallback when a color token uses another color spac
 
   const errors = validateTokenDocuments(documents);
   assert.ok(errors.some((error) => error.includes('colors.gray.100') && error.includes('DTCG color object')));
+});
+
+test('accepts valid sRGB and fallback color objects and rejects invalid channels and alpha', () => {
+  const srgb = loadTokenDocuments();
+  srgb.primitives.colors.gray['100'].$value = {
+    colorSpace: 'srgb',
+    components: [0.25, 0.5, 0.75],
+    hex: '#4080bf'
+  };
+  assert.deepEqual(validateTokenDocuments(srgb), []);
+
+  const lab = loadTokenDocuments();
+  lab.primitives.colors.gray['100'].$value = {
+    colorSpace: 'lab',
+    components: [50, 0, 0],
+    hex: '#808080'
+  };
+  assert.deepEqual(validateTokenDocuments(lab), []);
+
+  const invalid = loadTokenDocuments();
+  invalid.primitives.colors.gray['100'].$value = {
+    colorSpace: 'srgb',
+    components: [0.25, 1.5, 0.75],
+    alpha: 1.5,
+    hex: '#4080bf'
+  };
+  const errors = validateTokenDocuments(invalid);
+  assert.ok(errors.some((error) => error.includes('colors.gray.100 (color)')));
+});
+
+test('validates typed token values through focused value validators', () => {
+  assert.equal(isTokenReference('{space.4}'), true);
+  assert.equal(isTokenReference('{not{atoken}}'), false);
+  assert.equal(validateTokenValue('dimension', { value: 16, unit: 'px' }), null);
+  assert.match(validateTokenValue('dimension', '16px') ?? '', /typed dimension/);
+  assert.equal(validateTokenValue('duration', { value: 120, unit: 'ms' }), null);
+  assert.equal(validateTokenValue('fontFamily', ['Inter', 'sans-serif']), null);
+  assert.equal(validateTokenValue('fontWeight', 600), null);
+  assert.equal(validateTokenValue('number', 1.5), null);
+  assert.equal(validateTokenValue('future-type', { value: 'kept' }), null);
 });
 
 test('honors a token type inherited from its containing group', () => {

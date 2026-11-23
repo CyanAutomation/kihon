@@ -61,10 +61,13 @@ kihon/
 │   ├── build-tokens.ts          # Generates tokens.css from source
 │   ├── build-runtime.ts         # Generates runtime bundles and declarations
 │   ├── build-style-guide.ts     # Generates ignored style-guide browser scripts
-│   ├── token-resolver.ts        # Resolves aliases and formats typed values
+│   ├── token-resolver.ts        # Resolves aliases and extracts token maps
+│   ├── token-format.ts          # Formats resolved token values for CSS
+│   ├── token-value-validation.ts # Validates DTCG value shapes and references
 │   ├── token-validation.ts      # DTCG schema and value validation
 │   ├── contrast.ts              # WCAG contrast calculations
 │   ├── check-generated.ts       # Detects stale committed outputs
+│   ├── run-unit-coverage.ts     # Runs unit tests with raw V8 coverage
 │   ├── sanity-check.ts          # Parses HTML and CSS
 │   └── serve.ts                 # Local style-guide preview server
 ├── schemas/                     # Vendored DTCG JSON Schema
@@ -107,10 +110,21 @@ Each JavaScript output has a generated `.js.map` source map beside it.
 | `npm run build:package` | Build ESM, CommonJS, browser-global, declaration, and bundled CSS package artifacts in `dist/`. |
 | `npm run test:package` | Pack and install the archive in isolated JavaScript, TypeScript, and browser consumers. |
 | `npm run typecheck` | Strictly check runtime, tooling, style-guide source, and consumer fixtures; separately type-check Playwright specs. |
+| `npm run test:unit:coverage` | Run unit tests and write raw V8 coverage under the ignored `coverage/v8/` directory. |
 
 The generated helpers in `src/js/` remain usable as classic browser scripts exposing `window.KihonDialogs` and `window.KihonSidebar`, and through Node `require()` at their existing paths. Each bundle is built from its TypeScript source; there is no second handwritten implementation. TypeScript and esbuild are development dependencies only. The existing compatibility JavaScript, source maps, and declarations are committed; `npm run check:generated` detects stale output without rewriting it. These compatibility bundles are not browser ES modules.
 
 The style guide's maintained scripts also use TypeScript. `npm run build:style-guide` bundles them as browser IIFEs under the ignored `style-guide/generated/` directory, and the HTML pages load those generated files. Playwright starts this build before its preview server. Browser specs have their own TypeScript profile because their DOM queries intentionally operate on page fixtures; the runtime, scripts, and package consumer fixtures remain under strict checking.
+
+### Code health with Fallow
+
+Fallow is a development dependency. Use `npm run fallow:dead-code`,
+`npm run fallow:dupes`, `npm run fallow:health`, or `npm run fallow:audit` for
+JSON reports. `.fallowrc.json` lists the TypeScript build inputs and CSS roots,
+all four TypeScript projects, and the generated compatibility output policy.
+The unit test command in `npm test` also writes raw V8 coverage, which Fallow
+uses for measured CRAP scores. Fallow complements `npm run typecheck`; it does
+not replace TypeScript compiler checks.
 
 The internal package generates separate native ESM (`.mjs`), CommonJS (`.cjs`), module-specific declaration (`.d.mts`/`.d.cts`), browser-global, and CSS artifacts under `dist/`. `dist/` is ignored by Git. `npm pack` runs the `prepack` build automatically, and package tests verify that this archive contains every export and only the consumer files. The package contract is described in [`distribution.md`](distribution.md).
 
@@ -301,7 +315,7 @@ This runs `scripts/validate-tokens.ts`, which checks:
 - Alias resolution, including missing and cyclic references
 - Approved text and non-text contrast pairings in light and dark themes
 
-`npm run sanity` parses the style-guide HTML with `html-validate` and all committed CSS with PostCSS. `npm run check:generated` compares generated CSS in memory with `src/css/tokens.css`; it does not rebuild first. `npm test` runs these checks, Node unit tests, and Playwright browser checks.
+`npm run sanity` parses the style-guide HTML with `html-validate` and all committed CSS with PostCSS. `npm run check:generated` compares generated CSS in memory with `src/css/tokens.css`; it does not rebuild first. `npm test` runs these checks, coverage-enabled Node unit tests, and Playwright browser checks.
 
 Run this before committing token changes.
 

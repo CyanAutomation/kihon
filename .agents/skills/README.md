@@ -6,6 +6,8 @@ Choose the narrowest skill for the task, then combine it with another only when 
 
 | Skill | Use it for |
 | --- | --- |
+| [Fallow](fallow/SKILL.md) | Dead-code, duplication, health, architecture, change-risk, and TypeScript semantic analysis. |
+| [Fallow setup](fallow-setup/SKILL.md) | Installing or configuring repository code-health tooling and agent guidance. |
 | [Accessibility review](kihon-accessibility-review/SKILL.md) | Evidence-based accessibility reviews of changed components and examples. |
 | [Component authoring](kihon-component-authoring/SKILL.md) | Public component CSS, behavior, contract, examples, and documentation. |
 | [Token workflow](kihon-token-workflow/SKILL.md) | DTCG token and theme changes, generated CSS, and contrast validation. |

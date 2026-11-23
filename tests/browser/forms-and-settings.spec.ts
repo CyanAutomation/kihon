@@ -88,13 +88,15 @@ test('application-owned validation associates errors and focuses the summary', a
   const name = page.locator('#guide-custom-name');
   const email = page.locator('#guide-custom-email');
 
+  await email.fill('invalid-address');
   await form.locator('button[type="submit"]').click();
   await expect(summary).toBeVisible();
   await expect(summary).toBeFocused();
   await expect(summary.locator('a')).toHaveCount(2);
   await expect(name).toHaveAttribute('aria-invalid', 'true');
   await expect(email).toHaveAttribute('aria-invalid', 'true');
-  await expect(email).toHaveAccessibleDescription(/Use a monitored address.*Enter contact email/);
+  await expect(email).toHaveAccessibleDescription(/Use a monitored address.*Enter contact email in a valid format/);
+  await expect(page.locator('#guide-custom-email-error')).toHaveText('Enter contact email in a valid format.');
 
   await name.fill('Local application');
   await email.fill('team@example.com');
@@ -102,6 +104,7 @@ test('application-owned validation associates errors and focuses the summary', a
   await expect(summary).toBeHidden();
   await expect(name).not.toHaveAttribute('aria-invalid', 'true');
   await expect(email).not.toHaveAttribute('aria-invalid', 'true');
+  await expect(email).toHaveAttribute('aria-describedby', 'guide-custom-email-help');
   await expect(page.locator('[data-kh-demo-custom-status]')).toHaveText('The example passed native constraints. No data was sent or saved.');
 });
 

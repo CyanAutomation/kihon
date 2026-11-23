@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { closeDialog, disposeDialog, openDialog, type DialogFocusTarget } from '../../src/js/dialogs.js';
+import { closeDialog, disposeDialog, openDialog, type DialogFocusTarget } from '../../src/ts/dialogs.ts';
 
 interface FakeDocument {
   activeElement: FakeFocusable | null;
