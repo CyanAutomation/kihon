@@ -53,5 +53,5 @@ test('serves files, resolves directory indexes, and handles invalid paths', asyn
 
   const malformedEncoding = await fetch(`${baseUrl}/%E0%A4%A`);
   assert.equal(malformedEncoding.status, 500);
-  assert.equal(await malformedEncoding.text(), 'Not found');
+  assert.equal(await malformedEncoding.text(), 'Internal server error');
 });

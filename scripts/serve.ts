@@ -34,7 +34,7 @@ export function createStaticServer(root = defaultRoot): http.Server {
       response.end(body);
     } catch (error) {
       const missing = error instanceof Error && 'code' in error && error.code === 'ENOENT';
-      response.writeHead(missing ? 404 : 500).end('Not found');
+      response.writeHead(missing ? 404 : 500).end(missing ? 'Not found' : 'Internal server error');
     }
   });
 }
