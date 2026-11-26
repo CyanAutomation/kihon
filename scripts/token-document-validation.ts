@@ -3,6 +3,8 @@ import * as path from 'node:path';
 import Ajv from 'ajv';
 import addFormats from 'ajv-formats';
 import type { CompleteTokenDocuments, TokenData } from './token-types.ts';
+import { isJsonObject, isRecord } from './token-json.ts';
+import { isTokenDefinition } from './token-shapes.ts';
 import { validateTokenValue } from './token-value-validation.ts';
 
 const ROOT = path.join(__dirname, '..');
@@ -36,24 +38,25 @@ export function validateDocumentShape(document: TokenData, label: string, errors
 }
 
 export function validateRequiredThemeTokens(theme: TokenData, name: string, errors: string[]): void {
-  const colors = theme && theme.color;
+  const colors = isRecord(theme.color) ? theme.color : null;
   for (const token of REQUIRED_THEME_COLORS) {
-    if (!colors || !Object.hasOwn(colors, token) || !Object.hasOwn(colors[token], '$value')) {
+    if (!colors || !isTokenDefinition(colors[token])) {
       errors.push(`${name} is missing required color token color.${token}`);
     }
   }
 }
 
 function validateTypedValues(document: TokenData, label: string, errors: string[]): void {
-  const walk = (node: any, tokenPath = '', inheritedType: string | null = null): void => {
-    if (!node || typeof node !== 'object' || Array.isArray(node)) return;
-    const type = node.$type || inheritedType;
+  const walk = (node: unknown, tokenPath = '', inheritedType: string | null = null): void => {
+    if (!isRecord(node)) return;
+    const type = typeof node.$type === 'string' ? node.$type : inheritedType;
 
     if (Object.hasOwn(node, '$value')) {
+      const value = node.$value;
       if (!type) {
         errors.push(`${label}.${tokenPath} is missing a token type ($type)`);
       } else {
-        const issue = validateTokenValue(type, node.$value);
+        const issue = validateTokenValue(type, value);
         if (issue) errors.push(`${label}.${tokenPath} (${type}): ${issue}`);
       }
       return;
@@ -69,5 +72,7 @@ function validateTypedValues(document: TokenData, label: string, errors: string[
 }
 
 function readJson(filePath: string): TokenData {
-  return JSON.parse(fs.readFileSync(filePath, 'utf8'));
+  const value: unknown = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+  if (!isJsonObject(value)) throw new TypeError(`Expected a JSON object in ${filePath}.`);
+  return value;
 }

@@ -1,50 +1,64 @@
-import type { TokenData } from './token-types.ts';
+import { isJsonValue, isRecord } from './token-json.ts';
+import { isTokenDefinition } from './token-shapes.ts';
+import { isTokenReference } from './token-value-reference.ts';
+import type { JsonValue, TokenData, TokenDefinition } from './token-types.ts';
 
-const REFERENCE = /^\{([^{}]+)\}$/;
-
-export function lookupToken(reference: string, context: TokenData | null): { token: TokenData; type: string | null } {
-  let target: any = context;
+export function lookupToken(
+  reference: string,
+  context: TokenData | null
+): { token: TokenDefinition; type: string | null } {
+  let target: unknown = context;
   let inheritedType: string | null = null;
   for (const part of reference.split('.')) {
-    if (target && typeof target === 'object' && target.$type) inheritedType = target.$type;
-    if (!target || typeof target !== 'object' || !Object.hasOwn(target, part)) {
+    const record = isRecord(target) ? target : null;
+    if (record && typeof record.$type === 'string') inheritedType = record.$type;
+    if (!record || !Object.hasOwn(record, part)) {
       throw new Error(`Unresolved reference: ${reference}`);
     }
-    target = target[part];
+    target = record[part];
   }
 
-  if (!target || typeof target !== 'object' || !Object.hasOwn(target, '$value')) {
+  if (!isTokenDefinition(target)) {
     throw new Error(`Reference does not point to a token: ${reference}`);
   }
 
   return { token: target, type: target.$type || inheritedType };
 }
 
-export function resolveTokenValue(value: any, context: TokenData | null, referenceStack: string[] = []): any {
-  if (typeof value === 'string') {
-    const match = value.match(REFERENCE);
-    if (!match) return value;
+export function resolveTokenValue(
+  value: unknown,
+  context: TokenData | null,
+  referenceStack: readonly string[] = []
+): JsonValue {
+  if (!isJsonValue(value)) throw new TypeError('Token values must contain JSON-compatible data.');
+  return resolveJsonValue(value, context, referenceStack);
+}
 
-    const reference = match[1];
-    if (reference === undefined) return value;
+function resolveJsonValue(
+  value: JsonValue,
+  context: TokenData | null,
+  referenceStack: readonly string[]
+): JsonValue {
+  if (typeof value === 'string' && isTokenReference(value)) {
+    const reference = value.slice(1, -1);
     if (referenceStack.includes(reference)) {
       const chain = [...referenceStack, reference].join(' -> ');
       throw new Error(`Circular reference detected: ${chain}`);
     }
 
     const { token } = lookupToken(reference, context);
-    return resolveTokenValue(token.$value, context, [...referenceStack, reference]);
+    return resolveJsonValue(token.$value, context, [...referenceStack, reference]);
   }
 
   if (Array.isArray(value)) {
-    return value.map((item) => resolveTokenValue(item, context, referenceStack));
+    return value.map((item) => resolveJsonValue(item, context, referenceStack));
   }
 
-  if (value && typeof value === 'object') {
+  if (value !== null && typeof value === 'object') {
     return Object.fromEntries(
       Object.entries(value).map(([key, child]) => [
         key,
-        resolveTokenValue(child, context, referenceStack)
+        resolveJsonValue(child, context, referenceStack)
       ])
     );
   }

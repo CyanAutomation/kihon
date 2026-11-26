@@ -1,16 +1,24 @@
 import { formatColor } from './token-format-color.ts';
+import { isColor } from './token-value-color.ts';
+import { isDimension } from './token-value-scalar.ts';
+import { isShadowObject } from './token-value-shadow.ts';
 
-function formatShadow(shadow: any): string {
-  const parts = ['offsetX', 'offsetY', 'blur', 'spread'].map((part) => shadow[part]);
-  if (parts.every((part) => part.value === 0) && (shadow.color.alpha ?? 1) === 0) return 'none';
-  const inset = shadow.inset ? 'inset ' : '';
-  return `${inset}${parts.map(formatDimension).join(' ')} ${formatColor(shadow.color)}`;
+function formatShadow(value: unknown): string {
+  if (!isShadowObject(value)) return String(value);
+
+  const dimensions = [value.offsetX, value.offsetY, value.blur, value.spread];
+  const isTransparentZeroShadow = dimensions.every(isDimension)
+    && dimensions.every((part) => part.value === 0)
+    && isColor(value.color)
+    && (value.color.alpha ?? 1) === 0;
+  if (isTransparentZeroShadow) return 'none';
+
+  const inset = value.inset ? 'inset ' : '';
+  return `${inset}${dimensions.map(formatDimension).join(' ')} ${formatColor(value.color)}`;
 }
 
-function formatDimension(value: any): string {
-  return typeof value === 'object' && value !== null
-    ? `${value.value}${value.unit}`
-    : String(value);
+function formatDimension(value: unknown): string {
+  return isDimension(value) ? `${value.value}${value.unit}` : String(value);
 }
 
 export { formatShadow };

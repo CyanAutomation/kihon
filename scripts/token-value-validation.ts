@@ -3,7 +3,7 @@ import { isDimension, isDuration, isFiniteNumber, isFontFamily, isFontWeight } f
 import { isColor } from './token-value-color.ts';
 import { validateShadow } from './token-value-shadow.ts';
 
-type TokenValueValidator = (value: any) => string | null;
+type TokenValueValidator = (value: unknown) => string | null;
 
 const VALUE_VALIDATORS: Record<string, TokenValueValidator> = {
   dimension: (value) => isDimension(value)
@@ -19,9 +19,9 @@ const VALUE_VALIDATORS: Record<string, TokenValueValidator> = {
   number: (value) => isFiniteNumber(value) ? null : 'expected a finite number'
 };
 
-function validateTokenValue(type: string, value: any): string | null {
+function validateTokenValue(type: string, value: unknown): string | null {
   if (isTokenReference(value)) return null;
   return VALUE_VALIDATORS[type]?.(value) ?? null;
 }
 
-export { isTokenReference, validateTokenValue };
+export { validateTokenValue };

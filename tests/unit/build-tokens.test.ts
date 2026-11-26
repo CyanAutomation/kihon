@@ -5,10 +5,11 @@ import * as os from 'node:os';
 import * as path from 'node:path';
 import { generateTokensCss } from '../../scripts/build-tokens.ts';
 import { loadTokenDocuments } from '../../scripts/token-validation.ts';
+import { setTokenValueAtPath } from './token-test-helpers.ts';
 
 test('generates theme CSS from explicitly namespaced semantic references', () => {
   const documents = loadTokenDocuments();
-  documents.lightTheme.color.background.$value = '{semantic.color.background}';
+  setTokenValueAtPath(documents, 'lightTheme.color.background', '{semantic.color.background}');
   const tokensDir = fs.mkdtempSync(path.join(os.tmpdir(), 'kihon-token-context-'));
 
   try {

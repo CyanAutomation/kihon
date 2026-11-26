@@ -1,6 +1,8 @@
-import type { CompleteTokenDocuments, TokenData } from './token-types.ts';
+import type { CompleteTokenDocuments, TokenData, TokenDefinition } from './token-types.ts';
 import { TokenResolver } from './token-resolver.ts';
 import { createTokenContext } from './token-context.ts';
+import { isRecord } from './token-json.ts';
+import { isTokenDefinition } from './token-shapes.ts';
 import { isTokenReference } from './token-value-reference.ts';
 
 export function validateDocumentReferences(documents: CompleteTokenDocuments, errors: string[]): void {
@@ -8,7 +10,8 @@ export function validateDocumentReferences(documents: CompleteTokenDocuments, er
     const context = createTokenContext(documents, document);
     const resolver = new TokenResolver(context);
     visitTokens(document, (token, tokenPath, inheritedType) => {
-      validateReferenceTypes(token.$value, token.$type || inheritedType, resolver, context, `${label}.${tokenPath}`, errors);
+      const type = typeof token.$type === 'string' ? token.$type : inheritedType;
+      validateReferenceTypes(token.$value, type, resolver, context, `${label}.${tokenPath}`, errors);
       try {
         resolver.resolveValue(token.$value, context);
       } catch (error) {
@@ -19,7 +22,7 @@ export function validateDocumentReferences(documents: CompleteTokenDocuments, er
 }
 
 function validateReferenceTypes(
-  value: any,
+  value: unknown,
   expectedType: string | null,
   resolver: TokenResolver,
   context: TokenData,
@@ -39,13 +42,13 @@ function validateReferenceTypes(
   }
 
   if (expectedType === 'shadow') {
-    const shadows = Array.isArray(value) ? value : [value];
+    const shadows: readonly unknown[] = Array.isArray(value) ? value : [value];
     shadows.forEach((shadow, index) => {
       if (isTokenReference(shadow)) {
         validateReferenceTypes(shadow, 'shadow', resolver, context, `${tokenPath}[${index}]`, errors);
         return;
       }
-      if (!shadow || typeof shadow !== 'object') return;
+      if (!isRecord(shadow)) return;
       for (const key of ['offsetX', 'offsetY', 'blur', 'spread']) {
         validateReferenceTypes(shadow[key], 'dimension', resolver, context, `${tokenPath}.${key}`, errors);
       }
@@ -55,17 +58,17 @@ function validateReferenceTypes(
 }
 
 function visitTokens(
-  group: TokenData,
-  callback: (token: TokenData, tokenPath: string, inheritedType: string | null) => void,
+  group: unknown,
+  callback: (token: TokenDefinition, tokenPath: string, inheritedType: string | null) => void,
   prefix = '',
   inheritedType: string | null = null
 ): void {
-  if (!group || typeof group !== 'object' || Array.isArray(group)) return;
-  const type = group.$type || inheritedType;
+  if (!isRecord(group)) return;
+  const type = typeof group.$type === 'string' ? group.$type : inheritedType;
   for (const [key, value] of Object.entries(group)) {
     if (key.startsWith('$')) continue;
     const tokenPath = prefix ? `${prefix}.${key}` : key;
-    if (value && typeof value === 'object' && Object.hasOwn(value, '$value')) {
+    if (isTokenDefinition(value)) {
       callback(value, tokenPath, type);
     } else {
       visitTokens(value, callback, tokenPath, type);
