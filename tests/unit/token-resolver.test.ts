@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { TokenResolver } from '../../scripts/token-resolver.ts';
 import { formatColor, formatValue } from '../../scripts/token-format.ts';
+import type { TokenDefinition } from '../../scripts/token-types.ts';
 
 test('resolves transitive aliases without losing the active reference chain', () => {
   const tokens = {
@@ -41,7 +42,8 @@ test('lookup preserves inherited types and prefers an explicitly typed token', (
     $type: 'dimension',
     spacing: {
       inherited: { $value: { value: 4, unit: 'px' } },
-      explicit: { $type: 'number', $value: 2 }
+      explicit: { $type: 'number', $value: 2 },
+      emptyType: { $type: '', $value: 3 }
     }
   };
   const resolver = new TokenResolver(tokens);
@@ -53,6 +55,12 @@ test('lookup preserves inherited types and prefers an explicitly typed token', (
   assert.deepEqual(resolver.lookupToken('spacing.explicit'), {
     token: tokens.spacing.explicit,
     type: 'number'
+  });
+  const explicitToken: TokenDefinition = resolver.lookupToken('spacing.explicit').token;
+  assert.equal(explicitToken.$value, 2);
+  assert.deepEqual(resolver.lookupToken('spacing.emptyType'), {
+    token: tokens.spacing.emptyType,
+    type: ''
   });
   assert.throws(() => resolver.lookupToken('spacing'), /Reference does not point to a token: spacing/);
 });

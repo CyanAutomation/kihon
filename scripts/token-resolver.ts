@@ -1,7 +1,7 @@
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { isJsonObject } from './token-json.ts';
-import type { JsonValue, TokenData, TokenMap } from './token-types.ts';
+import type { JsonValue, TokenData, TokenDefinition, TokenMap } from './token-types.ts';
 import { extractTokenMap } from './token-extraction.ts';
 import { lookupToken, resolveTokenValue } from './token-resolution.ts';
 
@@ -30,7 +30,7 @@ class TokenResolver {
     return resolveTokenValue(value, context);
   }
 
-  lookupToken(reference: string, context: TokenData | null = this.primitives): { token: TokenData; type: string | null } {
+  lookupToken(reference: string, context: TokenData | null = this.primitives): { token: TokenDefinition; type: string | null } {
     return lookupToken(reference, context);
   }
 

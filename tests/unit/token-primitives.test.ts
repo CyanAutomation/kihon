@@ -3,8 +3,7 @@ import assert from 'node:assert/strict';
 import { isJsonObject, isJsonValue } from '../../scripts/token-json.ts';
 import { isTokenDefinition } from '../../scripts/token-shapes.ts';
 import { isTokenReference } from '../../scripts/token-value-reference.ts';
-import type { JsonValue, ResolvedToken, TokenDefinition } from '../../scripts/token-types.ts';
-import type { TokenData } from '../../scripts/token-types.ts';
+import type { JsonValue, ResolvedToken, TokenData, TokenDefinition } from '../../scripts/token-types.ts';
 import { TokenResolver } from '../../scripts/token-resolver.ts';
 
 type IsAny<Value> = 0 extends (1 & Value) ? true : false;

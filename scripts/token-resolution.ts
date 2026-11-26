@@ -22,7 +22,7 @@ export function lookupToken(
     throw new Error(`Reference does not point to a token: ${reference}`);
   }
 
-  return { token: target, type: target.$type || inheritedType };
+  return { token: target, type: target.$type ?? inheritedType };
 }
 
 export function resolveTokenValue(
