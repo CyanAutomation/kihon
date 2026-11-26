@@ -1,13 +1,20 @@
-function formatColor(value: any): string {
+import { hasValidSrgbComponents, isColor } from './token-value-color.ts';
+
+function formatColor(value: unknown): string {
   if (typeof value === 'string') return value;
-  const hex = value.hex || srgbToHex(value.components);
+  if (!isColor(value)) return String(value);
+
+  const hex = value.hex ?? (hasValidSrgbComponents(value.components)
+    ? srgbToHex(value.components)
+    : null);
+  if (hex === null) return String(value);
   if ((value.alpha ?? 1) === 1) return hex;
 
   const channels = hexToRgb(hex);
   return `rgba(${channels.join(', ')}, ${value.alpha})`;
 }
 
-function srgbToHex(components: number[]): string {
+function srgbToHex(components: readonly number[]): string {
   const hex = components.map((component) => Math.round(component * 255).toString(16).padStart(2, '0'));
   return `#${hex.join('')}`;
 }

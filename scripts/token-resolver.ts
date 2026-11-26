@@ -1,6 +1,7 @@
 import * as fs from 'node:fs';
 import * as path from 'node:path';
-import type { TokenData, TokenMap } from './token-types.ts';
+import { isJsonObject } from './token-json.ts';
+import type { JsonValue, TokenData, TokenDefinition, TokenMap } from './token-types.ts';
 import { extractTokenMap } from './token-extraction.ts';
 import { lookupToken, resolveTokenValue } from './token-resolution.ts';
 
@@ -25,11 +26,11 @@ class TokenResolver {
     return this;
   }
 
-  resolveValue(value: any, context: TokenData | null = this.primitives): any {
+  resolveValue(value: unknown, context: TokenData | null = this.primitives): JsonValue {
     return resolveTokenValue(value, context);
   }
 
-  lookupToken(reference: string, context: TokenData | null = this.primitives): { token: TokenData; type: string | null } {
+  lookupToken(reference: string, context: TokenData | null = this.primitives): { token: TokenDefinition; type: string | null } {
     return lookupToken(reference, context);
   }
 
@@ -39,7 +40,9 @@ class TokenResolver {
 }
 
 function readJson(filePath: string): TokenData {
-  return JSON.parse(fs.readFileSync(filePath, 'utf8'));
+  const value: unknown = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+  if (!isJsonObject(value)) throw new TypeError(`Expected a JSON object in ${filePath}.`);
+  return value;
 }
 
 export { TokenResolver };

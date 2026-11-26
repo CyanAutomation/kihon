@@ -5,6 +5,7 @@ import { isTokenReference } from '../../scripts/token-value-reference.ts';
 import { validateTokenValue } from '../../scripts/token-value-validation.ts';
 import { validateDocumentReferences } from '../../scripts/token-reference-validation.ts';
 import { generateTokensCss } from '../../scripts/build-tokens.ts';
+import { deleteAtPath, jsonObjectAtPath, setTokenValueAtPath, tokenDefinitionAtPath } from './token-test-helpers.ts';
 
 test('all committed token files validate against DTCG 2025.10 and typed value rules', () => {
   const errors = validateTokenDocuments(loadTokenDocuments());
@@ -13,23 +14,23 @@ test('all committed token files validate against DTCG 2025.10 and typed value ru
 
 test('primary button hover colour is defined in both themes and exported by token generation', () => {
   const documents = loadTokenDocuments();
-  assert.equal(documents.lightTheme.color.background.$value, '{colors.warm-gray.100}');
-  assert.equal(documents.lightTheme.color.surface.$value, '{colors.white}');
-  assert.equal(documents.lightTheme.color['text-primary'].$value, '{colors.warm-gray.900}');
-  assert.equal(documents.lightTheme.color['text-secondary'].$value, '{colors.warm-gray.700}');
-  assert.equal(documents.lightTheme.color['border-subtle'].$value, '{colors.warm-gray.300}');
-  assert.equal(documents.lightTheme.color['border-strong'].$value, '{colors.warm-gray.600}');
-  assert.equal(documents.lightTheme.color.accent.$value, '{colors.coral.500}');
-  assert.equal(documents.lightTheme.color['on-accent'].$value, '{colors.warm-gray.900}');
-  assert.equal(documents.lightTheme.color['accent-text'].$value, '{colors.coral.700}');
-  assert.equal(documents.lightTheme.color['button-primary-hover'].$value, '{colors.coral.600}');
-  assert.equal(documents.lightTheme.color['focus-ring'].$value, '{colors.coral.700}');
-  assert.equal(documents.darkTheme.color.accent.$value, '{colors.orange.500}');
-  assert.equal(documents.darkTheme.color['on-accent'].$value, '{colors.gray.900}');
-  assert.equal(documents.darkTheme.color['button-primary-hover'].$value, '{colors.orange.400}');
-  assert.equal(documents.darkTheme.color['accent-text'].$value, '{colors.orange.500}');
-  assert.equal(documents.lightTheme.color.success.$value, '{colors.green.800}');
-  assert.equal(documents.darkTheme.color.success.$value, '{colors.green.300}');
+  assert.equal(tokenDefinitionAtPath(documents, 'lightTheme.color.background').$value, '{colors.warm-gray.100}');
+  assert.equal(tokenDefinitionAtPath(documents, 'lightTheme.color.surface').$value, '{colors.white}');
+  assert.equal(tokenDefinitionAtPath(documents, 'lightTheme.color.text-primary').$value, '{colors.warm-gray.900}');
+  assert.equal(tokenDefinitionAtPath(documents, 'lightTheme.color.text-secondary').$value, '{colors.warm-gray.700}');
+  assert.equal(tokenDefinitionAtPath(documents, 'lightTheme.color.border-subtle').$value, '{colors.warm-gray.300}');
+  assert.equal(tokenDefinitionAtPath(documents, 'lightTheme.color.border-strong').$value, '{colors.warm-gray.600}');
+  assert.equal(tokenDefinitionAtPath(documents, 'lightTheme.color.accent').$value, '{colors.coral.500}');
+  assert.equal(tokenDefinitionAtPath(documents, 'lightTheme.color.on-accent').$value, '{colors.warm-gray.900}');
+  assert.equal(tokenDefinitionAtPath(documents, 'lightTheme.color.accent-text').$value, '{colors.coral.700}');
+  assert.equal(tokenDefinitionAtPath(documents, 'lightTheme.color.button-primary-hover').$value, '{colors.coral.600}');
+  assert.equal(tokenDefinitionAtPath(documents, 'lightTheme.color.focus-ring').$value, '{colors.coral.700}');
+  assert.equal(tokenDefinitionAtPath(documents, 'darkTheme.color.accent').$value, '{colors.orange.500}');
+  assert.equal(tokenDefinitionAtPath(documents, 'darkTheme.color.on-accent').$value, '{colors.gray.900}');
+  assert.equal(tokenDefinitionAtPath(documents, 'darkTheme.color.button-primary-hover').$value, '{colors.orange.400}');
+  assert.equal(tokenDefinitionAtPath(documents, 'darkTheme.color.accent-text').$value, '{colors.orange.500}');
+  assert.equal(tokenDefinitionAtPath(documents, 'lightTheme.color.success').$value, '{colors.green.800}');
+  assert.equal(tokenDefinitionAtPath(documents, 'darkTheme.color.success').$value, '{colors.green.300}');
 
   const errors = validateTokenDocuments(documents);
   assert.deepEqual(errors, []);
@@ -42,16 +43,16 @@ test('primary button hover colour is defined in both themes and exported by toke
 
 test('loading motion has a typed semantic alias and is exported to CSS', () => {
   const documents = loadTokenDocuments();
-  assert.deepEqual(documents.primitives.motion.loading.$value, { value: 800, unit: 'ms' });
-  assert.equal(documents.semantic['motion-duration'].loading.$value, '{motion.loading}');
+  assert.deepEqual(tokenDefinitionAtPath(documents, 'primitives.motion.loading').$value, { value: 800, unit: 'ms' });
+  assert.equal(tokenDefinitionAtPath(documents, 'semantic.motion-duration.loading').$value, '{motion.loading}');
   assert.deepEqual(validateTokenDocuments(documents), []);
   assert.match(generateTokensCss(), /--kh-motion-loading: 800ms;/);
 });
 
 test('rejects legacy string dimensions and durations', () => {
   const documents = loadTokenDocuments();
-  documents.primitives.spacing['4'].$value = '16px';
-  documents.primitives.motion.fast.$value = '120ms';
+  setTokenValueAtPath(documents, 'primitives.spacing.4', '16px');
+  setTokenValueAtPath(documents, 'primitives.motion.fast', '120ms');
 
   const errors = validateTokenDocuments(documents);
   assert.ok(errors.some((error) => error.includes('spacing.4') && error.includes('dimension')));
@@ -60,8 +61,8 @@ test('rejects legacy string dimensions and durations', () => {
 
 test('rejects malformed shadow sub-values and unresolved references', () => {
   const documents = loadTokenDocuments();
-  documents.primitives.shadow.sm.$value.offsetY = '1px';
-  documents.semantic.color.background.$value = '{colors.not-a-color}';
+  jsonObjectAtPath(documents, 'primitives.shadow.sm.$value').offsetY = '1px';
+  setTokenValueAtPath(documents, 'semantic.color.background', '{colors.not-a-color}');
 
   const errors = validateTokenDocuments(documents);
   assert.ok(errors.some((error) => error.includes('shadow.sm') && error.includes('offsetY')));
@@ -70,8 +71,8 @@ test('rejects malformed shadow sub-values and unresolved references', () => {
 
 test('rejects aliases whose target token has an incompatible type', () => {
   const documents = loadTokenDocuments();
-  documents.primitives.spacing['4'].$value = '{colors.gray.100}';
-  documents.primitives.shadow.sm.$value.offsetY = '{colors.black}';
+  setTokenValueAtPath(documents, 'primitives.spacing.4', '{colors.gray.100}');
+  jsonObjectAtPath(documents, 'primitives.shadow.sm.$value').offsetY = '{colors.black}';
 
   const errors = validateTokenDocuments(documents);
   assert.ok(errors.some((error) => error.includes('spacing.4') && error.includes('expected a dimension reference')));
@@ -80,10 +81,10 @@ test('rejects aliases whose target token has an incompatible type', () => {
 
 test('requires a usable sRGB fallback when a color token uses another color space', () => {
   const documents = loadTokenDocuments();
-  documents.primitives.colors.gray['100'].$value = {
+  setTokenValueAtPath(documents, 'primitives.colors.gray.100', {
     colorSpace: 'lab',
     components: [50, 0, 0]
-  };
+  });
 
   const errors = validateTokenDocuments(documents);
   assert.ok(errors.some((error) => error.includes('colors.gray.100') && error.includes('DTCG color object')));
@@ -91,28 +92,28 @@ test('requires a usable sRGB fallback when a color token uses another color spac
 
 test('accepts valid sRGB and fallback color objects and rejects invalid channels and alpha', () => {
   const srgb = loadTokenDocuments();
-  srgb.primitives.colors.gray['100'].$value = {
+  setTokenValueAtPath(srgb, 'primitives.colors.gray.100', {
     colorSpace: 'srgb',
     components: [0.25, 0.5, 0.75],
     hex: '#4080bf'
-  };
+  });
   assert.deepEqual(validateTokenDocuments(srgb), []);
 
   const lab = loadTokenDocuments();
-  lab.primitives.colors.gray['100'].$value = {
+  setTokenValueAtPath(lab, 'primitives.colors.gray.100', {
     colorSpace: 'lab',
     components: [50, 0, 0],
     hex: '#808080'
-  };
+  });
   assert.deepEqual(validateTokenDocuments(lab), []);
 
   const invalid = loadTokenDocuments();
-  invalid.primitives.colors.gray['100'].$value = {
+  setTokenValueAtPath(invalid, 'primitives.colors.gray.100', {
     colorSpace: 'srgb',
     components: [0.25, 1.5, 0.75],
     alpha: 1.5,
     hex: '#4080bf'
-  };
+  });
   const errors = validateTokenDocuments(invalid);
   assert.ok(errors.some((error) => error.includes('colors.gray.100 (color)')));
 });
@@ -142,7 +143,7 @@ test('honors a token type inherited from its containing group', () => {
 
 test('resolves explicitly namespaced references to the semantic document', () => {
   const documents = loadTokenDocuments();
-  documents.lightTheme.color.background.$value = '{semantic.color.background}';
+  setTokenValueAtPath(documents, 'lightTheme.color.background', '{semantic.color.background}');
 
   assert.deepEqual(validateTokenDocuments(documents), []);
 });
@@ -150,7 +151,7 @@ test('resolves explicitly namespaced references to the semantic document', () =>
 test('reports missing inherited types and required theme colors with their paths', () => {
   const documents = loadTokenDocuments();
   documents.primitives.extension = { $value: 1 };
-  delete documents.darkTheme.color.accent;
+  deleteAtPath(documents, 'darkTheme.color.accent');
 
   const errors = validateTokenDocuments(documents);
   assert.ok(errors.some((error) => error.includes('primitives.extension is missing a token type ($type)')));

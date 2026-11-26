@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { contrastRatio, resolveThemeColors, validateThemeContrast, validateThemeDocuments } from '../../scripts/contrast.ts';
 import { loadTokenDocuments } from '../../scripts/token-validation.ts';
+import { jsonObjectAtPath, setTokenValueAtPath, tokenDefinitionAtPath } from './token-test-helpers.ts';
 
 test('calculates WCAG contrast ratios from hex colors', () => {
   assert.ok(Math.abs(contrastRatio('#000000', '#ffffff') - 21) < 0.01);
@@ -51,9 +52,9 @@ test('light coral component colors meet text and control-boundary contrast requi
 
 test('fails contrast validation for translucent theme colors', () => {
   const documents = loadTokenDocuments();
-  documents.lightTheme.color.background.$value = {
+  setTokenValueAtPath(documents, 'lightTheme.color.background', {
     colorSpace: 'srgb', components: [1, 1, 1], alpha: 0.5, hex: '#ffffff'
-  };
+  });
 
   const errors = validateThemeDocuments(documents);
   assert.ok(errors.some((error) => error.includes('background') && error.includes('must be opaque')));
@@ -61,11 +62,13 @@ test('fails contrast validation for translucent theme colors', () => {
 
 test('ignores translucent non-text roles such as the dialog scrim during contrast resolution', () => {
   const documents = loadTokenDocuments();
-  documents.lightTheme.color.scrim = {
+  jsonObjectAtPath(documents, 'lightTheme.color').scrim = {
     $type: 'color',
     $value: { colorSpace: 'srgb', components: [0, 0, 0], alpha: 0.48, hex: '#000000' }
   };
-  documents.darkTheme.color.scrim = structuredClone(documents.lightTheme.color.scrim);
+  jsonObjectAtPath(documents, 'darkTheme.color').scrim = structuredClone(
+    tokenDefinitionAtPath(documents, 'lightTheme.color.scrim')
+  );
 
   const colors = resolveThemeColors(documents.lightTheme, documents);
   assert.equal(Object.hasOwn(colors, 'scrim'), false);
@@ -74,9 +77,9 @@ test('ignores translucent non-text roles such as the dialog scrim during contras
 
 test('checks contrast after resolving a theme reference into the semantic document', () => {
   const documents = loadTokenDocuments();
-  documents.semantic.color['text-primary'].$value = '{colors.gray.100}';
-  documents.lightTheme.color.background.$value = '{semantic.color.background}';
-  documents.lightTheme.color['text-primary'].$value = '{semantic.color.text-primary}';
+  setTokenValueAtPath(documents, 'semantic.color.text-primary', '{colors.gray.100}');
+  setTokenValueAtPath(documents, 'lightTheme.color.background', '{semantic.color.background}');
+  setTokenValueAtPath(documents, 'lightTheme.color.text-primary', '{semantic.color.text-primary}');
 
   const errors = validateThemeDocuments(documents);
   assert.ok(errors.some((error) => error.includes('light: text-primary on background')));
